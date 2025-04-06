@@ -3,19 +3,32 @@ package com.ma5951.utils.Logger;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 public class MALog {
+    private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
     private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("MALog");
     private static final Map<String, NetworkTableEntry> entries = new HashMap<>();
+    private static final Map<String, StructPublisher<Pose2d>> pose2dPublishers = new HashMap<>();
+    private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();
+    private static final Map<String, StructPublisher<Translation2d>> translation2dPublishers = new HashMap<>();
+    private static final Map<String, StructArrayPublisher<SwerveModuleState>> swerveModuleStatePublishers = new HashMap<>();
     private static final String ID_FILE_PATH = "/home/lvuser/malog/lastLogID.txt";
-    private static MALogMode currentMode = MALogMode.TEST;
     private static String sessionID = "0000";
     private static boolean started = false;
     private static final NetworkTableEntry flagEntry = malogTable.getEntry("Flag");
@@ -34,7 +47,6 @@ public class MALog {
         if (started)
             return;
 
-        currentMode = mode;
         sessionID = loadNextID();
 
         if (!DriverStation.isFMSAttached()) {
@@ -56,22 +68,55 @@ public class MALog {
         started = false;
     }
 
-    public static void log(String key, double value, LogLevel level) {
-        if (!started)
-            return;
+    public static void log(String key, double value) {
         getEntry(key).setDouble(value);
     }
 
-    public static void log(String key, boolean value, LogLevel level) {
-        if (!started)
-            return;
+    public static void log(String key, boolean value) {
         getEntry(key).setBoolean(value);
     }
 
-    public static void log(String key, String value, LogLevel level) {
-        if (!started)
-            return;
+    public static void log(String key, String value) {
         getEntry(key).setString(value);
+    }
+
+    public static void log(String key, BooleanSupplier supplier) {
+        getEntry(key).setBoolean(supplier.getAsBoolean());
+    }
+
+    public static void log(String key, DoubleSupplier supplier) {
+        getEntry(key).setDouble(supplier.getAsDouble());
+    }
+
+    public static void log(String key, IntSupplier supplier) {
+        getEntry(key).setInteger(supplier.getAsInt());
+    }
+
+    public static void log(String key, int value) {
+        getEntry(key).setInteger(value);
+    }
+
+    public static void logSwerveModuleStates(String key, SwerveModuleState[] states) {
+        if (states == null)
+            return;
+
+        StructArrayPublisher<SwerveModuleState> publisher = swerveModuleStatePublishers.computeIfAbsent(key,
+                k -> nt
+                        .getStructArrayTopic("MALog/" + k, SwerveModuleState.struct)
+                        .publish());
+
+        publisher.set(states);
+    }
+
+    public static void log(String key, Pose2d pose) {
+        if (!started || pose == null)
+            return;
+
+        StructPublisher<Pose2d> publisher = pose2dPublishers.computeIfAbsent(
+                key,
+                k -> nt.getStructTopic("MALog/" + k, Pose2d.struct).publish());
+
+        publisher.set(pose);
     }
 
     private static NetworkTableEntry getEntry(String key) {
@@ -79,8 +124,6 @@ public class MALog {
     }
 
     public static void flag(String label) {
-        if (!started)
-            return;
         flagEntry.setString(label);
     }
 

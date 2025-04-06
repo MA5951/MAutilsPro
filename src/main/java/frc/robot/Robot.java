@@ -4,12 +4,17 @@ package frc.robot;
 import org.ironmaple.simulation.SimulatedArena;
 
 import com.ma5951.utils.DashBoard.DashboardPID;
+import com.ma5951.utils.Logger.MALog;
+import com.ma5951.utils.Logger.MALog.MALogMode;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Subsystem.PoseEstimation.PoseEstimator;
 import frc.robot.Subsystem.Swerve.SwerveConstants;
-
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -33,7 +38,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-
   }
 
   @Override
@@ -60,6 +64,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
   }
 
   @Override
@@ -83,7 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {
     SimulatedArena.getInstance().simulationPeriodic();
-    //LOG SWERVE POSE
+    // LOG SWERVE POSE
   }
 
 }
