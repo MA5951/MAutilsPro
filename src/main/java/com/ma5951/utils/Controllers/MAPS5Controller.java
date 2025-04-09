@@ -1,12 +1,14 @@
 package com.ma5951.utils.Controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.PS5Controller.Button;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
 
 public class MAPS5Controller {
     private final PS5Controller controller;
+    private final Map<Button, Long> buttonHoldStartTimes = new HashMap<>();
 
     public MAPS5Controller(int port) {
         controller = new PS5Controller(port);
@@ -16,7 +18,6 @@ public class MAPS5Controller {
         return controller;
     }
 
-    // Base getters
     public double getLeftX() {
         return controller.getLeftX();
     }
@@ -33,7 +34,14 @@ public class MAPS5Controller {
         return controller.getRightY();
     }
 
-    // Deadband-aware getters
+    public double getL2Value() {
+        return controller.getL2Axis();
+    }
+    
+    public double getR2Value() {
+        return controller.getR2Axis();
+    }
+
     public double getLeftX(double deadband) {
         return applyDeadband(getLeftX(), deadband);
     }
@@ -50,7 +58,14 @@ public class MAPS5Controller {
         return applyDeadband(getRightY(), deadband);
     }
 
-    // Utility
+    public double getL2Value(double deadband) {
+        return applyDeadband(getL2Value(), deadband);
+    }
+    
+    public double getR2Value(double deadband) {
+        return applyDeadband(getR2Value(), deadband);
+    }
+
     private double applyDeadband(double value, double threshold) {
         return Math.abs(value) < threshold ? 0.0 : value;
     }
@@ -109,6 +124,23 @@ public class MAPS5Controller {
 
     public boolean getTouchpadButton() {
         return controller.getRawButton(Button.kTouchpad.value);
+    }
+
+    public boolean getCombo(Button button1, Button button2) {
+        return controller.getRawButton(button1.value) && controller.getRawButton(button2.value);
+    }
+
+    public boolean isHeld(Button button, double seconds) {
+        boolean pressed = controller.getRawButton(button.value);
+        long now = System.currentTimeMillis();
+    
+        if (pressed) {
+            buttonHoldStartTimes.putIfAbsent(button, now);
+            return (now - buttonHoldStartTimes.get(button)) >= (seconds * 1000);
+        } else {
+            buttonHoldStartTimes.remove(button);
+            return false;
+        }
     }
 
     // Stick deadband checks
