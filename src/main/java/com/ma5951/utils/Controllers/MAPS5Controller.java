@@ -158,4 +158,21 @@ public class MAPS5Controller {
                 Math.abs(getRightY()) < threshold;
     }
 
+    public boolean isDpadUp() {
+        return controller.getPOV() == 0;
+    }
+    
+    public boolean isDpadRight() {
+        return controller.getPOV() == 90;
+    }
+    
+    public boolean isDpadDown() {
+        return controller.getPOV() == 180;
+    }
+    
+    public boolean isDpadLeft() {
+        return controller.getPOV() == 270;
+    }
+    
+
 }
