@@ -37,7 +37,7 @@ public class SwerveConstants {
                         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)) / 2.0;
         public final static double BUMPER_WIDTH = WIDTH + 0.16;
         public final static double BUMPER_LENGTH = LENGTH + 0.16;
-        public final static double ROBOT_MASS = 54;
+        public final static double ROBOT_MASS = 62;
 
         // Modules constants
         public final static double TURNING_GEAR_RATIO = 150d / 7;
@@ -238,7 +238,7 @@ public class SwerveConstants {
                                         DCMotor.getKrakenX60(1),
                                         DCMotor.getFalcon500(1),
                                         COTS.WHEELS.DEFAULT_NEOPRENE_TREAD.cof,
-                                        3 // Gear ratio (l3 gear ratio)
+                                        2 // Gear ratio (l3 gear ratio)
                         ))
                         .withTrackLengthTrackWidth(edu.wpi.first.units.Units.Meter.of(LENGTH),
                                         edu.wpi.first.units.Units.Meter.of(WIDTH))
