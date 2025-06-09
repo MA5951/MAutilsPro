@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class DashBoardTab {
     private ShuffleboardTab board;
     private HashMap<String, GenericEntry> values;
-   //TODO extend the func to be able to set the box peremter and use widget from the code
-   //TODO think about other Sendable we whant, one that change state can be a good one 
 
     public DashBoardTab(String tab) {
         board = Shuffleboard.getTab(tab);

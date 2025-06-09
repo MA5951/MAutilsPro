@@ -18,6 +18,8 @@ public class StateTrigger {
     private StateTrigger(BooleanSupplier condition , RobotState stateToSet) {
         this.condition = condition;
         this.stateToSet = stateToSet;
+        robotMode = null;
+        stateIn = null;
     }
 
     public StateTrigger withRobotMode(RobotMode robotMode) {

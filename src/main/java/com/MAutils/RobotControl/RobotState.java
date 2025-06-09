@@ -1,6 +1,7 @@
 
 package com.MAutils.RobotControl;
 
+
 public class RobotState {
 
     private SubsystemState[] subsystemStates;
@@ -16,6 +17,7 @@ public class RobotState {
         this.subsystemStates = subsystemStates;
         stateName = name;
         this.onStateSet = onStateSet;
+
     }
 
     public void setState() {
