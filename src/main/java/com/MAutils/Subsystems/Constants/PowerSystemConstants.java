@@ -1,8 +1,7 @@
 
 package com.MAutils.Subsystems.Constants;
 
-import com.MAutils.Utils.Motor;
-import com.MAutils.Utils.Sensors.BaseSensor;
+import com.MAutils.Components.Motor;
 
 public class PowerSystemConstants {
     public Motor[] MOTORS;
@@ -16,8 +15,10 @@ public class PowerSystemConstants {
     public double PEAK_REVERSE_VOLTAGE = -12;
     public boolean FOC = false;
     public double INERTIA = 0.0004;
-    @SuppressWarnings("rawtypes")
-    public BaseSensor[] SENSORS;
+    public double POSITION_FACTOR = 1;
+    public double VELOCITY_FACTOR = 1;
+    //@SuppressWarnings("rawtypes")
+    //public BaseSensor[] SENSORS;
 
     public PowerSystemConstants() {
 
@@ -78,10 +79,20 @@ public class PowerSystemConstants {
         return this;
     }
 
-    public PowerSystemConstants withSensors(@SuppressWarnings("rawtypes") BaseSensor[] sensors) {
-        this.SENSORS = sensors;
+    public PowerSystemConstants withPositionFactor(double positionFactor) {
+        this.POSITION_FACTOR = positionFactor;
         return this;
     }
+
+    public PowerSystemConstants withVelocityFactor(double velocityFactor) {
+        this.VELOCITY_FACTOR = velocityFactor;
+        return this;
+    }
+
+    // public PowerSystemConstants withSensors(@SuppressWarnings("rawtypes") BaseSensor[] sensors) {
+    //     this.SENSORS = sensors;
+    //     return this;
+    // }
 
 
 }
