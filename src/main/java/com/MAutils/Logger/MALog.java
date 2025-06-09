@@ -39,13 +39,14 @@ public class MALog {
         TEST
     }
 
-    public enum LogLevel {
+    public enum LogLevel {//TODO: implement log levels to console writes
         INFO, WARN, ERROR, DEBUG
     }
 
     public static void startLog(MALogMode mode) {
-        if (started)
+        if (started) {
             return;
+        }
 
         sessionID = loadNextID();
 
@@ -62,8 +63,9 @@ public class MALog {
     }
 
     public static void stopLog() {
-        if (!started)
+        if (!started) {
             return;
+        }
         DataLogManager.stop();
         started = false;
     }

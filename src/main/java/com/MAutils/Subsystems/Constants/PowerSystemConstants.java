@@ -78,7 +78,7 @@ public class PowerSystemConstants {
         return this;
     }
 
-    public PowerSystemConstants withSensors(BaseSensor[] sensors) {
+    public PowerSystemConstants withSensors(@SuppressWarnings("rawtypes") BaseSensor[] sensors) {
         this.SENSORS = sensors;
         return this;
     }

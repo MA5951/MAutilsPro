@@ -1,14 +1,13 @@
 
-package com.ma5951.utils.ControlledMotors.Sim;
+package com.MAutils.Simulation;
 
 
+import com.MAutils.Utils.ConvUtil;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import com.ma5951.utils.Utils.ConvUtil;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
