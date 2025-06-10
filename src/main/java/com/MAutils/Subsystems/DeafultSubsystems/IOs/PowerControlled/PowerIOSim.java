@@ -1,8 +1,8 @@
 
-package com.MAutils.Subsystems.IOs.PowerControlled;
+package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 
 import com.MAutils.Simulation.TalonFXMotorSim;
-import com.MAutils.Subsystems.Constants.PowerSystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 

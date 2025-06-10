@@ -1,8 +1,8 @@
 
-package com.MAutils.Subsystems.IOs.VelocityControlled;
+package com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled;
 
 import com.MAutils.Simulation.TalonFXMotorSim;
-import com.MAutils.Subsystems.Constants.VelocitySystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 

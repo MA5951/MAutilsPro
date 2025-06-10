@@ -1,25 +1,25 @@
 
-package com.MAutils.Subsystems.Systems;
+package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.RobotControl.SubsystemState;
-import com.MAutils.Subsystems.Constants.PositionSystemConstants;
-import com.MAutils.Subsystems.IOs.Interfaces.PositionSystemIO;
-import com.MAutils.Subsystems.IOs.PositionControlled.PositionIOReal;
-import com.MAutils.Subsystems.IOs.PositionControlled.PositionIOSim;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOSim;
 
 import frc.robot.Robot;
 
-public class PositionControlledSystem extends StateSubsystem{
+public class VelocityControlledSystem extends StateSubsystem{
 
-    protected final PositionSystemIO systemIO;
+    protected final VelocitySystemIO systemIO;
 
-    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, SubsystemState... subsystemStates) {
+    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, SubsystemState... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
-            systemIO = new PositionIOReal(systemConstants);
+            systemIO = new VelocityIOReal(systemConstants);
         } else {
-            systemIO = new PositionIOSim(systemConstants);
+            systemIO = new VelocityIOSim(systemConstants);
         }
     }
 
@@ -59,12 +59,8 @@ public class PositionControlledSystem extends StateSubsystem{
         return systemIO.atPoint();
     }
 
-    public void setPosition(double position) {
-        systemIO.setPosition(position);
-    }
-
-    public void setPosition(double position, double feedForward) {
-        systemIO.setPosition(position, feedForward);
+    public void setVelocity(double velocity) {
+        systemIO.setVelocity(velocity);
     }
 
     @Override

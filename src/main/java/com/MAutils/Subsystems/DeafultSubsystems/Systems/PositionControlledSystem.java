@@ -1,25 +1,25 @@
 
-package com.MAutils.Subsystems.Systems;
+package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.RobotControl.SubsystemState;
-import com.MAutils.Subsystems.Constants.VelocitySystemConstants;
-import com.MAutils.Subsystems.IOs.Interfaces.VelocitySystemIO;
-import com.MAutils.Subsystems.IOs.VelocityControlled.VelocityIOReal;
-import com.MAutils.Subsystems.IOs.VelocityControlled.VelocityIOSim;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOSim;
 
 import frc.robot.Robot;
 
-public class VelocityControlledSystem extends StateSubsystem{
+public class PositionControlledSystem extends StateSubsystem{
 
-    protected final VelocitySystemIO systemIO;
+    protected final PositionSystemIO systemIO;
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, SubsystemState... subsystemStates) {
+    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, SubsystemState... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(systemConstants);
+            systemIO = new PositionIOReal(systemConstants);
         } else {
-            systemIO = new VelocityIOSim(systemConstants);
+            systemIO = new PositionIOSim(systemConstants);
         }
     }
 
@@ -59,8 +59,12 @@ public class VelocityControlledSystem extends StateSubsystem{
         return systemIO.atPoint();
     }
 
-    public void setVelocity(double velocity) {
-        systemIO.setVelocity(velocity);
+    public void setPosition(double position) {
+        systemIO.setPosition(position);
+    }
+
+    public void setPosition(double position, double feedForward) {
+        systemIO.setPosition(position, feedForward);
     }
 
     @Override

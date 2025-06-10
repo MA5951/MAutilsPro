@@ -1,12 +1,12 @@
 
-package com.MAutils.Subsystems.Systems;
+package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.RobotControl.SubsystemState;
-import com.MAutils.Subsystems.Constants.PowerSystemConstants;
-import com.MAutils.Subsystems.IOs.Interfaces.PowerSystemIO;
-import com.MAutils.Subsystems.IOs.PowerControlled.PowerIOReal;
-import com.MAutils.Subsystems.IOs.PowerControlled.PowerIOSim;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOSim;
 
 import frc.robot.Robot;
 

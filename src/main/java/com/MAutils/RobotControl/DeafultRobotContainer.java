@@ -7,6 +7,7 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 import com.MAutils.Controllers.MAController;
 import com.MAutils.Logger.MALog;
+import com.MAutils.Utils.StatusSignalsRunner;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -61,6 +62,7 @@ public class DeafultRobotContainer {
     }
 
     public static void robotPeriodic() {
+        StatusSignalsRunner.updateSignals();
         CommandScheduler.getInstance().run();
     }
 

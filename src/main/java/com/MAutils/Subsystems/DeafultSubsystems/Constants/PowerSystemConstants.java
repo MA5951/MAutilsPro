@@ -1,5 +1,5 @@
 
-package com.MAutils.Subsystems.Constants;
+package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 import com.MAutils.Components.Motor;
 

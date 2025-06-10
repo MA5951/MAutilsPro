@@ -1,9 +1,9 @@
-package com.MAutils.Subsystems.IOs.VelocityControlled;
+package com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled;
 
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
-import com.MAutils.Subsystems.Constants.VelocitySystemConstants;
-import com.MAutils.Subsystems.IOs.Interfaces.VelocitySystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -150,7 +150,7 @@ public class VelocityIOReal implements VelocitySystemIO {
     public void setVelocity(double Velocity) {
         if (Velocity > systemConstants.MAX_VELOCITY) {
             Velocity = systemConstants.MAX_VELOCITY;
-            System.out.println("Velocity exceeds maximum limit, setting to " + systemConstants.MAX_VELOCITY); //TODO normal alert
+            System.out.println("Velocity exceeds maximum limit, setting to " + systemConstants.MAX_VELOCITY); //TODO normal
         } 
         systemConstants.MOTORS[0].motorController.setControl(velocityRequest.withVelocity(Velocity)
                 .withSlot(0)
