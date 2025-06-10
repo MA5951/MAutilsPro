@@ -32,6 +32,10 @@ public class TalonFXMotorSim {
 
     }
 
+    public TalonFXSimState getMotorSimState() {
+        return motorSimState;
+    }
+
     public void updateSim() {
         motorSimState.setSupplyVoltage(12);
         physicshSim.setInputVoltage(motorSimState.getMotorVoltage());

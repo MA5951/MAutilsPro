@@ -17,8 +17,6 @@ public class PowerSystemConstants {
     public double INERTIA = 0.0004;
     public double POSITION_FACTOR = 1;
     public double VELOCITY_FACTOR = 1;
-    //@SuppressWarnings("rawtypes")
-    //public BaseSensor[] SENSORS;
 
     public PowerSystemConstants() {
 
@@ -34,17 +32,13 @@ public class PowerSystemConstants {
         return this;
     }
 
-    public PowerSystemConstants withStatorCurrentLimit(double statorCurrentLimit) {
+    public PowerSystemConstants withStatorCurrentLimit(boolean currentLimitEnabled, double statorCurrentLimit) {
         this.STATOR_CURRENT_LIMIT = statorCurrentLimit;
-        return this;
-    }
-
-    public PowerSystemConstants withCurrentLimitEnabled(boolean currentLimitEnabled) {
         this.CURRENT_LIMIT_ENABLED = currentLimitEnabled;
         return this;
     }
 
-    public PowerSystemConstants withMotorLimitCurrent(double motorLimitCurrent) {
+    public PowerSystemConstants withMotorCurrentLimit(double motorLimitCurrent) {
         this.MOTOR_LIMIT_CURRENT = motorLimitCurrent;
         return this;
     }
@@ -59,12 +53,8 @@ public class PowerSystemConstants {
         return this;
     }
 
-    public PowerSystemConstants withPeakForwardVoltage(double peakForwardVoltage) {
+    public PowerSystemConstants withPeakVoltage(double peakForwardVoltage, double peakReverseVoltage) {
         this.PEAK_FORWARD_VOLTAGE = peakForwardVoltage;
-        return this;
-    }
-
-    public PowerSystemConstants withPeakReverseVoltage(double peakReverseVoltage) {
         this.PEAK_REVERSE_VOLTAGE = peakReverseVoltage;
         return this;
     }
@@ -88,11 +78,5 @@ public class PowerSystemConstants {
         this.VELOCITY_FACTOR = velocityFactor;
         return this;
     }
-
-    // public PowerSystemConstants withSensors(@SuppressWarnings("rawtypes") BaseSensor[] sensors) {
-    //     this.SENSORS = sensors;
-    //     return this;
-    // }
-
 
 }

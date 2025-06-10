@@ -11,4 +11,5 @@ public interface VelocitySystemIO extends PowerSystemIO {
 
     void setVelocity(double velocity); 
 
+
 }
