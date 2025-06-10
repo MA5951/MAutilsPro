@@ -1,0 +1,65 @@
+site_name: MAutils Pro Documentation
+site_description: "User-friendly guides and tutorials for the MAutils Pro FRC library"
+site_author: "Your Team Name"
+site_url: https://your-org.github.io/MAutils-Pro-Docs/
+
+repo_url: https://github.com/your-org/MAutils-Pro
+edit_uri: edit/main/docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: red
+      accent: gray
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: images/logo.png
+
+plugins:
+  - search
+  - git-revision-date
+  - macros
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Core Concepts: concepts.md
+  - Tutorials:
+      - Quick Start: tutorials/quick-start.md
+      - Advanced Usage: tutorials/advanced-usage.md
+  - Modules:
+      - Components: modules/components.md
+      - Dashboard & Logging: modules/dashboard-logging.md
+  - FAQ: faq.md
+  - Contributing: contributing.md
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: red
+      accent: gray
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: red
+      accent: gray
+      toggle:
+        icon: material/white-balance-sunny
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: images/logo.png
+
