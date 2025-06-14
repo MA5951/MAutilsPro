@@ -1,5 +1,5 @@
 
-package frc.robot.Subsystem.Swerve.IOs;
+package com.MAutils.Swerve.Utils;
 
 import java.util.Arrays;
 import java.util.Queue;
@@ -9,8 +9,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.ma5951.utils.Logger.LoggedBool;
-import com.ma5951.utils.Logger.LoggedDouble;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -36,7 +34,7 @@ import frc.robot.Utils.ModuleLimits;
 import frc.robot.commands.Swerve.TeleopSwerveController;
 
 @SuppressWarnings("unused")
-public class SwerveThreadOdometry implements SwerveOdometry{
+public class SwerveThreadOdometry {
 
     private OdometryConfig config;
 

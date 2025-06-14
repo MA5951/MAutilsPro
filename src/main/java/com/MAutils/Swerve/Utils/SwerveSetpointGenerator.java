@@ -1,6 +1,6 @@
 
 
-package frc.robot.Subsystem.Swerve;
+package com.MAutils.Swerve.Utils;
 
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,13 +9,12 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Utils.ModuleLimits;
-import frc.robot.Utils.SwerveSetpoint;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import com.ma5951.utils.Utils.EqualsUtil;
+
+import com.MAutils.Utils.EqualsUtil;
 
 
 

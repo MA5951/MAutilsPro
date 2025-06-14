@@ -5,7 +5,6 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.Subsystem.Swerve;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -13,9 +12,6 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.PortMap;
-import frc.robot.RobotConstants;
-import frc.robot.Subsystem.Swerve.IOs.SwerveThreadOdometry;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
