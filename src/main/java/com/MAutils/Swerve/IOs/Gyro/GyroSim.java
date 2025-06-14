@@ -1,10 +1,11 @@
 
-package com.MAutils.Swerve.IOs;
+package com.MAutils.Swerve.IOs.Gyro;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import com.MAutils.Swerve.SwerveConstants;
-import com.MAutils.Utils.PhoenixUtil;
+import com.MAutils.Swerve.Utils.PhoenixUtil;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 
 

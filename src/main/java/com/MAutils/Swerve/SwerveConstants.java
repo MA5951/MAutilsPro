@@ -5,6 +5,12 @@ import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
+import com.MAutils.Swerve.IOs.Gyro.Gyro;
+import com.MAutils.Swerve.IOs.Gyro.GyroPiegon;
+import com.MAutils.Swerve.IOs.Gyro.GyroSim;
+import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
+import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
+import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.ModuleLimits;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
 import com.MAutils.Swerve.Utils.SwerveModuleID;
@@ -17,7 +23,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.Robot;
 
 public class SwerveConstants {
 
@@ -40,17 +48,18 @@ public class SwerveConstants {
 
     public enum WheelType {
         BLACK_TREAD(1.426, 1.5),
-        WCP_TREAD(1.0, 1.5); //TODO find
+        WCP_TREAD(1.0, 1.5); // TODO find
 
         public final double coFriction;
         public final double widthMM;
 
-        private WheelType(double coFriction , double widthInches) {
+        private WheelType(double coFriction, double widthInches) {
             this.coFriction = coFriction;
             this.widthMM = Units.inchesToMeters(widthInches) * 1000; // Convert inches to mm
         }
     }
 
+    public boolean OPTIMIZE = true;
     public double WIDTH = 0.566;
     public double LENGTH = 0.566;
     public final double RADIUS = Math.sqrt(
@@ -78,7 +87,11 @@ public class SwerveConstants {
     // rear right module
     public SwerveModuleID REAR_RIGHT_MODULE_ID;
 
-    //Piegon
+    public final SwerveModuleID[] MODULES_ID_ARRY = new SwerveModuleID[] {
+            FRONT_LEFT_MODULE_ID, FRONT_RIGHT_MODULE_ID,
+            REAR_LEFT_MODULE_ID, REAR_RIGHT_MODULE_ID };
+
+    // Piegon
     public CANBusID PIEGEON_CAN_ID;
 
     // Module locations
@@ -111,11 +124,8 @@ public class SwerveConstants {
     }
 
     // Modules config
-    public int TELEOP_SLOT_CONFIG = 0;
-    public int AUTO_SLOT_CONFIG = 1;
-
-    public double OPEN_LOOP_RAMP = 0.25;
-    public double CLOSED_LOOP_RAMP = 0;
+    public static int TELEOP_SLOT_CONFIG = 0;
+    public static int AUTO_SLOT_CONFIG = 1;
 
     public double TURNING_kP = 93;
     public double TURNING_kI = 0;
@@ -131,7 +141,7 @@ public class SwerveConstants {
     public double AUTO_DRIVE_kV = 0.857;
     public double AUTO_DRIVE_kA = 0;
 
-    public double TELEOP_DRIVE_kP = 0; 
+    public double TELEOP_DRIVE_kP = 0;
     public double TELEOP_DRIVE_kI = 0;
     public double TELEOP_DRIVE_kD = 0;
     public double TELEOP_DRIVE_kS = 0;
@@ -141,12 +151,12 @@ public class SwerveConstants {
     public double TURNING__CURRENT_LIMIT = 35;
     public boolean TURNING_ENABLE_CURRENT_LIMIT = true;
 
-    public double DRIVE__CURRENT_LIMIT = 35;
+    public double DRIVE__SLIP_LIMIT = 35;
     public boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
 
     // Kinamtics
     public double MAX_VELOCITY = 4.1;
-    public double MAX_ACCELERATION = 5; 
+    public double MAX_ACCELERATION = 5;
     public double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS;// Radians
     public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation,
@@ -161,8 +171,7 @@ public class SwerveConstants {
                     DRIVE_MOTOR,
                     TURNING_MOTOR,
                     WHEEL_TYPE.coFriction,
-                    DRIVE_GEAR_RATIO.ratioNumber 
-            ))
+                    DRIVE_GEAR_RATIO.ratioNumber))
             .withTrackLengthTrackWidth(edu.wpi.first.units.Units.Meter.of(LENGTH),
                     edu.wpi.first.units.Units.Meter.of(WIDTH))
             .withBumperSize(edu.wpi.first.units.Units.Meter.of(BUMPER_WIDTH),
@@ -257,8 +266,8 @@ public class SwerveConstants {
         return this;
     }
 
-    public SwerveConstants withDriveCurrentLimit(double currentLimit, boolean enableCurrentLimit) {
-        this.DRIVE__CURRENT_LIMIT = currentLimit;
+    public SwerveConstants withDriveCurrentLimit(double slipLimit, boolean enableCurrentLimit) {
+        this.DRIVE__SLIP_LIMIT = slipLimit;
         this.DRIVE_ENABLE_CURRENT_LIMIT = enableCurrentLimit;
         return this;
     }
@@ -280,5 +289,35 @@ public class SwerveConstants {
         this.realPPController = realPPController;
         this.simPPController = simPPController;
         return this;
+    }
+
+    public SwerveConstants withOptimize(boolean optimize) {
+        this.OPTIMIZE = optimize;
+        return this;
+    }
+
+    public static int getControlSlot() {
+        return DriverStation.isAutonomous() ? AUTO_SLOT_CONFIG : TELEOP_SLOT_CONFIG;
+    }
+
+    public SwerveModule[] getModules() {
+        return RobotBase.isReal() ? new SwerveModule[] {
+                new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),
+                new SwerveModule("Front Right", this, new SwerveModuleTalonFX(this, 1)),
+                new SwerveModule("Rear Left", this, new SwerveModuleTalonFX(this, 2)),
+                new SwerveModule("Rear Right", this, new SwerveModuleTalonFX(this, 3)) }
+                : new SwerveModule[] {
+                        new SwerveModule("Front Left", this,
+                                new SwerveModuleSim(this, 0, SWERVE_DRIVE_SIMULATION.getModules()[0])),
+                        new SwerveModule("Front Right", this,
+                                new SwerveModuleSim(this, 1, SWERVE_DRIVE_SIMULATION.getModules()[1])),
+                        new SwerveModule("Rear Left", this,
+                                new SwerveModuleSim(this, 2, SWERVE_DRIVE_SIMULATION.getModules()[2])),
+                        new SwerveModule("Rear Right", this,
+                                new SwerveModuleSim(this, 3, SWERVE_DRIVE_SIMULATION.getModules()[3])) };
+    }
+
+    public Gyro getGyro() {
+        return RobotBase.isReal() ? new Gyro("Piegon", new GyroPiegon(this)) : new Gyro("Sim Gyro", new GyroSim(this));
     }
 }

@@ -1,22 +1,21 @@
-// Copyright (c) 2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
 
+package com.MAutils.Swerve.IOs;
 
+import com.MAutils.Swerve.SwerveConstants;
+import com.MAutils.Swerve.SwerveSubsystem;
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.ParentDevice;
-
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.Timer;
-
-import java.util.*;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Threads;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.DoubleSupplier;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
@@ -29,72 +28,133 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PhoenixOdometryThread extends Thread {
   private final Lock signalsLock =
       new ReentrantLock(); // Prevents conflicts when registering signals
-  private BaseStatusSignal[] signals = new BaseStatusSignal[0];
-  private final List<Queue<Double>> queues = new ArrayList<>();
-  
-  private boolean isCANFD = false;
+  private BaseStatusSignal[] phoenixSignals = new BaseStatusSignal[0];
+  private final List<DoubleSupplier> genericSignals = new ArrayList<>();
+  private final List<Queue<Double>> phoenixQueues = new ArrayList<>();
+  private final List<Queue<Double>> genericQueues = new ArrayList<>();
+  private final List<Queue<Double>> timestampQueues = new ArrayList<>();
 
+  private static boolean isCANFD = new CANBus("*").isNetworkFD();
   private static PhoenixOdometryThread instance = null;
+  private SwerveConstants constants;
 
-  public static PhoenixOdometryThread getInstance() {
+  public static PhoenixOdometryThread getInstance(SwerveConstants constants) {
     if (instance == null) {
-      instance = new PhoenixOdometryThread();
+      instance = new PhoenixOdometryThread(constants);
     }
     return instance;
   }
 
-  private PhoenixOdometryThread() {
+  private PhoenixOdometryThread(SwerveConstants constants) {
+    this.constants = constants;
     setName("PhoenixOdometryThread");
     setDaemon(true);
-    start();
   }
 
-  public Queue<Double> registerSignal(ParentDevice device, StatusSignal<Angle> signal) {
+  @Override
+  public void start() {
+    if (timestampQueues.size() > 0) {
+      super.start();
+    }
+  }
+
+  /** Registers a Phoenix signal to be read from the thread. */
+  public Queue<Double> registerSignal(StatusSignal<Angle> signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    SwerveThreadOdometry.odometryLock.lock();
+    SwerveSubsystem.odometryLock.lock();
     try {
-      isCANFD = PortMap.Swerve.SwervBus.isNetworkFD();
-      BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
-      System.arraycopy(signals, 0, newSignals, 0, signals.length);
-      newSignals[signals.length] = signal;
-      signals = newSignals;
-      queues.add(queue);
+      BaseStatusSignal[] newSignals = new BaseStatusSignal[phoenixSignals.length + 1];
+      System.arraycopy(phoenixSignals, 0, newSignals, 0, phoenixSignals.length);
+      newSignals[phoenixSignals.length] = signal;
+      phoenixSignals = newSignals;
+      phoenixQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      SwerveThreadOdometry.odometryLock.unlock();
+      SwerveSubsystem.odometryLock.unlock();
+    }
+    return queue;
+  }
+
+  /** Registers a generic signal to be read from the thread. */
+  public Queue<Double> registerSignal(DoubleSupplier signal) {
+    Queue<Double> queue = new ArrayBlockingQueue<>(20);
+    signalsLock.lock();
+    SwerveSubsystem.odometryLock.lock();
+    try {
+      genericSignals.add(signal);
+      genericQueues.add(queue);
+    } finally {
+      signalsLock.unlock();
+      SwerveSubsystem.odometryLock.unlock();
+    }
+    return queue;
+  }
+
+  /** Returns a new queue that returns timestamp values for each sample. */
+  public Queue<Double> makeTimestampQueue() {
+    Queue<Double> queue = new ArrayBlockingQueue<>(20);
+    SwerveSubsystem.odometryLock.lock();
+    try {
+      timestampQueues.add(queue);
+    } finally {
+      SwerveSubsystem.odometryLock.unlock();
     }
     return queue;
   }
 
   @Override
   public void run() {
+    // DO NOT COPY UNLESS YOU UNDERSTAND THE CONSEQUENCES
+    // https://docs.advantagekit.org/getting-started/template-projects/spark-swerve-template#real-time-thread-priority
+    Threads.setCurrentThreadPriority(true, 1);
+
     while (true) {
       // Wait for updates from all signals
       signalsLock.lock();
       try {
-        if (isCANFD) {
-          BaseStatusSignal.waitForAll(RobotConstants.kDELTA_TIME, signals);
+        if (isCANFD && phoenixSignals.length > 0) {
+          BaseStatusSignal.waitForAll(2.0 / constants.ODOMETRY_UPDATE_RATE, phoenixSignals);
         } else {
-          Thread.sleep((long) (1000.0 / SwerveConstants.ODOMETRY_UPDATE_RATE));
-          if (signals.length > 0) BaseStatusSignal.refreshAll(signals);
+          // "waitForAll" does not support blocking on multiple signals with a bus
+          // that is not CAN FD, regardless of Pro licensing. No reasoning for this
+          // behavior is provided by the documentation.
+          Thread.sleep((long) (1000.0 / constants.ODOMETRY_UPDATE_RATE));
+          if (phoenixSignals.length > 0) BaseStatusSignal.refreshAll(phoenixSignals);
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
       } finally {
         signalsLock.unlock();
       }
-      double fpgaTimestamp = Timer.getFPGATimestamp() / 1.0e6;
 
       // Save new data to queues
-      SwerveThreadOdometry.odometryLock.lock();
+      SwerveSubsystem.odometryLock.lock();
       try {
-        for (int i = 0; i < signals.length; i++) {
-          queues.get(i).offer(signals[i].getValueAsDouble());
+        // Sample timestamp is current FPGA time minus average CAN latency
+        //     Default timestamps from Phoenix are NOT compatible with
+        //     FPGA timestamps, this solution is imperfect but close
+        double timestamp = RobotController.getFPGATime() / 1e6;
+        double totalLatency = 0.0;
+        for (BaseStatusSignal signal : phoenixSignals) {
+          totalLatency += signal.getTimestamp().getLatency();
         }
-        SwerveThreadOdometry.timestampQueue.offer(fpgaTimestamp);
+        if (phoenixSignals.length > 0) {
+          timestamp -= totalLatency / phoenixSignals.length;
+        }
+
+        // Add new samples to queues
+        for (int i = 0; i < phoenixSignals.length; i++) {
+          phoenixQueues.get(i).offer(phoenixSignals[i].getValueAsDouble());
+        }
+        for (int i = 0; i < genericSignals.size(); i++) {
+          genericQueues.get(i).offer(genericSignals.get(i).getAsDouble());
+        }
+        for (int i = 0; i < timestampQueues.size(); i++) {
+          timestampQueues.get(i).offer(timestamp);
+        }
       } finally {
-        SwerveThreadOdometry.odometryLock.unlock();
+        SwerveSubsystem.odometryLock.unlock();
       }
     }
   }

@@ -1,9 +1,9 @@
 
-package com.MAutils.Swerve.IOs;
+package com.MAutils.Swerve.IOs.SwerveModule;
 
 import com.MAutils.Logger.MALog;
 import com.MAutils.Swerve.SwerveConstants;
-import com.MAutils.Swerve.IOs.SwerveModuleIO.SwerveModuleData;
+import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -42,13 +42,18 @@ public class SwerveModule {
         moduleIO.updateSwerveModuleData(moduleData);
         updateLog();
 
-        int sampleCount = moduleData.odometryTimestamps.length;
+        int sampleCount = moduleData.odometryDrivePositionsRad.length;
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = moduleData.odometryDrivePositionsRad[i] * constants.WHEEL_RADIUS;
+            double positionMeters = moduleData.odometryDrivePositionsRad[i] * constants.WHEEL_RADIUS;//TODO
             Rotation2d angle = moduleData.odometryTurnPositions[i];
             odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
+    }
+
+    public void setVoltage(double driveVolts, double steerVolts) {
+        moduleIO.setDriveVoltage(driveVolts);
+        moduleIO.setSteerVoltage(steerVolts);
     }
 
     public SwerveModuleState getState() {
@@ -67,7 +72,7 @@ public class SwerveModule {
         return odometryPositions;
     }
 
-    public void setSetPoint(SwerveModuleState setpoint) {
+    public void setSetPoint(SwerveModuleState setpoint, double feedForward) {
         moduleIO.setDriveVelocity(setpoint.speedMetersPerSecond);
         moduleIO.setSteerPosition(setpoint.angle);
     }

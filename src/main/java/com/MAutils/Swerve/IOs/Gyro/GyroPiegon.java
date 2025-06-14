@@ -1,5 +1,5 @@
 
-package com.MAutils.Swerve.IOs;
+package com.MAutils.Swerve.IOs.Gyro;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import java.util.Queue;
 
 import com.MAutils.Swerve.SwerveConstants;
+import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -34,6 +35,8 @@ public class GyroPiegon implements GyroIO {
         pitchAngle = piegon.getPitch(false);
         rollAngle = piegon.getRoll(false);
         yawRate = piegon.getAngularVelocityZDevice(false);
+
+        StatusSignalsRunner.registerSignals(yawAngle, pitchAngle, rollAngle, yawRate);
 
         // TODO high frequency odometry
     }

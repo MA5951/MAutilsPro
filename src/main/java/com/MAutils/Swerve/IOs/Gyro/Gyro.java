@@ -1,8 +1,8 @@
 
-package com.MAutils.Swerve.IOs;
+package com.MAutils.Swerve.IOs.Gyro;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.Swerve.IOs.GyroIO.GyroData;
+import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 
 public class Gyro {
 
@@ -35,5 +35,7 @@ public class Gyro {
     public void resetYaw(double yaw) {
         gyroIO.resetYaw(yaw);
     }
+
+    
 
 }

@@ -8,12 +8,12 @@ public class SwerveModuleID {
 
     public final CANBusID driveMotor;
     public final CANBusID steerMotor;
-    public final int steerEncoderID;
+    public final CANBusID steerEncoder;
 
-    public SwerveModuleID(CANBusID driveMotor, CANBusID steerMotor, int steerEncoderID) {
+    public SwerveModuleID(CANBusID driveMotor, CANBusID steerMotor, CANBusID steerEncoder) {
         this.driveMotor = driveMotor;
         this.steerMotor = steerMotor;
-        this.steerEncoderID = steerEncoderID;
+        this.steerEncoder = steerEncoder;
     }
 
 }
