@@ -5,16 +5,31 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /**
- * A setpoint for a swerve drivetrain, containing robot-relative chassis speeds and individual
+ * A setpoint for a swerve drivetrain, containing robot-relative chassis speeds
+ * and individual
  * module states
  *
  * @param robotRelativeSpeeds Robot-relative chassis speeds
- * @param moduleStates Array of individual swerve module states. These will be in FL, FR, BL, BR
- *     order.
- * @param feedforwards Feedforwards for each module's drive motor. The arrays in this record will be
- *     in FL, FR, BL, BR order.
+ * @param moduleStates        Array of individual swerve module states. These
+ *                            will be in FL, FR, BL, BR
+ *                            order.
+ * @param feedforwards        Feedforwards for each module's drive motor. The
+ *                            arrays in this record will be
+ *                            in FL, FR, BL, BR order.
  */
-public record SwerveSetpoint(
-    ChassisSpeeds robotRelativeSpeeds,
-    SwerveModuleState[] moduleStates,
-    DriveFeedforwards feedforwards) {}
+public class SwerveSetpoint {
+
+    public final ChassisSpeeds robotRelativeSpeeds;
+    public final SwerveModuleState[] moduleStates;
+    public final DriveFeedforwards feedforwards;
+
+    public SwerveSetpoint(
+            ChassisSpeeds robotRelativeSpeeds,
+            SwerveModuleState[] moduleStates,
+            DriveFeedforwards feedforwards) {
+        this.robotRelativeSpeeds = robotRelativeSpeeds;
+        this.moduleStates = moduleStates; 
+        this.feedforwards = feedforwards;
+    }
+
+}

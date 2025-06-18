@@ -17,6 +17,7 @@ import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
 import com.MAutils.Swerve.Utils.SwerveModuleID;
 import com.MAutils.Utils.CANBusID;
 import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,6 +63,7 @@ public class SwerveConstants {
         public boolean OPTIMIZE = true;
         public double WIDTH = 0.566;
         public double LENGTH = 0.566;
+        public double MOI = 1;
         public final double RADIUS = Math.sqrt(
                         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)) / 2.0;
         public final double BUMPER_WIDTH = WIDTH + 0.16; // TODO cheack
@@ -204,7 +206,7 @@ public class SwerveConstants {
         }
 
         public SwerveConstants withPyshicalParameters(double with,
-                        double length, double robotMass, WheelType wheelType) {
+                        double length, double robotMass, WheelType wheelType, double moi) {
                 this.WHEEL_TYPE = wheelType;
                 this.WIDTH = with;
                 this.LENGTH = length;
@@ -335,4 +337,12 @@ public class SwerveConstants {
                 return RobotBase.isReal() ? new Gyro("Piegon", new GyroPiegon(this))
                                 : new Gyro("Sim Gyro", new GyroSim(this));
         }
+
+        public RobotConfig getRobotConfig() {
+
+        }
+
 }
+
+
+
