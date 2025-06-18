@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "Gilroy";
+  src: url('/assets/Gilroy-Light.otf') format('truetype'),
+
+}
+
+:root  > * {
+  --md-primary-fg-color:        #181b1f;
+  --md-primary-bg-color:  #ffffff;
+  --md-default-fg-color: #ffffff;
+  --md-default-bg-color:  #16171d;
+  --md-accent-fg-color:  #b83726;
+
+}
+

@@ -1,65 +1,35 @@
-site_name: MAutils Pro Documentation
-site_description: "User-friendly guides and tutorials for the MAutils Pro FRC library"
-site_author: "Your Team Name"
-site_url: https://your-org.github.io/MAutils-Pro-Docs/
+site_name: MAutils Documentation
+site_url: https://mydomain.org/Home
 
-repo_url: https://github.com/your-org/MAutils-Pro
-edit_uri: edit/main/docs
+extra_css:
+  - stylesheets/extra.css
 
 theme:
-  name: material
+  name : material
+  favicon: assets/favicon.ico
   palette:
-    - scheme: default
-      primary: red
-      accent: gray
+    scheme: slate
+    primary: custom
+  features:
+    - navigation.path
   font:
-    text: Roboto
-    code: Roboto Mono
-  logo: images/logo.png
+    text: DM Sans
 
-plugins:
-  - search
-  - git-revision-date
-  - macros
 
-markdown_extensions:
-  - admonition
-  - toc:
-      permalink: true
-  - pymdownx.superfences
-  - pymdownx.highlight:
-      anchor_linenums: true
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - Core Concepts: concepts.md
-  - Tutorials:
-      - Quick Start: tutorials/quick-start.md
-      - Advanced Usage: tutorials/advanced-usage.md
-  - Modules:
-      - Components: modules/components.md
-      - Dashboard & Logging: modules/dashboard-logging.md
-  - FAQ: faq.md
-  - Contributing: contributing.md
-
-theme:
-  name: material
-  palette:
-    - scheme: default
-      primary: red
-      accent: gray
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    - scheme: slate
-      primary: red
-      accent: gray
-      toggle:
-        icon: material/white-balance-sunny
-        name: Switch to light mode
-  font:
-    text: Roboto
-    code: Roboto Mono
-  logo: images/logo.png
-
+  - Home: Pages/index.md
+  - Key Features: Pages/key_features.md
+  - Installation: Pages/installation.md
+  - State Meachine:
+      - Features And Structure: Pages/state_machine/state_machine.md
+      - Using State Machine: Pages/state_machine/using_state_machine.md
+  - Swerve:
+      - Features And Structure: swerve/swerve.md
+      - Using Swerve: swerve/swerve_drive.md
+  - Subsystems:
+      - Deafult Subsystems Structure: subsystems/default_subsystems.md
+      - PowerControlledSubsystem: subsystems/power_controlled_subsystem.md
+      - PositionControlledSubsystem: subsystems/position_controlled_subsystem.md
+      - VelocityControlledSubsystem: subsystems/velocity_controlled_subsystem.md
+  
