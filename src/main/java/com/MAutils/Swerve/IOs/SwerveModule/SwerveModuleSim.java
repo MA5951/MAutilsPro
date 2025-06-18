@@ -38,7 +38,7 @@ public class SwerveModuleSim extends SwerveModuleTalonFX {
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
     
 
-        turnTalonConfig.Feedback.SensorToMechanismRatio = 16;
+        //turnTalonConfig.Feedback.SensorToMechanismRatio = 16;
         turnTalon.getConfigurator().apply(turnTalonConfig);
         
 

@@ -1,9 +1,15 @@
 
 package com.MAutils.Swerve;
 
+import static edu.wpi.first.units.Units.KilogramMetersPerSecond;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Volts;
+
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroPiegon;
@@ -25,6 +31,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -162,11 +169,17 @@ public class SwerveSystemConstants {
 
                         .withGyro(COTS.ofPigeon2())
                         .withRobotMass(edu.wpi.first.units.Units.Kilogram.of(ROBOT_MASS))
-                        .withSwerveModule(COTS.ofMark4i(
-                                        DRIVE_MOTOR,
-                                        TURNING_MOTOR,
-                                        WHEEL_TYPE.coFriction,
-                                        DRIVE_GEAR_RATIO.ratioNumber))
+                        
+                        .withSwerveModule(new SwerveModuleSimulationConfig(
+                                DRIVE_MOTOR, 
+                                TURNING_MOTOR, 
+                                DRIVE_GEAR_RATIO.gearRatio,
+                                TURNING_GEAR_RATIO, 
+                                Volts.of(0.3), 
+                                Volts.of(0.5), 
+                                Meters.of(WHEEL_RADIUS), 
+                                KilogramSquareMeters.of(0.05), 
+                                WHEEL_TYPE.coFriction))
                         .withTrackLengthTrackWidth(edu.wpi.first.units.Units.Meter.of(LENGTH),
                                         edu.wpi.first.units.Units.Meter.of(WIDTH))
                         .withBumperSize(edu.wpi.first.units.Units.Meter.of(BUMPER_WIDTH),
