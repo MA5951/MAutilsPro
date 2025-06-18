@@ -5,17 +5,16 @@ import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
-import com.MAutils.PoseEstimation.PoseEstimator;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroPiegon;
 import com.MAutils.Swerve.IOs.Gyro.GyroSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
-import com.MAutils.Swerve.Utils.ModuleLimits;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
 import com.MAutils.Swerve.Utils.SwerveModuleID;
 import com.MAutils.Utils.CANBusID;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -28,7 +27,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
-public class SwerveConstants {
+public class SwerveSystemConstants {
 
         public enum GearRatio {
                 L1(8.14, 1),
@@ -64,58 +63,43 @@ public class SwerveConstants {
         public double WIDTH = 0.566;
         public double LENGTH = 0.566;
         public double MOI = 1;
-        public final double RADIUS = Math.sqrt(
+        public double RADIUS = Math.sqrt(
                         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)) / 2.0;
-        public final double BUMPER_WIDTH = WIDTH + 0.16; // TODO cheack
-        public final double BUMPER_LENGTH = LENGTH + 0.16; // TODO cheack
+        public double BUMPER_WIDTH = WIDTH + 0.16; // TODO cheack
+        public double BUMPER_LENGTH = LENGTH + 0.16; // TODO cheack
         public double ROBOT_MASS = 62;
         public double TURNING_GEAR_RATIO = 150d / 7;
         public GearRatio DRIVE_GEAR_RATIO = GearRatio.L2;
         public double WHEEL_RADIUS = 0.0508;
-        public final double WHEEL_CIRCUMFERENCE = 2 * WHEEL_RADIUS * Math.PI;
+        public double WHEEL_CIRCUMFERENCE = 2 * WHEEL_RADIUS * Math.PI;
         public DCMotor DRIVE_MOTOR = DCMotor.getKrakenX60(1);
         public DCMotor TURNING_MOTOR = DCMotor.getFalcon500(1);
         public WheelType WHEEL_TYPE = WheelType.BLACK_TREAD;
 
-        // front left module
-        public SwerveModuleID FRONT_LEFT_MODULE_ID;
+        public SwerveModuleID[] MODULES_ID_ARRY;
 
-        // front right module
-        public SwerveModuleID FRONT_RIGHT_MODULE_ID;
-
-        // rear left module
-        public SwerveModuleID REAR_LEFT_MODULE_ID;
-
-        // rear right module
-        public SwerveModuleID REAR_RIGHT_MODULE_ID;
-
-        public final SwerveModuleID[] MODULES_ID_ARRY = new SwerveModuleID[] {
-                        FRONT_LEFT_MODULE_ID, FRONT_RIGHT_MODULE_ID,
-                        REAR_LEFT_MODULE_ID, REAR_RIGHT_MODULE_ID };
-
-        public PoseEstimator poseEstimator;
 
         // Piegon
         public CANBusID PIEGEON_CAN_ID;
 
         // Module locations
-        public final Translation2d frontLeftLocation = new Translation2d(
+        public Translation2d frontLeftLocation = new Translation2d(
                         -WIDTH / 2,
                         LENGTH / 2);
 
-        public final Translation2d frontRightLocation = new Translation2d(
+        public Translation2d frontRightLocation = new Translation2d(
                         WIDTH / 2,
                         LENGTH / 2);
 
-        public final Translation2d rearLeftLocation = new Translation2d(
+        public Translation2d rearLeftLocation = new Translation2d(
                         -WIDTH / 2,
                         -LENGTH / 2);
 
-        public final Translation2d rearRightLocation = new Translation2d(
+        public Translation2d rearRightLocation = new Translation2d(
                         WIDTH / 2,
                         -LENGTH / 2);
 
-        public final Translation2d[] modulesLocationArry = new Translation2d[] { frontLeftLocation,
+        public Translation2d[] modulesLocationArry = new Translation2d[] { frontLeftLocation,
                         frontRightLocation, rearLeftLocation, rearRightLocation };
 
         public PPHolonomicDriveController realPPController = new PPHolonomicDriveController(new PIDConstants(0),
@@ -123,7 +107,7 @@ public class SwerveConstants {
         public PPHolonomicDriveController simPPController = new PPHolonomicDriveController(new PIDConstants(0),
                         new PIDConstants(0));;
 
-        public final PPHolonomicDriveController getPPController() {
+        public PPHolonomicDriveController getPPController() {
                 return RobotBase.isReal() ? realPPController : simPPController;
         }
 
@@ -162,11 +146,11 @@ public class SwerveConstants {
         public double MAX_VELOCITY = 4.1;
         public double MAX_ACCELERATION = 5;
         public double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS;// Radians
-        public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+        public SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
                         frontLeftLocation, frontRightLocation,
                         rearLeftLocation, rearRightLocation);
 
-        public final DriveTrainSimulationConfig DRIVE_TRAIN_SIMULATION_CONFIG = DriveTrainSimulationConfig
+        public DriveTrainSimulationConfig DRIVE_TRAIN_SIMULATION_CONFIG = DriveTrainSimulationConfig
                         .Default()
 
                         .withGyro(COTS.ofPigeon2())
@@ -185,27 +169,27 @@ public class SwerveConstants {
                         DRIVE_TRAIN_SIMULATION_CONFIG, new Pose2d(0, 0, new Rotation2d()));
 
         // Module Limits
-        public final ModuleLimits DEFUALT = new ModuleLimits(MAX_VELOCITY, MAX_ACCELERATION,
-                        Units.degreesToRadians(700));
-
         public double ODOMETRY_UPDATE_RATE = 250;
 
-        public SwerveConstants() {
+        public SwerveSystemConstants() {
 
         }
 
-        public SwerveConstants withMotors(DCMotor driveMotor, DCMotor turningMotor) {
+        public SwerveSystemConstants withMotors(DCMotor driveMotor, DCMotor turningMotor, 
+                        SwerveModuleID[] modulesID, CANBusID piegonCANID) {
+                this.PIEGEON_CAN_ID = piegonCANID;
+                this.MODULES_ID_ARRY = modulesID;
                 this.DRIVE_MOTOR = driveMotor;
                 this.TURNING_MOTOR = turningMotor;
                 return this;
         }
 
-        public SwerveConstants withGearRatio(GearRatio gearRatio) {
+        public SwerveSystemConstants withGearRatio(GearRatio gearRatio) {
                 this.DRIVE_GEAR_RATIO = gearRatio;
                 return this;
         }
 
-        public SwerveConstants withPyshicalParameters(double with,
+        public SwerveSystemConstants withPyshicalParameters(double with,
                         double length, double robotMass, WheelType wheelType, double moi) {
                 this.WHEEL_TYPE = wheelType;
                 this.WIDTH = with;
@@ -214,7 +198,7 @@ public class SwerveConstants {
                 return this;
         }
 
-        public SwerveConstants withTurningTuning(double Kp,
+        public SwerveSystemConstants withTurningTuning(double Kp,
                         double Ki, double Kd, double Ks, double Kv, double Ka) {
                 this.TURNING_kP = Kp;
                 this.TURNING_kI = Ki;
@@ -225,7 +209,7 @@ public class SwerveConstants {
                 return this;
         }
 
-        public SwerveConstants withDriveTuning(double Kp,
+        public SwerveSystemConstants withDriveTuning(double Kp,
                         double Ki, double Kd, double Ks, double Kv, double Ka) {
                 this.TELEOP_DRIVE_kP = Kp;
                 this.TELEOP_DRIVE_kI = Ki;
@@ -242,7 +226,7 @@ public class SwerveConstants {
                 return this;
         }
 
-        public SwerveConstants withDriveTuningTeleop(double Kp,
+        public SwerveSystemConstants withDriveTuningTeleop(double Kp,
                         double Ki, double Kd, double Ks, double Kv, double Ka) {
                 this.TELEOP_DRIVE_kP = Kp;
                 this.TELEOP_DRIVE_kI = Ki;
@@ -253,7 +237,7 @@ public class SwerveConstants {
                 return this;
         }
 
-        public SwerveConstants withDriveAuto(double Kp,
+        public SwerveSystemConstants withDriveAuto(double Kp,
                         double Ki, double Kd, double Ks, double Kv, double Ka) {
                 this.AUTO_DRIVE_kP = Kp;
                 this.AUTO_DRIVE_kI = Ki;
@@ -264,45 +248,40 @@ public class SwerveConstants {
                 return this;
         }
 
-        public SwerveConstants withTurningCurrentLimit(double currentLimit, boolean enableCurrentLimit) {
+        public SwerveSystemConstants withTurningCurrentLimit(double currentLimit, boolean enableCurrentLimit) {
                 this.TURNING__CURRENT_LIMIT = currentLimit;
                 this.TURNING_ENABLE_CURRENT_LIMIT = enableCurrentLimit;
                 return this;
         }
 
-        public SwerveConstants withDriveCurrentLimit(double slipLimit, boolean enableCurrentLimit) {
+        public SwerveSystemConstants withDriveCurrentLimit(double slipLimit, boolean enableCurrentLimit) {
                 this.DRIVE__SLIP_LIMIT = slipLimit;
                 this.DRIVE_ENABLE_CURRENT_LIMIT = enableCurrentLimit;
                 return this;
         }
 
-        public SwerveConstants withMaxVelocityMaxAcceleration(double maxVelocity, double maxAcceleration) {
+        public SwerveSystemConstants withMaxVelocityMaxAcceleration(double maxVelocity, double maxAcceleration) {
                 this.MAX_VELOCITY = maxVelocity;
                 this.MAX_ACCELERATION = maxAcceleration;
                 this.MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS;
                 return this;
         }
 
-        public SwerveConstants withOdometryUpdateRate(double odometryUpdateRate) {
+        public SwerveSystemConstants withOdometryUpdateRate(double odometryUpdateRate) {
                 this.ODOMETRY_UPDATE_RATE = odometryUpdateRate;
                 return this;
         }
 
-        public SwerveConstants withPPControllers(PPHolonomicDriveController realPPController,
+        public SwerveSystemConstants withPPControllers(PPHolonomicDriveController realPPController,
                         PPHolonomicDriveController simPPController) {
                 this.realPPController = realPPController;
                 this.simPPController = simPPController;
                 return this;
         }
 
-        public SwerveConstants withOptimize(boolean optimize) {
+        public SwerveSystemConstants withOptimize(boolean optimize) {
                 this.OPTIMIZE = optimize;
                 return this;
-        }
-
-        public PoseEstimator withPoseEstimator(PoseEstimator poseEstimator) {
-                this.poseEstimator = poseEstimator;
-                return this.poseEstimator;
         }
 
         public static int getControlSlot() {
@@ -339,7 +318,9 @@ public class SwerveConstants {
         }
 
         public RobotConfig getRobotConfig() {
-
+                return new RobotConfig(ROBOT_MASS, MOI, 
+                new ModuleConfig(
+                        WHEEL_RADIUS, MAX_VELOCITY, WHEEL_TYPE.coFriction, DRIVE_MOTOR, DRIVE__SLIP_LIMIT, 1), modulesLocationArry);
         }
 
 }

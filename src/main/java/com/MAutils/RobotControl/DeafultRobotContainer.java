@@ -5,22 +5,22 @@ import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
-import com.MAutils.Controllers.MAController;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Utils.StatusSignalsRunner;
 
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
-    protected static MAController driverController;
-    protected static MAController operatorController;
+    protected static PS5Controller driverController = new PS5Controller(0);
+    protected static PS5Controller operatorController = new PS5Controller(1);
     private static SwerveDriveSimulation swerveDriveSimulation;
 
     private static String[] gamePiecesList ;
 
-    public static void setDriverController(MAController controller) {
+    public static void setDriverController(PS5Controller controller) {
         driverController = controller;
 
     }
@@ -29,15 +29,15 @@ public class DeafultRobotContainer {
         CommandScheduler.getInstance().setDefaultCommand(command.getCommandSubsystem(), command);
     }
 
-    public static MAController getDriverController() {
+    public static PS5Controller getDriverController() {
         return driverController;
     }
 
-    public static void setOperatorController(MAController controller) {
+    public static void setOperatorController(PS5Controller controller) {
         operatorController = controller;
     }
 
-    public static MAController getOperatorController() {
+    public static PS5Controller getOperatorController() {
         return operatorController;
     }
 

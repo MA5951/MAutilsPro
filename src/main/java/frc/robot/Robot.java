@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Swerve.Swerve;
+import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -19,7 +22,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    RobotContainer.robotPeriodic();
   }
 
   @Override
@@ -54,7 +57,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    ChassisSpeeds speeds = new ChassisSpeeds(
+      -RobotContainer.getDriverController().getLeftY() * SwerveConstants.SWERVE_CONSTANTS.MAX_VELOCITY, 
+      -RobotContainer.getDriverController().getLeftX() * SwerveConstants.SWERVE_CONSTANTS.MAX_VELOCITY, 
+      -RobotContainer.getDriverController().getRightX() * SwerveConstants.SWERVE_CONSTANTS.MAX_ANGULAR_VELOCITY);
+
+    Swerve.getInstance().drive(speeds);
+  }
 
   @Override
   public void teleopExit() {}
@@ -69,4 +79,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {}
+
+  @Override
+  public void simulationInit() {
+    RobotContainer.simulationInit(true);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    RobotContainer.simulationPeriodic();
+  }
 }

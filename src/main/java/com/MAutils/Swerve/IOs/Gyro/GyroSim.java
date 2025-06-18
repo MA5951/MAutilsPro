@@ -3,7 +3,7 @@ package com.MAutils.Swerve.IOs.Gyro;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
-import com.MAutils.Swerve.SwerveConstants;
+import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Utils.PhoenixUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,7 +14,7 @@ public class GyroSim implements GyroIO {
 
     private GyroSimulation gyroSim;
 
-    public GyroSim(SwerveConstants constants) {
+    public GyroSim(SwerveSystemConstants constants) {
         gyroSim = constants.SWERVE_DRIVE_SIMULATION.getGyroSimulation();
     }
 

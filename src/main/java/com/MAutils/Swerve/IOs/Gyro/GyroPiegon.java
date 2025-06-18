@@ -6,7 +6,8 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 
 import java.util.Queue;
 
-import com.MAutils.Swerve.SwerveConstants;
+import com.MAutils.Swerve.SwerveSystemConstants;
+import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -26,7 +27,7 @@ public class GyroPiegon implements GyroIO {
     private Queue<Double> yawPositionQueue;
     private Queue<Double> yawTimestampQueue;
 
-    public GyroPiegon(SwerveConstants constants) {
+    public GyroPiegon(SwerveSystemConstants constants) {
         piegon = new Pigeon2(constants.PIEGEON_CAN_ID.id, constants.PIEGEON_CAN_ID.bus);
 
         piegon.getConfigurator().setYaw(0);
@@ -38,10 +39,10 @@ public class GyroPiegon implements GyroIO {
 
         StatusSignalsRunner.registerSignals(yawAngle, pitchAngle, rollAngle, yawRate);
 
-        // TODO high frequency odometry
+        yawTimestampQueue = PhoenixOdometryThread.getInstance(constants).makeTimestampQueue();
+        yawPositionQueue = PhoenixOdometryThread.getInstance(constants).registerSignal(piegon.getYaw());
     }
-
-
+ 
     public void resetYaw(double yaw) {
         piegon.getConfigurator().setYaw(yaw);
     }

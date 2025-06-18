@@ -101,6 +101,10 @@ public class ConvUtil {
         double circumference = 2 * Math.PI * Radius;
         return Rotations * circumference;
     }
+
+    public static double RotationsToDistance2(double Rotations, double circumference) {
+        return Rotations * circumference;
+    }
     
     /**
    * Convert Meters To Millimeters.
