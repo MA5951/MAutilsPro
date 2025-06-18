@@ -14,6 +14,7 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
 import com.MAutils.Swerve.Utils.SwerveModuleID;
 import com.MAutils.Utils.CANBusID;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -78,6 +79,12 @@ public class SwerveSystemConstants {
 
         public SwerveModuleID[] MODULES_ID_ARRY;
 
+        public InvertedValue[] DRIVES_INVERT = new InvertedValue[] {
+                InvertedValue.Clockwise_Positive,
+                InvertedValue.CounterClockwise_Positive,
+                InvertedValue.Clockwise_Positive,
+                InvertedValue.CounterClockwise_Positive
+        };
 
         // Piegon
         public CANBusID PIEGEON_CAN_ID;
@@ -166,7 +173,7 @@ public class SwerveSystemConstants {
                                         edu.wpi.first.units.Units.Meter.of(BUMPER_LENGTH));
 
         public SwerveDriveSimulation SWERVE_DRIVE_SIMULATION = new SwerveDriveSimulation(
-                        DRIVE_TRAIN_SIMULATION_CONFIG, new Pose2d(0, 0, new Rotation2d()));
+                        DRIVE_TRAIN_SIMULATION_CONFIG, new Pose2d(2, 2, new Rotation2d()));
 
         // Module Limits
         public double ODOMETRY_UPDATE_RATE = 250;

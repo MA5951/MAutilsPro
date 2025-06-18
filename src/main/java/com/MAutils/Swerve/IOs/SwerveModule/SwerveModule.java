@@ -77,8 +77,4 @@ public class SwerveModule {
         moduleIO.setSteerPosition(setpoint.angle);
     }
 
-    protected double toMeters(double rotations) {
-        return rotations * constants.WHEEL_CIRCUMFERENCE;
-    }
-
 }

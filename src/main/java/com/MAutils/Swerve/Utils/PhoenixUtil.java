@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.motorsims.SimulatedBattery;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
 public final class PhoenixUtil {
@@ -32,12 +33,10 @@ public final class PhoenixUtil {
 
         private final TalonFXSimState talonFXSimState;
 
-        public TalonFXMotorControllerSim(TalonFX talonFX, boolean motorInverted) {
+        public TalonFXMotorControllerSim(TalonFX talonFX) {
             this.id = instances++;
 
             this.talonFXSimState = talonFX.getSimState();
-            talonFXSimState.Orientation =
-                    motorInverted ? ChassisReference.Clockwise_Positive : ChassisReference.CounterClockwise_Positive;
         }
 
         @Override
@@ -48,26 +47,17 @@ public final class PhoenixUtil {
                 AngularVelocity encoderVelocity) {
             talonFXSimState.setRawRotorPosition(encoderAngle);
             talonFXSimState.setRotorVelocity(encoderVelocity);
-            talonFXSimState.setSupplyVoltage(12.0);
+            talonFXSimState.setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
             return talonFXSimState.getMotorVoltageMeasure();
         }
     }
 
     public static class TalonFXMotorControllerWithRemoteCancoderSim extends TalonFXMotorControllerSim {
         private final CANcoderSimState remoteCancoderSimState;
-        private final Angle encoderOffset;
 
-        public TalonFXMotorControllerWithRemoteCancoderSim(
-                TalonFX talonFX,
-                boolean motorInverted,
-                CANcoder cancoder,
-                boolean encoderInverted,
-                Angle encoderOffset) {
-            super(talonFX, motorInverted);
+        public TalonFXMotorControllerWithRemoteCancoderSim(TalonFX talonFX, CANcoder cancoder) {
+            super(talonFX);
             this.remoteCancoderSimState = cancoder.getSimState();
-            this.remoteCancoderSimState.Orientation =
-                    encoderInverted ? ChassisReference.Clockwise_Positive : ChassisReference.CounterClockwise_Positive;
-            this.encoderOffset = encoderOffset;
         }
 
         @Override
@@ -76,13 +66,10 @@ public final class PhoenixUtil {
                 AngularVelocity mechanismVelocity,
                 Angle encoderAngle,
                 AngularVelocity encoderVelocity) {
-            remoteCancoderSimState.setRawPosition(mechanismAngle.minus(encoderOffset));
+            remoteCancoderSimState.setRawPosition(mechanismAngle);
             remoteCancoderSimState.setVelocity(mechanismVelocity);
 
-            final Voltage output =
-                    super.updateControlSignal(mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity);
-
-            return output;
+            return super.updateControlSignal(mechanismAngle, mechanismVelocity, encoderAngle, encoderVelocity);
         }
     }
 

@@ -20,6 +20,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -37,18 +38,18 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     private final PositionVoltage positionVoltageRequest = new PositionVoltage(0.0);
     private final VelocityVoltage velocityVoltageRequest = new VelocityVoltage(0.0);
 
-    private final TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
+    protected final TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
     protected final TalonFXConfiguration turnTalonConfig = new TalonFXConfiguration();
 
     private final StatusSignal<Angle> drivePosition;
-    private Queue<Double> drivePositionQueue;// TODO
+    private final Queue<Double> drivePositionQueue;
     private final StatusSignal<AngularVelocity> driveVelocity;
     private final StatusSignal<Voltage> driveAppliedVolts;
     private final StatusSignal<Current> driveCurrent;
 
     private final StatusSignal<Angle> turnAbsolutePosition;
     private final StatusSignal<Angle> turnPosition;
-    private Queue<Double> turnPositionQueue;// TODO
+    private final Queue<Double> turnPositionQueue;
     private final StatusSignal<AngularVelocity> turnVelocity;
     private final StatusSignal<Voltage> turnAppliedVolts;
     private final StatusSignal<Current> turnCurrent;
@@ -64,7 +65,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         cancoder = new CANcoder(constants.MODULES_ID_ARRY[index].steerEncoder.id,
                 constants.MODULES_ID_ARRY[index].steerEncoder.bus);
 
-        configDevices();
+        configDevices(index);
 
         drivePosition = driveTalon.getPosition(false);
         drivePositionQueue =
@@ -100,8 +101,9 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
     }
 
-    private void configDevices() {
+    private void configDevices(int index) {
         driveTalonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        driveTalonConfig.MotorOutput.Inverted = constants.DRIVES_INVERT[index];
         driveTalonConfig.Feedback.SensorToMechanismRatio = constants.DRIVE_GEAR_RATIO.gearRatio;
         driveTalonConfig.CurrentLimits.StatorCurrentLimit = constants.DRIVE__SLIP_LIMIT;
         driveTalonConfig.CurrentLimits.StatorCurrentLimitEnable = constants.DRIVE_ENABLE_CURRENT_LIMIT;
@@ -124,6 +126,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         driveTalon.setPosition(0);
 
         turnTalonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        turnTalonConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         turnTalonConfig.Feedback.SensorToMechanismRatio = constants.TURNING_GEAR_RATIO;
         turnTalonConfig.ClosedLoopGeneral.ContinuousWrap = true;
         turnTalonConfig.CurrentLimits.StatorCurrentLimit = constants.TURNING__CURRENT_LIMIT;
@@ -143,7 +146,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     public void updateSwerveModuleData(SwerveModuleData data) {
         data.isDriveConnected = BaseStatusSignal.isAllGood(
                 drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
-        data.drivePosition = drivePosition.getValue().in(Rotations)     ;// Rotations to Meters
+        data.drivePosition = drivePosition.getValue().in(Rotations) * constants.WHEEL_CIRCUMFERENCE;// Rotations to Meters
         data.driveVelocity = driveVelocity.getValue().in(RotationsPerSecond) * constants.WHEEL_CIRCUMFERENCE; // Rotations Per Second to Meters Per Second
         data.driveCurrent = driveCurrent.getValue().in(Amps);
         data.driveVolts = driveAppliedVolts.getValue().in(Volts);
@@ -178,6 +181,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     }
 
     public void setDriveVelocity(double metersPerSecond) {
+        System.out.println("metersPerSecond: " + metersPerSecond);
         driveTalon.setControl(velocityVoltageRequest.withVelocity(metersPerSecond / constants.WHEEL_CIRCUMFERENCE)// Meters Per Second to Rotations Per Second
                 .withSlot(SwerveSystemConstants.getControlSlot()));
     }

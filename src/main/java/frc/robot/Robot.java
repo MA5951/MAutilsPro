@@ -13,17 +13,11 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  private Test test;
-  private Test test2;
 
 
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    test = new Test();
-    test2 = new Test();
-    test.TestInit(7, 1);
-    test2.TestInit(5, 4);
 
     
 

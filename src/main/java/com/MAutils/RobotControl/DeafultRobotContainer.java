@@ -20,6 +20,10 @@ public class DeafultRobotContainer {
 
     private static String[] gamePiecesList ;
 
+    public DeafultRobotContainer() {
+        SimulatedArena.getInstance();
+    }
+
     public static void setDriverController(PS5Controller controller) {
         driverController = controller;
 
@@ -43,6 +47,8 @@ public class DeafultRobotContainer {
 
     public static void setSwerveDriveSimulation(SwerveDriveSimulation simulation) {
         swerveDriveSimulation = simulation;
+        SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+
     }
 
     public static void setGamePiecesList(String[] gamePieces) {

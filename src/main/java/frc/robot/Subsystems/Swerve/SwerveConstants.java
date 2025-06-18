@@ -15,7 +15,7 @@ public class SwerveConstants {
     .withMotors(DCMotor.getKrakenX60(1), DCMotor.getFalcon500(1), PortMap.Swerve.SWERVE_MODULE_IDS, PortMap.Swerve.PIGEON2)
     .withMaxVelocityMaxAcceleration(4.92, 10)
     .withOdometryUpdateRate(250)
-    .withDriveCurrentLimit(45, true)
+    .withDriveCurrentLimit(120, true)//45
     .withTurningCurrentLimit(30, true)
     .withGearRatio(GearRatio.L2)
     .withDriveTuning(0, 0, 0, 0, 0.857, 0)
