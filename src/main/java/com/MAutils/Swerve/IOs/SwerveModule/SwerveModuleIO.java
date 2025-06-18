@@ -23,6 +23,23 @@ public interface SwerveModuleIO {
 
         public double[] odometryDrivePositionsRad = new double[] {};
         public Rotation2d[] odometryTurnPositions = new Rotation2d[] {};
+
+        public SwerveModuleData() {
+            isDriveConnected = false;
+            drivePosition = 0.0;
+            driveVelocity = 0.0;
+            driveCurrent = 0.0;
+            driveVolts = 0.0;
+
+            isSteerConnected = false;
+            steerPosition = Rotation2d.fromDegrees(0.0);
+            steerVelocity = 0.0;
+            steerCurrent = 0.0;
+            steerVolts = 0.0;
+
+            absoluteSteerPosition = 0.0;
+            isAbsoluteSteerConnected = false;
+        }
     }
 
     void updateSwerveModuleData(SwerveModuleData data);
@@ -38,5 +55,6 @@ public interface SwerveModuleIO {
     void setDrivePID(double kP, double kI, double kD);
 
     void setSteerPID(double kP, double kI, double kD);
+
 
 }

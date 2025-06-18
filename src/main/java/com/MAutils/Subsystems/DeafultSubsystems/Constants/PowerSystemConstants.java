@@ -15,14 +15,14 @@ public class PowerSystemConstants {
     public double PEAK_REVERSE_VOLTAGE = -12;
     public boolean FOC = false;
     public double INERTIA = 0.0004;
-    public double POSITION_FACTOR = 1;
-    public double VELOCITY_FACTOR = 1;
+    public double POSITION_FACTOR = 360;
+    public double VELOCITY_FACTOR = 60;
 
     public PowerSystemConstants() {
 
     }
 
-    public PowerSystemConstants withMotors(Motor[] motors) {
+    public PowerSystemConstants withMotors(Motor... motors) {
         this.MOTORS = motors;
         return this;
     }

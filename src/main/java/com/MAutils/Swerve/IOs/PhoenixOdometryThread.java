@@ -1,8 +1,8 @@
 
 package com.MAutils.Swerve.IOs;
 
-import com.MAutils.Swerve.SwerveConstants;
-import com.MAutils.Swerve.SwerveSubsystem;
+import com.MAutils.Swerve.SwerveSystemConstants;
+import com.MAutils.Swerve.SwerveSystem;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
@@ -36,16 +36,16 @@ public class PhoenixOdometryThread extends Thread {
 
   private static boolean isCANFD = new CANBus("*").isNetworkFD();
   private static PhoenixOdometryThread instance = null;
-  private SwerveConstants constants;
+  private SwerveSystemConstants constants;
 
-  public static PhoenixOdometryThread getInstance(SwerveConstants constants) {
+  public static PhoenixOdometryThread getInstance(SwerveSystemConstants constants) {
     if (instance == null) {
       instance = new PhoenixOdometryThread(constants);
     }
     return instance;
   }
 
-  private PhoenixOdometryThread(SwerveConstants constants) {
+  private PhoenixOdometryThread(SwerveSystemConstants constants) {
     this.constants = constants;
     setName("PhoenixOdometryThread");
     setDaemon(true);
@@ -62,7 +62,7 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(StatusSignal<Angle> signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    SwerveSubsystem.odometryLock.lock();
+    SwerveSystem.odometryLock.lock();
     try {
       BaseStatusSignal[] newSignals = new BaseStatusSignal[phoenixSignals.length + 1];
       System.arraycopy(phoenixSignals, 0, newSignals, 0, phoenixSignals.length);
@@ -71,7 +71,7 @@ public class PhoenixOdometryThread extends Thread {
       phoenixQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      SwerveSubsystem.odometryLock.unlock();
+      SwerveSystem.odometryLock.unlock();
     }
     return queue;
   }
@@ -80,13 +80,13 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(DoubleSupplier signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    SwerveSubsystem.odometryLock.lock();
+    SwerveSystem.odometryLock.lock();
     try {
       genericSignals.add(signal);
       genericQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      SwerveSubsystem.odometryLock.unlock();
+      SwerveSystem.odometryLock.unlock();
     }
     return queue;
   }
@@ -94,11 +94,11 @@ public class PhoenixOdometryThread extends Thread {
   /** Returns a new queue that returns timestamp values for each sample. */
   public Queue<Double> makeTimestampQueue() {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
-    SwerveSubsystem.odometryLock.lock();
+    SwerveSystem.odometryLock.lock();
     try {
       timestampQueues.add(queue);
     } finally {
-      SwerveSubsystem.odometryLock.unlock();
+      SwerveSystem.odometryLock.unlock();
     }
     return queue;
   }
@@ -129,7 +129,7 @@ public class PhoenixOdometryThread extends Thread {
       }
 
       // Save new data to queues
-      SwerveSubsystem.odometryLock.lock();
+      SwerveSystem.odometryLock.lock();
       try {
         // Sample timestamp is current FPGA time minus average CAN latency
         //     Default timestamps from Phoenix are NOT compatible with
@@ -154,7 +154,7 @@ public class PhoenixOdometryThread extends Thread {
           timestampQueues.get(i).offer(timestamp);
         }
       } finally {
-        SwerveSubsystem.odometryLock.unlock();
+        SwerveSystem.odometryLock.unlock();
       }
     }
   }

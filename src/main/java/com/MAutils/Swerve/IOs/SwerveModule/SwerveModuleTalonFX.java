@@ -9,7 +9,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Queue;
 
-import com.MAutils.Swerve.SwerveConstants;
+import com.MAutils.Swerve.SwerveSystemConstants;
+import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -21,6 +22,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -51,9 +53,9 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     private final StatusSignal<Voltage> turnAppliedVolts;
     private final StatusSignal<Current> turnCurrent;
 
-    private final SwerveConstants constants;
+    private final SwerveSystemConstants constants;
 
-    public SwerveModuleTalonFX(SwerveConstants constants, int index) {
+    public SwerveModuleTalonFX(SwerveSystemConstants constants, int index) {
         this.constants = constants;
         driveTalon = new TalonFX(constants.MODULES_ID_ARRY[index].driveMotor.id,
                 constants.MODULES_ID_ARRY[index].driveMotor.bus);
@@ -65,8 +67,8 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         configDevices();
 
         drivePosition = driveTalon.getPosition(false);
-        // drivePositionQueue =
-        // PhoenixOdometryThread.getInstance().registerSignal(driveTalon.getPosition().clone());//TODO
+        drivePositionQueue =
+        PhoenixOdometryThread.getInstance(constants).registerSignal(driveTalon.getPosition().clone());
         driveVelocity = driveTalon.getVelocity(false);
         driveAppliedVolts = driveTalon.getMotorVoltage(false);
         driveCurrent = driveTalon.getStatorCurrent(false);
@@ -74,8 +76,8 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         turnAbsolutePosition = cancoder.getAbsolutePosition(false);
 
         turnPosition = turnTalon.getPosition(false);
-        // turnPositionQueue =
-        // PhoenixOdometryThread.getInstance().registerSignal(turnTalon.getPosition().clone());//TODO
+        turnPositionQueue =
+        PhoenixOdometryThread.getInstance(constants).registerSignal(turnTalon.getPosition().clone());
         turnVelocity = turnTalon.getVelocity(false);
         turnAppliedVolts = turnTalon.getMotorVoltage(false);
         turnCurrent = turnTalon.getStatorCurrent(false);
@@ -141,10 +143,11 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     public void updateSwerveModuleData(SwerveModuleData data) {
         data.isDriveConnected = BaseStatusSignal.isAllGood(
                 drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
-        data.drivePosition = drivePosition.getValue().in(Rotations) * constants.WHEEL_CIRCUMFERENCE;// Rotations to Meters
+        data.drivePosition = drivePosition.getValue().in(Rotations)     ;// Rotations to Meters
         data.driveVelocity = driveVelocity.getValue().in(RotationsPerSecond) * constants.WHEEL_CIRCUMFERENCE; // Rotations Per Second to Meters Per Second
         data.driveCurrent = driveCurrent.getValue().in(Amps);
         data.driveVolts = driveAppliedVolts.getValue().in(Volts);
+
 
         data.isSteerConnected = BaseStatusSignal.isAllGood(
                 turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
@@ -156,9 +159,10 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         data.absoluteSteerPosition = turnAbsolutePosition.getValue().in(Radians);// Radians to Rotation2d
         data.isAbsoluteSteerConnected = BaseStatusSignal.isAllGood(turnAbsolutePosition);
 
-        // data.odometryDrivePositionsRad = drivePositionQueue.stream()
-        // .mapToDouble((Double value) -> value).toArray();// TODO
-        // data.odometryTurnPositions = turnPositionQueue.stream()
+        data.odometryDrivePositionsRad =
+        drivePositionQueue.stream().mapToDouble(Units::rotationsToRadians).toArray();
+        data.odometryTurnPositions =
+        turnPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
 
         drivePositionQueue.clear();
         turnPositionQueue.clear();
@@ -175,7 +179,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
     public void setDriveVelocity(double metersPerSecond) {
         driveTalon.setControl(velocityVoltageRequest.withVelocity(metersPerSecond / constants.WHEEL_CIRCUMFERENCE)// Meters Per Second to Rotations Per Second
-                .withSlot(SwerveConstants.getControlSlot()));
+                .withSlot(SwerveSystemConstants.getControlSlot()));
     }
 
     public void setSteerPosition(Rotation2d rotation) {

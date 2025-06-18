@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -27,6 +28,7 @@ public class MALog {
     private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();
     private static final Map<String, StructArrayPublisher<SwerveModuleState>> swerveModuleStatePublishers = new HashMap<>();
     private static final Map<String, StructArrayPublisher<Pose3d>> pose3dPublishersArry = new HashMap<>();
+    private static final Map<String, StructPublisher<ChassisSpeeds>> chassisSpeedsPublishersArry = new HashMap<>();
     private static final String ID_FILE_PATH = "/home/lvuser/malog/lastLogID.txt";
     private static String sessionID = "0000";
     private static boolean started = false;
@@ -145,6 +147,17 @@ public class MALog {
                 k -> nt.getStructTopic("MALog/" + k, Pose3d.struct).publish());
 
         publisher.set(pose);
+    }
+
+    public static void log(String key, ChassisSpeeds chassisSpeeds) {
+        if (chassisSpeeds == null)
+            return;
+
+        StructPublisher<ChassisSpeeds> publisher = chassisSpeedsPublishersArry.computeIfAbsent(
+                key,
+                k -> nt.getStructTopic("MALog/" + k, ChassisSpeeds.struct).publish());
+
+        publisher.set(chassisSpeeds);
     }
 
     private static NetworkTableEntry getEntry(String key) {

@@ -22,10 +22,10 @@ public class Gyro {
 
     private void logGyroData() {
         MALog.log("/Subsystems/Swerve/" + name + "/Is Connected", gyroData.isConnected);
-        MALog.log("/Subsystems/Swerve/" + name + "/Is Connected", gyroData.yaw);
-        MALog.log("/Subsystems/Swerve/" + name + "/Is Connected", gyroData.yawVelocity);
-        MALog.log("/Subsystems/Swerve/" + name + "/Is Connected", gyroData.pitch);
-        MALog.log("/Subsystems/Swerve/" + name + "/Is Connected", gyroData.roll);
+        MALog.log("/Subsystems/Swerve/" + name + "/Yaw", gyroData.yaw);
+        MALog.log("/Subsystems/Swerve/" + name + "/Yaw Velocity", gyroData.yawVelocity);
+        MALog.log("/Subsystems/Swerve/" + name + "/Pitch", gyroData.pitch);
+        MALog.log("/Subsystems/Swerve/" + name + "/Roll", gyroData.roll);
     }
 
     public GyroData getGyroData() {
