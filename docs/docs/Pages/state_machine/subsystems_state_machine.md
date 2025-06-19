@@ -22,8 +22,6 @@ This structure makes it easy to locate physical configurations, states, and PID 
              └── IntakeIOSim.java
         ├── Intake.java
         └── IntakeConstants.java
-        
-
   └── Arm/
         ├── Arm.java
         └── ArmConstants.java
