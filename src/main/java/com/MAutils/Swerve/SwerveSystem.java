@@ -95,15 +95,20 @@ public class SwerveSystem extends SwerveSubsystem {
 
         //System.out.println("gOOD");
 
+        SwerveModuleState[] states = swerveConstants.kinematics.toSwerveModuleStates(speeds);
 
-        MALog.logSwerveModuleStates("/Subsystems/Swerve/States/SetPoint",swerveConstants.kinematics.toSwerveModuleStates(speeds));
-        runSwerveStates(swerveConstants.kinematics.toSwerveModuleStates(speeds));
+        MALog.logSwerveModuleStates("/Subsystems/Swerve/States/SetPoint",states);
+        runSwerveStates(states);
     }
 
     public void runSwerveStates(SwerveModuleState[] states) {
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setSetPoint(states[i]);
         }
+        // swerveModules[0].setSetPoint(states[3]);
+        // swerveModules[1].setSetPoint(states[0]);
+        // swerveModules[2].setSetPoint(states[1]);
+        // swerveModules[3].setSetPoint(states[2]);
     }
 
     public GyroData getGyroData() {

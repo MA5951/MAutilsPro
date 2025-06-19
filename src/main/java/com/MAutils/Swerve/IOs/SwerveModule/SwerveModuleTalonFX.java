@@ -159,7 +159,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         data.steerCurrent = turnCurrent.getValue().in(Amps);
         data.steerVolts = turnAppliedVolts.getValue().in(Volts);
 
-        data.absoluteSteerPosition = turnAbsolutePosition.getValue().in(Radians);// Radians to Rotation2d
+        data.absoluteSteerPosition = new Rotation2d(turnAbsolutePosition.getValue().in(Radians));// Radians to Rotation2d
         data.isAbsoluteSteerConnected = BaseStatusSignal.isAllGood(turnAbsolutePosition);
 
         data.odometryDrivePositionsRad =

@@ -97,19 +97,19 @@ public class SwerveSystemConstants {
         public CANBusID PIEGEON_CAN_ID;
 
         // Module locations
-        public Translation2d frontLeftLocation = new Translation2d(
+        public Translation2d rearLeftLocation = new Translation2d(
                         -WIDTH / 2,
                         LENGTH / 2);
 
-        public Translation2d frontRightLocation = new Translation2d(
+        public Translation2d frontLeftLocation = new Translation2d(
                         WIDTH / 2,
                         LENGTH / 2);
 
-        public Translation2d rearLeftLocation = new Translation2d(
+        public Translation2d rearRightLocation = new Translation2d(
                         -WIDTH / 2,
                         -LENGTH / 2);
 
-        public Translation2d rearRightLocation = new Translation2d(
+        public Translation2d frontRightLocation = new Translation2d(
                         WIDTH / 2,
                         -LENGTH / 2);
 

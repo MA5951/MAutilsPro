@@ -34,7 +34,7 @@ public class SwerveModule {
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Steer Velocity", moduleData.steerVelocity);
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Steer Current", moduleData.steerCurrent);
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Steer Volts", moduleData.steerVolts);
-        MALog.log("/Subsystems/Swerve/Modules/" + name + "/Absolute Steer Position", moduleData.absoluteSteerPosition);
+        MALog.log("/Subsystems/Swerve/Modules/" + name + "/Absolute Steer Position", moduleData.absoluteSteerPosition.getDegrees());
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Is Absolute Steer Connected", moduleData.isAbsoluteSteerConnected);
     }
 

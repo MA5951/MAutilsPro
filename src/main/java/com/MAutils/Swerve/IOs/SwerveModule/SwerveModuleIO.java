@@ -18,7 +18,7 @@ public interface SwerveModuleIO {
         public double steerCurrent;//Amps
         public double steerVolts;//Volts
 
-        public double absoluteSteerPosition;//Rotation2d
+        public Rotation2d absoluteSteerPosition;//Rotation2d
         public boolean isAbsoluteSteerConnected;
 
         public double[] odometryDrivePositionsRad = new double[] {};
@@ -37,7 +37,7 @@ public interface SwerveModuleIO {
             steerCurrent = 0.0;
             steerVolts = 0.0;
 
-            absoluteSteerPosition = 0.0;
+            absoluteSteerPosition = Rotation2d.fromDegrees(0);
             isAbsoluteSteerConnected = false;
         }
     }
