@@ -5,11 +5,7 @@
 }
 
 :root  > * {
-  --md-primary-fg-color:        #181b1f;
+  --md-primary-fg-color:        #ed1c24;
   --md-primary-bg-color:  #ffffff;
-  --md-default-fg-color: #ffffff;
-  --md-default-bg-color:  #16171d;
-  --md-accent-fg-color:  #b83726;
-
 }
 

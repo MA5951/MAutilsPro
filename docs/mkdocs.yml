@@ -12,8 +12,6 @@ theme:
     primary: custom
   features:
     - navigation.path
-  font:
-    text: DM Sans
 
 
 
@@ -21,6 +19,8 @@ nav:
   - Home: Pages/index.md
   - Key Features: Pages/key_features.md
   - Installation: Pages/installation.md
+  - Logging: Pages/logger.md
+  - Controllers: Pages/controllers.md
   - State Meachine:
       - Features And Structure: Pages/state_machine/state_machine.md
       - Using State Machine: Pages/state_machine/using_state_machine.md
@@ -32,4 +32,20 @@ nav:
       - PowerControlledSubsystem: subsystems/power_controlled_subsystem.md
       - PositionControlledSubsystem: subsystems/position_controlled_subsystem.md
       - VelocityControlledSubsystem: subsystems/velocity_controlled_subsystem.md
+
+
+markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  
   
