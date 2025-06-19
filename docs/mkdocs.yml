@@ -22,7 +22,7 @@ nav:
   - Logging: Pages/logger.md
   - Controllers: Pages/controllers.md
   - State Meachine:
-      - Features And Structure: Pages/state_machine/state_machine.md
+      - Subsystems Structure: Pages/state_machine/subsystems_state_machine.md
       - Using State Machine: Pages/state_machine/using_state_machine.md
   - Swerve:
       - Features And Structure: swerve/swerve.md
@@ -47,5 +47,7 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - pymdownx.blocks.caption
+  - admonition
+  - pymdownx.details
   
   

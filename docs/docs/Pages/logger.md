@@ -1,8 +1,9 @@
 # MALog Logging System
 
-`MALog` is the unified logging utility in MAutils. It provides an interface for real-time logging to **NetworkTables** as well as persistent storage via **DataLogManager**.
+MALog is the unified logging utility in MAutils. It provides an interface for real-time logging to NetworkTables, as well as persistent storage via DataLogManager.
 
-MALog is ideal for debugging, telemetry, logging controller input, kinematics, and high-level state transitions across autonomous and teleop.
+
+The logger records all NetworkTables data, including values logged via MALog, joystick states, vision coprocessor output, and FMS data.
 
 ---
 
@@ -16,7 +17,19 @@ MALog.startLog(MALogMode.AUTO);
 MALog.startLog(MALogMode.TELEOP);
 ```
 
-This starts data logging with a session ID and timestamped filename (if not running on FMS).
+This starts data logging with a unique session ID and a timestamped filename (if not running on FMS). If using `DeafultRobotContainer`, the log is started and stopped automaticly.
+
+??? info "Log naming format"
+    Logs are saved using the format: `MALog_Mode_SessionID_Timestamp`.
+    \- **Mode** corresponds to the robot's current mode (`AUTO`, `TELEOP`, `TEST`).
+    \- **SessionID** is a unique, persistent number that increments on each run (stored in `/home/lvuser/malog/lastLogID.txt`). Use `resetID()` to reset it manually.
+    \- **Timestamp** follows the format `yyyy-MM-dd_HH-mm-ss`.
+
+    **Example:**
+    ```
+    MALog_Teleop_0047_2025-11-02_16-22-17
+    ```
+
 
 To stop logging:
 
@@ -24,22 +37,23 @@ To stop logging:
 MALog.stopLog();
 ```
 
+
 ---
 
 ## Logging Basic Values
 
-You can log values with a `String key` using any of these:
+You can log values using a string key:
 
 ```java
-MALog.log("ArmAngle", 45.0);
-MALog.log("IsAligned", true);
-MALog.log("Mode", "AUTO");
+MALog.log("/Subsystems/Arm/Arm Angle", 45.0);
+MALog.log("/Subsystems/Swerve/Is Aligned", true);
+MALog.log("/RobotControl/Mode", "AUTO");
 ```
 
-Or using suppliers (evaluated on log call):
+Or with suppliers (evaluated at runtime):
 
 ```java
-MALog.log("Pressure", () -> compressor.getPressure());
+MALog.log("/Pneumatics/Pressure", () -> compressor.getPressure());
 ```
 
 ---
@@ -76,45 +90,39 @@ MALog.logSwerveModuleStates("Drive/Modules", swerve.getModuleStates());
 MALog.log("Drive/ChassisSpeeds", kinematics.toChassisSpeeds());
 ```
 
-All of these publish to `NetworkTables` under the `MALog/` namespace.
+All of these publish to NetworkTables under the `MALog/` namespace.
 
 ---
 
 ## Getting Logged Values
 
-You can retrieve numeric values from NT:
+You can retrieve numeric values from NetworkTables:
 
 ```java
-double shooterRPM = MALog.get("Shooter/RPM");
+double shooterRPM = MALog.getEntry("Shooter/RPM").getDouble(0);
 ```
 
 ---
 
 ## Flags and Status
 
-Use `flag()` to mark key events in Shuffleboard logs:
+Use `flag()` to mark specific events in logs:
 
 ```java
-MALog.flag("IntakeStarted");
+MALog.flag("Driver Flag");
 ```
 
-Update system status display:
+You can view the flag field in a graph to easily locate these events.
+
+??? tip "Using flags during driver practice"
+    If the driver encounters a bug or something feels off, they can press a controller button mapped to `MALog.flag()`. This creates a visible marker in the log, allowing the software team to easily investigate it afterward.
+
+Indicates the status of the robot, other parts of MAutils use this field so its mostly reserved for library use.
 
 ```java
-MALog.addStatus("Running Autonomous Routine A");
+MALog.addStatus("Self Testing");
 ```
 
----
-
-## Log ID System
-
-MALog generates and persists session IDs between runs (real robot only):
-
-```java
-MALog.resetID(); // Resets ID to 0000
-```
-
-Each new session auto-increments, cycling after 999.
 
 ---
 
@@ -124,7 +132,6 @@ Each new session auto-increments, cycling after 999.
 @Override
 public void robotInit() {
     MALog.startLog(MALogMode.TELEOP);
-    MALog.log("StartupTime", System.currentTimeMillis());
 }
 
 @Override
@@ -135,15 +142,3 @@ public void teleopPeriodic() {
     MALog.log("Intake/Pressed", intakeButton::get);
 }
 ```
-
----
-
-## Notes
-
-* Uses NetworkTables for real-time dashboards
-* Uses WPILib DataLogManager for persistent storage
-* Only logs when running on real hardware unless manually overridden
-
-For more, see the full implementation:
-
-[github.com/MA5951/MAutilsPro/MALog.java](https://github.com/MA5951/MAutilsPro/blob/main/src/main/java/com/MAutils/Logger/MALog.java)
