@@ -3,11 +3,16 @@ package com.MAutils.Controllers;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-public class PS5MAController implements MAController {
+public class PS5MAController extends MAController {
     private final PS5Controller controller;
 
     public PS5MAController(int port) {
         this.controller = new PS5Controller(port);
+    }
+
+    @Override
+    public int getPort() {
+        return controller.getPort();
     }
 
     @Override

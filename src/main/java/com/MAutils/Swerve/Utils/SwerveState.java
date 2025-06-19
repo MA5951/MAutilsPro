@@ -11,10 +11,30 @@ public class SwerveState {
     private String stateName;
     private Supplier<ChassisSpeeds> xySupplier;
     private Supplier<ChassisSpeeds> omegaSupplier;
+    private Runnable onStateEnter;
+    private Runnable onStateRuning;
 
     public SwerveState(String name) {
         this.stateName = name;
         this.stateSpeeds = new ChassisSpeeds(0, 0, 0);
+    }
+
+    public SwerveState withOnStateEnter(Runnable onStateEnter) {
+        this.onStateEnter = onStateEnter;
+        return this;
+    }
+
+    public SwerveState withOnStateRuning(Runnable onStateRuning) {
+        this.onStateRuning = onStateRuning;
+        return this;
+    }
+
+    public Runnable getOnStateEnter() {
+        return onStateEnter;
+    }
+    
+    public Runnable getOnStateRuning() {
+        return onStateRuning;
     }
 
     public SwerveState withXY(SwerveController controller) {

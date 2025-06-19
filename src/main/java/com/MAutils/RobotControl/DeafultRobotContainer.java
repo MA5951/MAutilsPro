@@ -5,18 +5,18 @@ import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
+import com.MAutils.Controllers.MAController;
+import com.MAutils.Controllers.PS5MAController;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Utils.StatusSignalsRunner;
 
-import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
-    protected static XboxController driverController = new XboxController(0);
-    protected static PS5Controller operatorController = new PS5Controller(1);
+    protected static MAController driverController = new PS5MAController(0);
+    protected static MAController operatorController = new PS5MAController(1);
     private static SwerveDriveSimulation swerveDriveSimulation;
 
     private static String[] gamePiecesList ;
@@ -25,7 +25,7 @@ public class DeafultRobotContainer {
         SimulatedArena.getInstance();
     }
 
-    public static void setDriverController(XboxController controller) {
+    public static void setDriverController(MAController controller) {
         driverController = controller;
 
     }
@@ -34,15 +34,15 @@ public class DeafultRobotContainer {
         CommandScheduler.getInstance().setDefaultCommand(command.getCommandSubsystem(), command);
     }
 
-    public static XboxController getDriverController() {
+    public static MAController getDriverController() {
         return driverController;
     }
 
-    public static void setOperatorController(PS5Controller controller) {
+    public static void setOperatorController(MAController controller) {
         operatorController = controller;
     }
 
-    public static PS5Controller getOperatorController() {
+    public static MAController getOperatorController() {
         return operatorController;
     }
 

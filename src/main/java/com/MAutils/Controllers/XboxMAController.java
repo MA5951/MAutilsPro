@@ -3,12 +3,18 @@ package com.MAutils.Controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-public class XboxMAController implements MAController {
+public class XboxMAController extends MAController {
     private final XboxController controller;
-    private static final double TRIGGER_THRESHOLD = 0.1; //TODO: Measure on ps5 and match
+    private static final double TRIGGER_THRESHOLD = 0.03;
 
     public XboxMAController(int port) {
         this.controller = new XboxController(port);
+        deadbound = 0.3;
+    }
+
+    @Override
+    public int getPort() {
+        return controller.getPort();
     }
 
     @Override
@@ -93,7 +99,6 @@ public class XboxMAController implements MAController {
 
     @Override
     public boolean getMiddle() {
-        // WPILib does not expose the “Guide”/Xbox-logo button
         return false;
     }
 

@@ -1,28 +1,28 @@
 
 package com.MAutils.Swerve;
 
+import com.MAutils.Controllers.MAController;
 import com.MAutils.Logger.MALog;
-import com.MAutils.Swerve.Controllers.FieldCentricDrive;
 import com.MAutils.Swerve.Utils.SwerveState;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public abstract class SwerveSystemController extends Command {
   protected SwerveSystem swerveSystem;
+  protected SwerveSystemConstants constants;
+  protected MAController drivController;
   private ChassisSpeeds currentSpeeds;
   
-  public FieldCentricDrive fieldCentricDriveController;
 
-  public SwerveSystemController(SwerveSystem swerveSystem, SwerveSystemConstants constants ,XboxController controller) {
+  public SwerveSystemController(SwerveSystem swerveSystem, SwerveSystemConstants constants ,MAController drivController) {
     super();
+    this.constants = constants;
+    this.drivController = drivController;
     this.swerveSystem = swerveSystem;
     addRequirements(swerveSystem);
     setName("SwerveSystemController");
     
-    fieldCentricDriveController = new FieldCentricDrive(controller,
-    () -> controller.getLeftBumperButtonPressed(), 0.4, swerveSystem, constants);
 
     
   }
