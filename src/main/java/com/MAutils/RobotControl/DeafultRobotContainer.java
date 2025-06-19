@@ -9,12 +9,13 @@ import com.MAutils.Logger.MALog;
 import com.MAutils.Utils.StatusSignalsRunner;
 
 import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
-    protected static PS5Controller driverController = new PS5Controller(0);
+    protected static XboxController driverController = new XboxController(0);
     protected static PS5Controller operatorController = new PS5Controller(1);
     private static SwerveDriveSimulation swerveDriveSimulation;
 
@@ -24,7 +25,7 @@ public class DeafultRobotContainer {
         SimulatedArena.getInstance();
     }
 
-    public static void setDriverController(PS5Controller controller) {
+    public static void setDriverController(XboxController controller) {
         driverController = controller;
 
     }
@@ -33,7 +34,7 @@ public class DeafultRobotContainer {
         CommandScheduler.getInstance().setDefaultCommand(command.getCommandSubsystem(), command);
     }
 
-    public static PS5Controller getDriverController() {
+    public static XboxController getDriverController() {
         return driverController;
     }
 

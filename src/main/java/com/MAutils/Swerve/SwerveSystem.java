@@ -14,14 +14,14 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 import com.MAutils.Swerve.Utils.DriveFeedforwards;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
-import com.MAutils.Swerve.Utils.SwerveSubsystem;
+import com.MAutils.Swerve.Utils.DeafultSwerveSystem;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 
-public class SwerveSystem extends SwerveSubsystem {
+public class SwerveSystem extends DeafultSwerveSystem {
 
     public static final Lock odometryLock = new ReentrantLock();
     private final SwerveSystemConstants swerveConstants;
@@ -35,6 +35,7 @@ public class SwerveSystem extends SwerveSubsystem {
     private final DeafultPoseEstimator poseEstimator;
 
     public SwerveSystem(SwerveSystemConstants swerveConstants, DeafultPoseEstimator poseEstimator) {
+        super();
         this.swerveConstants = swerveConstants;
         this.poseEstimator = poseEstimator;
 
