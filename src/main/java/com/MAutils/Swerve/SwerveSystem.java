@@ -4,7 +4,6 @@ package com.MAutils.Swerve;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.MAutils.Logger.LoggedSwerveStates;
 import com.MAutils.Logger.MALog;
 import com.MAutils.PoseEstimation.DeafultPoseEstimator;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
@@ -47,6 +46,13 @@ public class SwerveSystem extends SwerveSubsystem {
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 
+        odometryLock.lock();
+        gyro.update();
+        for (var module : swerveModules) {
+            module.update();
+        }
+        odometryLock.unlock();
+
         for (int i = 0; i < swerveModules.length; i++) {
             currentStates[i] = swerveModules[i].getState();
         }
@@ -87,28 +93,22 @@ public class SwerveSystem extends SwerveSubsystem {
     }
 
     public void drive(ChassisSpeeds speeds) {
-        // swerveSetpoint = swerveSetpointGenerator.generateSetpoint(
-        // swerveSetpoint,
-        // ChassisSpeeds.discretize(speeds, 0.02),
-        // 0.02
-        // );
+        swerveSetpoint = swerveSetpointGenerator.generateSetpoint(
+        swerveSetpoint,
+        speeds,
+        0.02
+        );
 
-        //System.out.println("gOOD");
 
-        SwerveModuleState[] states = swerveConstants.kinematics.toSwerveModuleStates(speeds);
-
-        MALog.logSwerveModuleStates("/Subsystems/Swerve/States/SetPoint",states);
-        runSwerveStates(states);
+        MALog.logSwerveModuleStates("/Subsystems/Swerve/States/SetPoint", swerveSetpoint.moduleStates());
+        runSwerveStates(swerveSetpoint.moduleStates());
     }
 
     public void runSwerveStates(SwerveModuleState[] states) {
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setSetPoint(states[i]);
         }
-        // swerveModules[0].setSetPoint(states[3]);
-        // swerveModules[1].setSetPoint(states[0]);
-        // swerveModules[2].setSetPoint(states[1]);
-        // swerveModules[3].setSetPoint(states[2]);
+
     }
 
     public GyroData getGyroData() {

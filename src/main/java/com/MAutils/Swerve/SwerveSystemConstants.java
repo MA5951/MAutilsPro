@@ -340,7 +340,7 @@ public class SwerveSystemConstants {
         public RobotConfig getRobotConfig() {
                 return new RobotConfig(ROBOT_MASS, MOI, 
                 new ModuleConfig(
-                        WHEEL_RADIUS, MAX_VELOCITY, WHEEL_TYPE.coFriction, DRIVE_MOTOR, DRIVE__SLIP_LIMIT, 1), modulesLocationArry);
+                        WHEEL_RADIUS, MAX_VELOCITY, WHEEL_TYPE.coFriction, DRIVE_MOTOR.withReduction(DRIVE_GEAR_RATIO.gearRatio), DRIVE__SLIP_LIMIT, 1), modulesLocationArry);
         }
 
 }
