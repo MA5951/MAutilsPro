@@ -1,111 +1,67 @@
-# StateSubsystem Overview
+### File Structure for Subsystems
 
-`StateSubsystem` is a base class in MAutils designed to represent robot subsystems that operate in distinct states. It simplifies state-based control logic by associating the subsystem with a `SubsystemState` and `SystemMode`, and logs system behavior through MALog.
+MAutils encourages a clean, modular folder and file structure to organize subsystem logic, constants, and commands.
+
+Each **subsystem** resides in its own folder and contains two core files:
+
+* A main subsystem class (e.g., `Intake.java`, `Arm.java`)
+* A constants file (e.g., `IntakeConstants.java`, `GripperConstants.java`)
+* A folder that containse IOs and other heleper class (If needed) 
+
+This structure makes it easy to locate physical configurations, states, and PID parameters for each component.
 
 ---
 
+##  Subsystem Folder Layout
 
-## Constructor
+```text
+/robot/Subsystems
+  └── Intake/
+        ├── IOs (If needed)
+        |    ├── IntakeIOReal.java
+             └── IntakeIOSim.java
+        ├── Intake.java
+        └── IntakeConstants.java
+        
 
-```java
-public StateSubsystem(String name, SubsystemState... subsystemStates)
+  └── Arm/
+        ├── Arm.java
+        └── ArmConstants.java
 ```
 
-* **name** – A unique name for this subsystem (used in logging)
-* **subsystemStates** – The set of states this subsystem can operate in; each state is initialized with a reference to this subsystem
-
 ---
 
-##  Fields and Structure
+##  Constants File Purpose
 
-Each `StateSubsystem` includes the following fields:
+The `*Constants.java` file should include:
 
-* **`SubsystemState currentState`** – The current state of the subsystem
-* **`SystemMode systemMode`** – The system control mode (`AUTOMATIC`, `MANUAL`)
-* **`String subsystemName`** – A unique name for this subsystem, used in logging and dashboards
+* Physical dimensions (gear ratios, encoder ticks, etc.)
+* PID tuning values
+* Static configuration parameters
+* The `SubsystemState` definitions used by that subsystem
 
----
-
-##  Core Methods
-
-These are the primary methods available in a `StateSubsystem`:
-
-* `setState(SubsystemState state)`
-  Sets the subsystem’s current state.
-
-* `getCurrentState()`
-  Returns the currently active `SubsystemState`.
-
-* `setSystemMode(SystemMode mode)`
-  Sets the system's operational mode.
-
-* `getSystemMode()`
-  Returns the current `SystemMode`.
-
-* `CAN_MOVE()`
-  Returns `true` or `false` based on whether the subsystem is allowed to operate. Override this in your subclass to implement custom logic.
-
-* `getSelfTest()`
-  Returns a `Command` that runs a self-test. This is intended to be overridden in each subsystem to provide meaningful diagnostics. See the [SelfTest documentation](#) for more details.
-
-* `periodic()`
-  Called once per scheduler loop. This method includes automatic logging of the subsystem state.
-
-??? info "Default Logging Behavior"
-    The following values are automatically logged every cycle to NetworkTables:
-
-    ```
-    - `/RobotControl/{subsystemName}/Current State`
-    - `/RobotControl/{subsystemName}/System Function State`
-    - `/RobotControl/{subsystemName}/Can Move`
-    ```
-
----
-
-##  Instantiating a StateSubsystem
-
-When constructing your `StateSubsystem`, you must provide a name and optionally pass in all the states the subsystem can use. Each state will automatically link back to this subsystem.
+Example (partial):
 
 ```java
-public class Arm extends StateSubsystem {
+public class ArmConstants {
+    public static final double kP = 0.07;
+    public static final double ARM_LENGTH = 0.48;
 
-    public Arm() {
-        super("Arm",
-            ArmConstants.IDLE,
-            ArmConstants.INTAKE,
-            ArmConstants.EXTENDED,
-            ArmConstants.RETRACTED,
-            ArmConstants.FEEDER
-        );
-    }
+    public static final SubsystemState IDLE = new SubsystemState("IDLE");
+    public static final SubsystemState EXTENDED = new SubsystemState("EXTENDED");
 }
 ```
 
-This design ensures all your subsystem states are registered correctly and the name is consistent across logs and NT entries.
-
 ---
 
-## Notes
+##  Commands Folder
 
-* Works with any custom `SubsystemState` implementation.
-* Designed to simplify state-machine driven control.
-* Integrates seamlessly with `MALog` for tracking and diagnostics.
+The `commands` folder holds commands that are responsible for runing the subsystems. Each file implements the `SubsystemCommand` interface for that subsystem.
 
-For best results, pair this with the `DefaultSuperStructure` class and a central robot state coordinator.
+### Folder Example:
 
----
-
-
-## SubsystemState
-The SubsystemState object represents a state the a spacific subsystem can be in. It includes a stateName artabuit and a subsystem fiedl that represents the StateSubsystem that this state ia assigned to.
-
-Calling the `setState()` dunction will set the state of the assigned subsytem to the state
-
-
+```text
+/robot/Commands/
+  ├── IntakeCommand.java
+  ├── ArmCommand.java
 ```
-SubsystemState IDLE = new SubsystemState("IDLE", intake);
-Or:
-SubsystemState IDLE = new SubsystemState("IDLE");
-IDLE.setSubsystem(intake);
-
-IDLE.setState(); //Sets the intake subsystem to the "IDLE" state

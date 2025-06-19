@@ -1,0 +1,197 @@
+# MALog Logging System
+
+`MALog` is the unified logging utility in MAutils. It provides an interface for real-time logging to **NetworkTables** as well as persistent storage via **DataLogManager**.
+
+MALog is ideal for debugging, telemetry, logging controller input, kinematics, and high-level state transitions across autonomous and teleop.
+
+---
+
+## Initialization
+
+Start the logger once at the beginning of a mode:
+
+```java
+MALog.startLog(MALogMode.AUTO);
+// Or:
+MALog.startLog(MALogMode.TELEOP);
+```
+
+This starts data logging with a session ID and timestamped filename (if not running on FMS).
+
+To stop logging:
+
+```java
+MALog.stopLog();
+```
+
+---
+
+## Logging Basic Values
+
+You can log values with a `String key` using any of these:
+
+```java
+MALog.log("ArmAngle", 45.0);
+MALog.log("IsAligned", true);
+MALog.log("Mode", "AUTO");
+```
+
+Or using suppliers (evaluated on log call):
+
+```java
+MALog.log("Pressure", () -> compressor.getPressure());
+```
+
+---
+
+## Logging Advanced Types
+
+### Pose2d
+
+```java
+MALog.log("Odometry/Pose2d", drivetrain.getPose());
+```
+
+### Pose3d
+
+```java
+MALog.log("Odometry/Pose3d", camera.getPose());
+```
+
+### Pose3d\[]
+
+```java
+MALog.log("Vision/Targets", allDetectedTags);
+```
+
+### SwerveModuleState\[]
+
+```java
+MALog.logSwerveModuleStates("Drive/Modules", swerve.getModuleStates());
+```
+
+### ChassisSpeeds
+
+```java
+MALog.log("Drive/ChassisSpeeds", kinematics.toChassisSpeeds());
+```
+
+All of these publish to `NetworkTables` under the `MALog/` namespace.
+
+---
+
+## Getting Logged Values
+
+You can retrieve numeric values from NT:
+
+```java
+double shooterRPM = MALog.get("Shooter/RPM");
+```
+
+---
+
+## Flags and Status
+
+Use `flag()` to mark key events in Shuffleboard logs:
+
+```java
+MALog.flag("IntakeStarted");
+```
+
+Update system status display:
+
+```java
+MALog.addStatus("Running Autonomous Routine A");
+```
+
+---
+
+## Log ID System
+
+MALog generates and persists session IDs between runs (real robot only):
+
+```java
+MALog.resetID(); // Resets ID to 0000
+```
+
+Each new session auto-increments, cycling after 999.
+
+---
+
+## Example
+
+```java
+@Override
+public void robotInit() {
+    MALog.startLog(MALogMode.TELEOP);
+    MALog.log("StartupTime", System.currentTimeMillis());
+}
+
+@Override
+public void teleopPeriodic() {
+    MALog.log("Shooter/Velocity", shooter.getVelocity());
+    MALog.log("Drive/Pose2d", drivetrain.getPose());
+    MALog.log("Drive/Modules", drivetrain.getModuleStates());
+    MALog.log("Intake/Pressed", intakeButton::get);
+}
+```
+
+---
+
+## Notes
+
+* Uses NetworkTables for real-time dashboards
+* Uses WPILib DataLogManager for persistent storage
+* Only logs when running on real hardware unless manually overridden
+
+For more, see the full implementation:
+
+[github.com/MA5951/MAutilsPro/MALog.java](https://github.com/MA5951/MAutilsPro/blob/main/src/main/java/com/MAutils/Logger/MALog.java)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Subsystems Structure
+When using MAutils, all subsystems should follow a spacific structur.
+
+
+
+### Files Structure
+Each subsystem will have its own folder, containing two base files file. One will be called by the subsystem name (e.x. "Intake", "Arm", "Gripper"), The other file is a constants file and will be name the subsystem name followed by "Constants" (e.x. "IntakeConstants" "GripperConstatns")
+
+The Constants file holds constants that are relevent for the subsystem, for example:
+- Pyshical Parameters
+- PID Tuning and parameters
+- The subsystems states
+
+
+```
+-> Intake
+        - Intake.java
+        - IntakeConstants.java
+-> Arm
+        - Arm.java
+        - ArmConstatns.java
+        
+```
+
+The Commands folder, holds the commands that represet what each subsystem will do in every state of its subsystem 
+
+```
+-> Command
+        - IntakeCommand.java
+        - ArmCommand.java
+```
