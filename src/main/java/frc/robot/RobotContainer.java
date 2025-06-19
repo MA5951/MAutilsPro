@@ -1,10 +1,8 @@
 package frc.robot;
 
-import java.nio.file.WatchEvent;
 
 import com.MAutils.RobotControl.DeafultRobotContainer;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Subsystems.Swerve.Swerve;
@@ -19,7 +17,8 @@ public class RobotContainer extends DeafultRobotContainer{
     setGamePiecesList(new String[] {
       "Coral",
       "Algae"
-    });    
+    });  
+      
     setSwerveDriveSimulation(SwerveConstants.SWERVE_CONSTANTS.SWERVE_DRIVE_SIMULATION);
 
     Swerve.getInstance();
