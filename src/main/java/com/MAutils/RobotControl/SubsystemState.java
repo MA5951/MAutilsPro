@@ -16,7 +16,7 @@ public class SubsystemState {
             this.stateName = state_name;
         }
     
-        public void updateSubsystem(StateSubsystem subsystem) {
+        public void setSubsystem(StateSubsystem subsystem) {
             this.subsystem = subsystem;
         }
 
