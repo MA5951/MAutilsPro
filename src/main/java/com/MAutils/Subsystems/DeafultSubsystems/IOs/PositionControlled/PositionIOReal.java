@@ -5,6 +5,7 @@ import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Utils.StatusSignalsRunner;
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,7 +13,6 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -53,6 +53,7 @@ public class PositionIOReal implements PositionSystemIO {
             if (i > 0) {
                 followers[i - 1] = new StrictFollower(systemConstants.MOTORS[0].motorController.getDeviceID());
             } else {
+                System.out.println("Config");
                 motorVelocity = motor.motorController.getVelocity(false);
                 motorCurrent = motor.motorController.getStatorCurrent(false);
                 motorVoltage = motor.motorController.getMotorVoltage(false);
@@ -62,7 +63,6 @@ public class PositionIOReal implements PositionSystemIO {
                 StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
                         motorVoltage, motorError, motorSetPoint, motorPosition);
             }
-            TalonFX.resetSignalFrequenciesForAll(motor.motorController);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
             i++;
@@ -152,6 +152,7 @@ public class PositionIOReal implements PositionSystemIO {
 
     @Override
     public void setPosition(double position) {
+        
         if (systemConstants.IS_MOTION_MAGIC) {
             systemConstants.MOTORS[0].motorController.setControl(
                     motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
@@ -198,6 +199,8 @@ public class PositionIOReal implements PositionSystemIO {
 
     @Override
     public void updatePeriodic() {
+        BaseStatusSignal.refreshAll(motorVelocity, motorCurrent,
+        motorVoltage, motorError, motorSetPoint, motorPosition);
         MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Velocity", getVelocity());
         MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Voltage", getAppliedVolts());
         MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Current", getCurrent());

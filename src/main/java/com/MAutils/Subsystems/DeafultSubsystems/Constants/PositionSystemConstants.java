@@ -1,6 +1,7 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
+import com.MAutils.Components.Motor;
 
 public class PositionSystemConstants extends PowerSystemConstants {
     
@@ -17,8 +18,8 @@ public class PositionSystemConstants extends PowerSystemConstants {
     public double JERK = 0;
     public boolean IS_MOTION_MAGIC = false;
 
-    public PositionSystemConstants() {
-        super();
+    public PositionSystemConstants(Motor... motors) {
+        super(motors);
         VELOCITY_FACTOR = 60;// Default RPM
         POSITION_FACTOR = 360;// Default Degrees
     }

@@ -1,8 +1,29 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.Subsystems.Arm;
 
-/** Add your docs here. */
-public class Arm {}
+import com.MAutils.Subsystems.DeafultSubsystems.Systems.PositionControlledSystem;
+
+public class Arm extends PositionControlledSystem{
+    private static Arm arm;
+
+
+    public Arm() {
+        super("Arm" ,ArmConstatnts.ARM_CONSTANTS
+        , ArmConstatnts.IDLE, ArmConstatnts.UP, ArmConstatnts.DOWEN);
+    }
+
+
+    @Override
+    public boolean CAN_MOVE() {
+        return true;
+    }
+
+
+    public static Arm getInstance() {
+        if (arm == null) {
+            arm = new Arm();
+        }
+        return arm;
+    }
+
+}

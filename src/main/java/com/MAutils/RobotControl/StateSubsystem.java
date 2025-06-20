@@ -19,6 +19,10 @@ public class StateSubsystem extends SubsystemBase {
             state.setSubsystem(this);
         }
 
+        currentState = new SubsystemState("IDLE", this);
+        systemMode = SystemMode.AUTOMATIC;
+        
+
         this.subsystemName = name;
     }
 

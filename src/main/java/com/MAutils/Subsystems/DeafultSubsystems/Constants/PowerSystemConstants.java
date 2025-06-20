@@ -4,7 +4,7 @@ package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 import com.MAutils.Components.Motor;
 
 public class PowerSystemConstants {
-    public Motor[] MOTORS;
+    public final Motor[] MOTORS;
     public double GEAR = 1;
     public double STATOR_CURRENT_LIMIT = 40;
     public boolean CURRENT_LIMIT_ENABLED = true;
@@ -18,13 +18,8 @@ public class PowerSystemConstants {
     public double POSITION_FACTOR = 360;
     public double VELOCITY_FACTOR = 60;
 
-    public PowerSystemConstants() {
-
-    }
-
-    public PowerSystemConstants withMotors(Motor... motors) {
+    public PowerSystemConstants(Motor... motors) {
         this.MOTORS = motors;
-        return this;
     }
 
     public PowerSystemConstants withGear(double gear) {

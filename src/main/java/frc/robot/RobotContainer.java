@@ -7,6 +7,7 @@ import com.MAutils.RobotControl.DeafultRobotContainer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Commands.Arm.ArmCommand;
 import frc.robot.Commands.Swerve.SwerveTeleopController;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveConstants;
@@ -25,6 +26,8 @@ public class RobotContainer extends DeafultRobotContainer{
     setDriverController(new XboxMAController(0));
     setSwerveDriveSimulation(SwerveConstants.SWERVE_CONSTANTS.SWERVE_DRIVE_SIMULATION);
 
+    addSystemCommand(new ArmCommand());
+
     Swerve.getInstance();
 
     CommandScheduler.getInstance().setDefaultCommand(
@@ -36,9 +39,22 @@ public class RobotContainer extends DeafultRobotContainer{
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    T(() -> driverController.getActionsDown(),  RobotConstatns.ARM_IDLE).build();
+
+    T(() -> driverController.getActionsRight(),  RobotConstatns.ARM_DOWN).build();
+
+    T(() -> driverController.getActionsUp(),  RobotConstatns.ARM_UP).build();
+
+
+
   }
+
+public Command getAutonomousCommand() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+}
+
+
 }
