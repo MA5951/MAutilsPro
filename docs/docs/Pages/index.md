@@ -13,6 +13,6 @@ Built with **performance**, **flexibility**, and **ease of use** in mind, it off
 
 MAutils Pro **reduces boilerplate** and promotes **clean, scalable design**—helping teams focus more on strategy and performance than repetitive implementation details.
 
-This is the scouting app made by Makers Assemble 5951</span>
+
 
 
