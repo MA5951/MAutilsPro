@@ -10,6 +10,7 @@ public class Arm extends PositionControlledSystem{
     public Arm() {
         super("Arm" ,ArmConstatnts.ARM_CONSTANTS
         , ArmConstatnts.IDLE, ArmConstatnts.UP, ArmConstatnts.DOWEN);
+
     }
 
 

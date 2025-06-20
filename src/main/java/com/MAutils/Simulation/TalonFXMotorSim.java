@@ -8,8 +8,6 @@ import com.MAutils.Logger.MALog;
 import com.MAutils.Utils.ConvUtil;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -24,12 +22,8 @@ public class TalonFXMotorSim {
 
     public TalonFXMotorSim(TalonFX motor , TalonFXConfiguration motorConfig ,DCMotor motorType , double Inertia , boolean isRevers) {
         motorSimState = motor.getSimState();
-        physicshSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(motorType, Inertia, motorConfig.Feedback.SensorToMechanismRatio), motorType );
-        if  (motorConfig.MotorOutput.Inverted == InvertedValue.Clockwise_Positive) {
-            motorSimState.Orientation = ChassisReference.CounterClockwise_Positive;
-        } else {
-            motorSimState.Orientation = ChassisReference.Clockwise_Positive;
-        }
+        physicshSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(motorType.withReduction(motorConfig.Feedback.SensorToMechanismRatio), Inertia,1 ), motorType );
+
         
         configuration = motorConfig;
 

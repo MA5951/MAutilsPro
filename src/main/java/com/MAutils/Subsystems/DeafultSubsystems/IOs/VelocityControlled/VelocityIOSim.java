@@ -10,8 +10,8 @@ public class VelocityIOSim extends VelocityIOReal {
 
     private TalonFXMotorSim motorSim;
 
-    public VelocityIOSim(VelocitySystemConstants systemConstants) {
-        super(systemConstants);
+    public VelocityIOSim(String name,VelocitySystemConstants systemConstants) {
+        super(name, systemConstants);
         motorConfig.MotorOutput.Inverted = systemConstants.MOTORS[0].invert;
         motorSim = new TalonFXMotorSim(systemConstants.MOTORS[0].motorController, motorConfig, DCMotor.getKrakenX60(1),
                 systemConstants.INERTIA, false);

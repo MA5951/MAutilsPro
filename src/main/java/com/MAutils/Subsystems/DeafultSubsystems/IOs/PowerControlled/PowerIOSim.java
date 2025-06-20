@@ -10,8 +10,8 @@ public class PowerIOSim extends PowerIOReal {
 
     private TalonFXMotorSim motorSim;
 
-    public PowerIOSim(PowerSystemConstants systemConstants) {
-        super(systemConstants);
+    public PowerIOSim(String subsystemName , PowerSystemConstants systemConstants) {
+        super(subsystemName , systemConstants);
         motorConfig.MotorOutput.Inverted = systemConstants.MOTORS[0].invert;
         motorSim = new TalonFXMotorSim(systemConstants.MOTORS[0].motorController , motorConfig , DCMotor.getKrakenX60(1) , systemConstants.INERTIA , false);
 

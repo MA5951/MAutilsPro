@@ -17,9 +17,9 @@ public class PositionControlledSystem extends StateSubsystem{
     public PositionControlledSystem(String name,PositionSystemConstants systemConstants, SubsystemState... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
-            systemIO = new PositionIOReal(systemConstants);
+            systemIO = new PositionIOReal(name, systemConstants);
         } else {
-            systemIO = new PositionIOSim(systemConstants);
+            systemIO = new PositionIOSim(name, systemConstants);
         }
     }
 

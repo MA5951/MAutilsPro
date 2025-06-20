@@ -10,8 +10,8 @@ public class PositionIOSim extends PositionIOReal {
 
     private TalonFXMotorSim motorSim;
 
-    public PositionIOSim(PositionSystemConstants systemConstants) {
-        super(systemConstants);
+    public PositionIOSim(String systemName, PositionSystemConstants systemConstants) {
+        super(systemName, systemConstants);
         motorConfig.MotorOutput.Inverted = systemConstants.MOTORS[0].invert;
         motorSim = new TalonFXMotorSim(systemConstants.MOTORS[0].motorController , motorConfig , DCMotor.getKrakenX60(1) , systemConstants.INERTIA , false);
         motorSim.getMotorSimState().setRawRotorPosition((systemConstants.START_POSE / systemConstants.POSITION_FACTOR) * systemConstants.GEAR);

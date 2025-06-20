@@ -1,14 +1,14 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
-import com.MAutils.Components.Motor;
 
-public class PositionSystemConstants extends PowerSystemConstants {
+import com.MAutils.Components.Motor;
+import com.MAutils.Utils.GainConfig;
+
+public class PositionSystemConstants extends DeafultSystemConstants<PositionSystemConstants> {
     
-    public double P_GAIN = 0;
-    public double I_GAIN = 0;
-    public double D_GAIN = 0;
-    public double F_GAIN = 0;
+    public GainConfig realGainConfig = new GainConfig();
+    public GainConfig simGainConfig = new GainConfig();
     public double MIN_POSE = 0;
     public double MAX_POSE = 0;
     public double START_POSE = 0;
@@ -18,24 +18,25 @@ public class PositionSystemConstants extends PowerSystemConstants {
     public double JERK = 0;
     public boolean IS_MOTION_MAGIC = false;
 
-    public PositionSystemConstants(Motor... motors) {
+    public PositionSystemConstants(double minPose, double maxPose, double startPose,Motor... motors) {
         super(motors);
-        VELOCITY_FACTOR = 60;// Default RPM
-        POSITION_FACTOR = 360;// Default Degrees
+        this.MIN_POSE = minPose;
+        this.MAX_POSE = maxPose;
+        this.START_POSE = startPose;
     }
 
-    public PositionSystemConstants withPID(double pGain, double iGain, double dGain, double tolerance) {
-        this.P_GAIN = pGain;
-        this.I_GAIN = iGain;
-        this.D_GAIN = dGain;
+    public PositionSystemConstants withTolerance(double tolerance) {
         this.TOLERANCE = tolerance;
         return this;
     }
 
-    public PositionSystemConstants withPoseLimits(double minPose, double maxPose, double startPose) {
-        this.MIN_POSE = minPose;
-        this.MAX_POSE = maxPose;
-        this.START_POSE = startPose;
+    public PositionSystemConstants withRealGains(GainConfig gainConfig) {
+        this.realGainConfig = gainConfig;
+        return this;
+    }
+
+    public PositionSystemConstants withSimGains(GainConfig gainConfig) {
+        this.simGainConfig = gainConfig;
         return this;
     }
 
@@ -47,9 +48,6 @@ public class PositionSystemConstants extends PowerSystemConstants {
         return this;
     }
 
-    public PositionSystemConstants withFeedForward(double kF) {
-        this.F_GAIN = kF;
-        return this;
-    }
+
 
 }

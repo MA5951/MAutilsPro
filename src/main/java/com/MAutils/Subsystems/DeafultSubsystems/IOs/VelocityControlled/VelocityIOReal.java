@@ -35,13 +35,16 @@ public class VelocityIOReal implements VelocitySystemIO {
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
+    private String logPath;
+
     private final VelocitySystemConstants systemConstants;
 
     private int i = 0;
 
-    public VelocityIOReal(VelocitySystemConstants systemConstants) {
+    public VelocityIOReal(String subsystemName ,VelocitySystemConstants systemConstants) {
         this.systemConstants = systemConstants;
         numOfMotors = systemConstants.MOTORS.length;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
@@ -164,13 +167,13 @@ public class VelocityIOReal implements VelocitySystemIO {
 
     @Override
     public void updatePeriodic() {
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Velocity", getVelocity());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Voltage", getAppliedVolts());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Current", getCurrent());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Position", getPosition());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Set Point", getSetPoint());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Error", getError());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/At Point", atPoint());
+        MALog.log(logPath + "/Velocity", getVelocity());
+        MALog.log(logPath + "/Voltage", getAppliedVolts());
+        MALog.log(logPath + "/Current", getCurrent());
+        MALog.log(logPath + "/Position", getPosition());
+        MALog.log(logPath + "/Set Point", getSetPoint());
+        MALog.log(logPath + "/Error", getError());
+        MALog.log(logPath + "/At Point", atPoint());
 
     }
 

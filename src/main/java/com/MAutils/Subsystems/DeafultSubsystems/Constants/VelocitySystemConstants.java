@@ -3,7 +3,7 @@ package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 import com.MAutils.Components.Motor;
 
-public class VelocitySystemConstants extends PowerSystemConstants {
+public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
     
     public double P_GAIN = 0;
     public double I_GAIN = 0;
@@ -15,8 +15,6 @@ public class VelocitySystemConstants extends PowerSystemConstants {
 
     public VelocitySystemConstants(Motor... motors) {
         super(motors);
-        VELOCITY_FACTOR = 60;// Deafult RPM
-        POSITION_FACTOR = 360;// Default Degrees
     }
 
     public VelocitySystemConstants withPID(double pGain, double iGain, double dGain, double tolerance) {

@@ -17,9 +17,9 @@ public class VelocityControlledSystem extends StateSubsystem{
     public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, SubsystemState... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(systemConstants);
+            systemIO = new VelocityIOReal(name, systemConstants);
         } else {
-            systemIO = new VelocityIOSim(systemConstants);
+            systemIO = new VelocityIOSim(name, systemConstants);
         }
     }
 

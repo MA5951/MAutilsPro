@@ -17,9 +17,9 @@ public class PowerControlledSystem extends StateSubsystem{
     public PowerControlledSystem(String name,PowerSystemConstants systemConstants, SubsystemState... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
-            systemIO = new PowerIOReal(systemConstants);
+            systemIO = new PowerIOReal(name, systemConstants);
         } else {
-            systemIO = new PowerIOSim(systemConstants);
+            systemIO = new PowerIOSim(name, systemConstants);
         }
     }
 
