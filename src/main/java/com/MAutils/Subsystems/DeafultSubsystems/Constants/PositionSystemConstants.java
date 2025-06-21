@@ -5,6 +5,8 @@ package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 import com.MAutils.Components.Motor;
 import com.MAutils.Utils.GainConfig;
 
+import frc.robot.Robot;
+
 public class PositionSystemConstants extends DeafultSystemConstants<PositionSystemConstants> {
     
     public GainConfig realGainConfig = new GainConfig();
@@ -48,6 +50,8 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
         return this;
     }
 
-
+    public GainConfig getGainConfig() {
+        return Robot.isReal() ? realGainConfig : simGainConfig;
+    }
 
 }

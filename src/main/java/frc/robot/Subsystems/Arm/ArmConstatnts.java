@@ -13,7 +13,7 @@ import frc.robot.PortMap;
 public class ArmConstatnts {
 
     public static final GainConfig REAL_GAINS = new GainConfig();
-    public static final GainConfig SIM_GAINS = new GainConfig().withKP(300);
+    public static final GainConfig SIM_GAINS = new GainConfig().withKP(1);
 
     public static final PositionSystemConstants ARM_CONSTANTS = new PositionSystemConstants(
             0, 

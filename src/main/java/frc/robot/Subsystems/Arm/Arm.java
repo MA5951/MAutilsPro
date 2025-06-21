@@ -1,6 +1,7 @@
 
 package frc.robot.Subsystems.Arm;
 
+
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.PositionControlledSystem;
 
 public class Arm extends PositionControlledSystem{
@@ -10,7 +11,6 @@ public class Arm extends PositionControlledSystem{
     public Arm() {
         super("Arm" ,ArmConstatnts.ARM_CONSTANTS
         , ArmConstatnts.IDLE, ArmConstatnts.UP, ArmConstatnts.DOWEN);
-
     }
 
 

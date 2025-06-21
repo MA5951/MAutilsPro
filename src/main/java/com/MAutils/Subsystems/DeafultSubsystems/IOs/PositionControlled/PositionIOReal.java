@@ -4,7 +4,6 @@ import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
-import com.MAutils.Utils.GainConfig;
 import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -21,7 +20,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Robot;
 
 public class PositionIOReal implements PositionSystemIO {
 
@@ -39,7 +37,6 @@ public class PositionIOReal implements PositionSystemIO {
     private StatusSignal<Double> motorSetPoint;
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
-    private GainConfig systemGains;
 
     private final PositionSystemConstants systemConstants;
 
@@ -50,7 +47,6 @@ public class PositionIOReal implements PositionSystemIO {
     public PositionIOReal(String subsystemName ,PositionSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
         numOfMotors = systemConstants.MOTORS.length;
-        systemGains = Robot.isReal() ? systemConstants.realGainConfig : systemConstants.simGainConfig;
         logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
 
 
@@ -87,10 +83,10 @@ public class PositionIOReal implements PositionSystemIO {
                 ? NeutralModeValue.Brake
                 : NeutralModeValue.Coast;
 
-        motorConfig.Slot0.kP = systemGains.Kp;
-        motorConfig.Slot0.kI = systemGains.Ki;
-        motorConfig.Slot0.kD = systemGains.Kd;
-        motorConfig.Slot0.kS = systemGains.Ks;
+        motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
+        motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
+        motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+        motorConfig.Slot0.kS = systemConstants.getGainConfig().Ks;
         motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
         motorConfig.MotionMagic.MotionMagicAcceleration = systemConstants.ACCELERATION;
@@ -169,14 +165,14 @@ public class PositionIOReal implements PositionSystemIO {
             systemConstants.MOTORS[0].motorController.setControl(
                     motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
-                            .withFeedForward(systemGains.Kf)
+                            .withFeedForward(systemConstants.getGainConfig().Kf)
                             .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
                             .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
         } else {
              systemConstants.MOTORS[0].motorController.setControl(
                     positionRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
-                            .withFeedForward(systemGains.Kf)
+                            .withFeedForward(systemConstants.getGainConfig().Kf)
                             .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
                             .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
         }
