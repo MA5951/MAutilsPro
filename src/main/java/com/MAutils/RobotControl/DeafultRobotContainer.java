@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
+    protected static RobotState lastRobotState;
     protected static MAController driverController = new PS5MAController(0);
     protected static MAController operatorController = new PS5MAController(1);
     private static SwerveDriveSimulation swerveDriveSimulation;
@@ -57,11 +58,16 @@ public class DeafultRobotContainer {
     }
 
     public static void setRobotState(RobotState robotState) {
+        lastRobotState = currentRobotState;
         currentRobotState = robotState;
     }
 
     public static RobotState getRobotState() {
         return currentRobotState;
+    }
+
+    public static RobotState getLastRobotState() {
+        return lastRobotState;
     }
 
     public static StateTrigger T(BooleanSupplier condition, RobotState stateToSet) {

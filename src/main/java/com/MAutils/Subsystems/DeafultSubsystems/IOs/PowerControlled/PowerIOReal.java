@@ -31,13 +31,16 @@ public class PowerIOReal implements PowerSystemIO {
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
+    private String logPath;
+
     private final PowerSystemConstants systemConstants;
 
     private int i = 0;
 
-    public PowerIOReal(PowerSystemConstants systemConstants) {
+    public PowerIOReal(String subsystemName ,PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
         numOfMotors = systemConstants.MOTORS.length;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
@@ -122,10 +125,10 @@ public class PowerIOReal implements PowerSystemIO {
 
     @Override
     public void updatePeriodic() {
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Velocity", getVelocity());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Voltage", getAppliedVolts());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Current", getCurrent());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Position", getPosition());
+        MALog.log(logPath + "/Velocity", getVelocity());
+        MALog.log(logPath + "/Voltage", getAppliedVolts());
+        MALog.log(logPath + "/Current", getCurrent());
+        MALog.log(logPath + "/Position", getPosition());
 
         
 

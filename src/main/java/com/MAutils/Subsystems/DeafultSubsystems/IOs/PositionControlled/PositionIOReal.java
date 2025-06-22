@@ -5,6 +5,7 @@ import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Utils.StatusSignalsRunner;
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,8 +13,8 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -39,20 +40,26 @@ public class PositionIOReal implements PositionSystemIO {
 
     private final PositionSystemConstants systemConstants;
 
+    private String logPath;
+
     private int i = 0;
 
-    public PositionIOReal(PositionSystemConstants systemConstants) {
+    public PositionIOReal(String subsystemName ,PositionSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
         numOfMotors = systemConstants.MOTORS.length;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
+
 
         configMotors();
 
         followers = new StrictFollower[numOfMotors - 1];
+        
 
         for (Motor motor : systemConstants.MOTORS) {
             if (i > 0) {
                 followers[i - 1] = new StrictFollower(systemConstants.MOTORS[0].motorController.getDeviceID());
             } else {
+                System.out.println("Config");
                 motorVelocity = motor.motorController.getVelocity(false);
                 motorCurrent = motor.motorController.getStatorCurrent(false);
                 motorVoltage = motor.motorController.getMotorVoltage(false);
@@ -62,7 +69,6 @@ public class PositionIOReal implements PositionSystemIO {
                 StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
                         motorVoltage, motorError, motorSetPoint, motorPosition);
             }
-            TalonFX.resetSignalFrequenciesForAll(motor.motorController);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
             i++;
@@ -77,9 +83,11 @@ public class PositionIOReal implements PositionSystemIO {
                 ? NeutralModeValue.Brake
                 : NeutralModeValue.Coast;
 
-        motorConfig.Slot0.kP = systemConstants.P_GAIN;
-        motorConfig.Slot0.kI = systemConstants.I_GAIN;
-        motorConfig.Slot0.kD = systemConstants.D_GAIN;
+        motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
+        motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
+        motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+        motorConfig.Slot0.kS = systemConstants.getGainConfig().Ks;
+        motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
         motorConfig.MotionMagic.MotionMagicAcceleration = systemConstants.ACCELERATION;
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
@@ -152,18 +160,19 @@ public class PositionIOReal implements PositionSystemIO {
 
     @Override
     public void setPosition(double position) {
+        
         if (systemConstants.IS_MOTION_MAGIC) {
             systemConstants.MOTORS[0].motorController.setControl(
                     motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
-                            .withFeedForward(systemConstants.F_GAIN)
+                            .withFeedForward(systemConstants.getGainConfig().Kf)
                             .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
                             .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
         } else {
-            systemConstants.MOTORS[0].motorController.setControl(
+             systemConstants.MOTORS[0].motorController.setControl(
                     positionRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
-                            .withFeedForward(systemConstants.F_GAIN)
+                            .withFeedForward(systemConstants.getGainConfig().Kf)
                             .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
                             .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
         }
@@ -198,13 +207,15 @@ public class PositionIOReal implements PositionSystemIO {
 
     @Override
     public void updatePeriodic() {
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Velocity", getVelocity());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Voltage", getAppliedVolts());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Current", getCurrent());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Position", getPosition());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Set Point", getSetPoint());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/Error", getError());
-        MALog.log("/Subsystem/" + systemConstants.LOG_PATH + "/IO/" + "/At Point", atPoint());
+        BaseStatusSignal.refreshAll(motorVelocity, motorCurrent,
+        motorVoltage, motorError, motorSetPoint, motorPosition);
+        MALog.log(logPath + "/Velocity", getVelocity());
+        MALog.log(logPath + "/Voltage", getAppliedVolts());
+        MALog.log(logPath + "/Current", getCurrent());
+        MALog.log(logPath + "/Position", getPosition());
+        MALog.log(logPath + "/Set Point", getSetPoint());
+        MALog.log(logPath + "/Error", getError());
+        MALog.log(logPath + "/At Point", atPoint());
 
     }
 
