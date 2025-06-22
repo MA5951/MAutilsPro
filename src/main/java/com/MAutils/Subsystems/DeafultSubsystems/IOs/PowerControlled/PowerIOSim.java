@@ -3,6 +3,7 @@ package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Utils.DeafultRobotConstants;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -16,7 +17,6 @@ public class PowerIOSim implements PowerSystemIO {
   private double desiredVoltage = 0.0;
 
   private static final double kDampingRate = 13.0;
-  private final double kDt = 0.02;//TODO
 
   public PowerIOSim(String systemName, PowerSystemConstants constants) {
     this.constants = constants;
@@ -70,13 +70,13 @@ public class PowerIOSim implements PowerSystemIO {
     if (constants.IS_BRAKE && (!DriverStation.isEnabled() || Math.abs(voltageToApply) < 1e-3)) {
       double pos = motorSim.getAngularPositionRad();
       double vel = motorSim.getAngularVelocityRadPerSec();
-      double dampFactor = Math.max(0.0, 1.0 - kDampingRate * kDt);
+      double dampFactor = Math.max(0.0, 1.0 - kDampingRate * DeafultRobotConstants.kD);
       motorSim.setState(pos, vel * dampFactor);
       voltageToApply = 0.0;
     }
 
     motorSim.setInputVoltage(voltageToApply);
-    motorSim.update(kDt);
+    motorSim.update(DeafultRobotConstants.kD);
 
     MALog.log(logPath + "/Velocity", getVelocity());
     MALog.log(logPath + "/Voltage", getAppliedVolts());

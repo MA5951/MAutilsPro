@@ -14,6 +14,7 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 import com.MAutils.Swerve.Utils.DriveFeedforwards;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
+import com.MAutils.Utils.DeafultRobotConstants;
 import com.MAutils.Swerve.Utils.DeafultSwerveSystem;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -97,7 +98,7 @@ public class SwerveSystem extends DeafultSwerveSystem {
         swerveSetpoint = swerveSetpointGenerator.generateSetpoint(
         swerveSetpoint,
         speeds,
-        0.02
+        DeafultRobotConstants.kD
         );
 
 
