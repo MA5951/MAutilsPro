@@ -16,7 +16,9 @@ public class StateSubsystem extends SubsystemBase {
 
     public StateSubsystem(String name, SubsystemState... subsystemStates) {
         for (SubsystemState state : subsystemStates) {
-            state.setSubsystem(this);
+            if (state != null) {
+                state.setSubsystem(this);
+            }
         }
 
         currentState = new SubsystemState("IDLE", this);
