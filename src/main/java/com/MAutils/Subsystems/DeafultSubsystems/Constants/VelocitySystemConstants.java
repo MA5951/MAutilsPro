@@ -2,37 +2,40 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 import com.MAutils.Components.Motor;
+import com.MAutils.Utils.GainConfig;
+
+import frc.robot.Robot;
 
 public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
     
-    public double P_GAIN = 0;
-    public double I_GAIN = 0;
-    public double D_GAIN = 0;
-    public double KS = 0;
-    public double KV = 0;
+    public GainConfig realGainConfig = new GainConfig();
+    public GainConfig simGainConfig = new GainConfig()
+    .withKP(1);;
     public double MAX_VELOCITY = 0;
     public double TOLERANCE = 0;
 
-    public VelocitySystemConstants(Motor... motors) {
+    public VelocitySystemConstants(double maxVelocity ,Motor... motors) {
         super(motors);
-    }
-
-    public VelocitySystemConstants withPID(double pGain, double iGain, double dGain, double tolerance) {
-        this.P_GAIN = pGain;
-        this.I_GAIN = iGain;
-        this.D_GAIN = dGain;
-        this.TOLERANCE = tolerance;
-        return this;
-    }
-
-    public VelocitySystemConstants withMaxVelocity(double maxVelocity) {
         this.MAX_VELOCITY = maxVelocity;
+    }
+
+
+    public VelocitySystemConstants withRealGains(GainConfig gainConfig) {
+        this.realGainConfig = gainConfig;
         return this;
     }
 
-    public VelocitySystemConstants withFeedForward(double kS, double kV) {
-        this.KS = kS;
-        this.KV = kV;
+    public VelocitySystemConstants withSimGains(GainConfig gainConfig) {
+        this.simGainConfig = gainConfig;
+        return this;
+    }
+
+    public GainConfig getGainConfig() {
+        return Robot.isReal() ? realGainConfig : simGainConfig;
+    }
+
+    public VelocitySystemConstants withTolerance(double tolerance) {
+        this.TOLERANCE = tolerance;
         return this;
     }
 }

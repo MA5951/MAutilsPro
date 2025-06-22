@@ -7,6 +7,7 @@ import com.MAutils.RobotControl.DeafultRobotContainer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Commands.Arm.ArmCommand;
+import frc.robot.Commands.Shooter.ShooterCommand;
 import frc.robot.Commands.Swerve.SwerveTeleopController;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveConstants;
@@ -26,6 +27,7 @@ public class RobotContainer extends DeafultRobotContainer{
     setSwerveDriveSimulation(SwerveConstants.SWERVE_CONSTANTS.SWERVE_DRIVE_SIMULATION);
 
     addSystemCommand(new ArmCommand());
+    addSystemCommand(new ShooterCommand());
 
     Swerve.getInstance();
 

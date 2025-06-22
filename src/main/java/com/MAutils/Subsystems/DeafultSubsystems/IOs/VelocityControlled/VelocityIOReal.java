@@ -41,7 +41,7 @@ public class VelocityIOReal implements VelocitySystemIO {
 
     private int i = 0;
 
-    public VelocityIOReal(String subsystemName ,VelocitySystemConstants systemConstants) {
+    public VelocityIOReal(String subsystemName, VelocitySystemConstants systemConstants) {
         this.systemConstants = systemConstants;
         numOfMotors = systemConstants.MOTORS.length;
         logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
@@ -78,11 +78,10 @@ public class VelocityIOReal implements VelocitySystemIO {
                 ? NeutralModeValue.Brake
                 : NeutralModeValue.Coast;
 
-        motorConfig.Slot0.kP = systemConstants.P_GAIN;
-        motorConfig.Slot0.kI = systemConstants.I_GAIN;
-        motorConfig.Slot0.kD = systemConstants.D_GAIN;
-        motorConfig.Slot0.kV = systemConstants.KV;
-        motorConfig.Slot0.kS = systemConstants.KS;
+        motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
+        motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
+        motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+        motorConfig.Slot0.kS = systemConstants.getGainConfig().Ks;
 
         motorConfig.Voltage.PeakForwardVoltage = systemConstants.PEAK_FORWARD_VOLTAGE;
         motorConfig.Voltage.PeakReverseVoltage = systemConstants.PEAK_REVERSE_VOLTAGE;
@@ -153,8 +152,9 @@ public class VelocityIOReal implements VelocitySystemIO {
     public void setVelocity(double Velocity) {
         if (Velocity > systemConstants.MAX_VELOCITY) {
             Velocity = systemConstants.MAX_VELOCITY;
-            System.out.println("Velocity exceeds maximum limit, setting to " + systemConstants.MAX_VELOCITY); //TODO normal
-        } 
+            System.out.println("Velocity exceeds maximum limit, setting to " + systemConstants.MAX_VELOCITY); // TODO
+                                                                                                              // normal
+        }
         systemConstants.MOTORS[0].motorController.setControl(velocityRequest.withVelocity(Velocity)
                 .withSlot(0)
                 .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT)
