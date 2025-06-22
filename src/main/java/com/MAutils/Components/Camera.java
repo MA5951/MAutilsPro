@@ -1,5 +1,5 @@
 
-package com.MAutils.Componentsnents;
+package com.MAutils.Components;
 
 public class Camera {
 
