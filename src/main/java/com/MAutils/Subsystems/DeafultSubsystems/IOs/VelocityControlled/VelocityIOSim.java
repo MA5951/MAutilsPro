@@ -18,8 +18,8 @@ public class VelocityIOSim implements VelocitySystemIO {
     private final PIDController pid;
     private double voltage;
 
-    private static final double kDampingRate = 13.0;
-    private String logPath;
+    private final double kDampingRate = 13.0;
+    private final String logPath;
 
     public VelocityIOSim(String systemName, VelocitySystemConstants constants) {
         this.constants = constants;

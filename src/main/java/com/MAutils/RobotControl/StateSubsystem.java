@@ -5,10 +5,9 @@ import com.MAutils.Logger.MALog;
 import com.MAutils.RobotControl.RobotControlConstants.SystemMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class StateSubsystem extends SubsystemBase {
+public abstract class StateSubsystem extends SubsystemBase {
 
     private SubsystemState currentState;
     private SystemMode systemMode;
@@ -44,13 +43,9 @@ public class StateSubsystem extends SubsystemBase {
         return systemMode;
     }
 
-    public Command getSelfTest() {
-        return new InstantCommand(() -> System.out.println("Self-test not implemented for " + subsystemName));
-    }
+    public abstract Command getSelfTest();
 
-    public boolean CAN_MOVE() {
-        return false;
-    }
+    public abstract boolean CAN_MOVE();
 
     @Override
     public void periodic() {

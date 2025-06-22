@@ -24,8 +24,8 @@ public class VelocityIOReal implements VelocitySystemIO {
     private final int numOfMotors;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    private MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
+    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
     private final StrictFollower[] followers;
 
     private StatusSignal<AngularVelocity> motorVelocity;
@@ -35,7 +35,7 @@ public class VelocityIOReal implements VelocitySystemIO {
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
-    private String logPath;
+    private final String logPath;
 
     private final VelocitySystemConstants systemConstants;
 

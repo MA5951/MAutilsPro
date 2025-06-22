@@ -20,11 +20,11 @@ public class PositionIOSim implements PositionSystemIO {
     private final PIDController pidController;
     private final ProfiledPIDController profiledPIDController;
 
-    private final double kDampingRate = 13;// Used to simulate brake mode
+    private final double kDampingRate = 13;
 
     private double voltage;
 
-    private String logPath;
+    private final String logPath;
 
     public PositionIOSim(String systemName, PositionSystemConstants systemConstants) {
         this.systemConstants = systemConstants;

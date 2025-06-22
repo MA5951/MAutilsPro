@@ -16,7 +16,7 @@ public class PowerIOSim implements PowerSystemIO {
   private double desiredVoltage = 0.0;
 
   private static final double kDampingRate = 13.0;
-  private static final double kDt = 0.02;
+  private final double kDt = 0.02;//TODO
 
   public PowerIOSim(String systemName, PowerSystemConstants constants) {
     this.constants = constants;
@@ -55,7 +55,6 @@ public class PowerIOSim implements PowerSystemIO {
 
   @Override
   public void setVoltage(double voltage) {
-    // Record desired voltage; will apply insks updatePeriodic
     desiredVoltage = Math.max(Math.min(voltage, constants.PEAK_FORWARD_VOLTAGE), constants.PEAK_REVERSE_VOLTAGE);
   }
 
@@ -68,22 +67,17 @@ public class PowerIOSim implements PowerSystemIO {
   public void updatePeriodic() {
     double voltageToApply = desiredVoltage;
 
-    // Simulate brake mode if no voltage commanded or robot disabled
     if (constants.IS_BRAKE && (!DriverStation.isEnabled() || Math.abs(voltageToApply) < 1e-3)) {
-      // Dampen velocity to simulate mechanical braking
       double pos = motorSim.getAngularPositionRad();
       double vel = motorSim.getAngularVelocityRadPerSec();
       double dampFactor = Math.max(0.0, 1.0 - kDampingRate * kDt);
       motorSim.setState(pos, vel * dampFactor);
-      // Zero out voltage for physics step
       voltageToApply = 0.0;
     }
 
-    // Apply voltage and step physics
     motorSim.setInputVoltage(voltageToApply);
     motorSim.update(kDt);
 
-    // Logging
     MALog.log(logPath + "/Velocity", getVelocity());
     MALog.log(logPath + "/Voltage", getAppliedVolts());
     MALog.log(logPath + "/Current", getCurrent());
