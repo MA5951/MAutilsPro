@@ -1,6 +1,6 @@
 package com.MAutils.Components;
 
-import com.MAutils.Utils.CANBusID;
+import com.MAutils.CanBus.CANBusID;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 

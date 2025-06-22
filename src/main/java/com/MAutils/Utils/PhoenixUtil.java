@@ -1,5 +1,5 @@
 
-package com.MAutils.Swerve.Utils;
+package com.MAutils.Utils;
 
 import static edu.wpi.first.units.Units.Seconds;
 

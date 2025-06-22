@@ -1,9 +1,9 @@
 
 package frc.robot;
 
-import com.MAutils.Swerve.Utils.SwerveModuleID;
-import com.MAutils.Utils.CANBusID;
-import com.MAutils.Utils.DeafultPortMap;
+import com.MAutils.CanBus.CANBusID;
+import com.MAutils.CanBus.DeafultPortMap;
+import com.MAutils.CanBus.SwerveModuleID;
 
 public class PortMap extends DeafultPortMap{
 

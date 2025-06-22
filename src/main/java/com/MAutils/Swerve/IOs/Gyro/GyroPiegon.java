@@ -6,9 +6,9 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 
 import java.util.Queue;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
-import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;

@@ -1,10 +1,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
-import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;

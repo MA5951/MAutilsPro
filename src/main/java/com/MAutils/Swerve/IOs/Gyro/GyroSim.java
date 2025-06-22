@@ -4,7 +4,7 @@ package com.MAutils.Swerve.IOs.Gyro;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import com.MAutils.Swerve.SwerveSystemConstants;
-import com.MAutils.Swerve.Utils.PhoenixUtil;
+import com.MAutils.Utils.PhoenixUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
