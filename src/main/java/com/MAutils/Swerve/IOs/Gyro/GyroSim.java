@@ -28,6 +28,8 @@ public class GyroSim implements GyroIO {
         gyroData.yawVelocity = gyroSim.getMeasuredAngularVelocity().in(DegreesPerSecond);
         gyroData.pitch = 0;
         gyroData.roll = 0;
+        gyroData.accelX = 0;
+        gyroData.accelY = 0;
 
         gyroData.odometryYawTimestamps = PhoenixUtil.getSimulationOdometryTimeStamps();
         gyroData.odometryYawPositions = gyroSim.getCachedGyroReadings();
