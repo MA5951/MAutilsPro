@@ -23,6 +23,16 @@ public class PositionControlledSystem extends StateSubsystem{
         }
     }
 
+    
+    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, PositionSystemIO simIO ,SubsystemState... subsystemStates) {
+        super(name, subsystemStates);
+        if (Robot.isReal()) {
+            systemIO = new PositionIOReal(name, systemConstants);
+        } else {
+            systemIO = simIO;
+        }
+    }
+
     public double getAppliedVolts() {
         return systemIO.getAppliedVolts();
     }

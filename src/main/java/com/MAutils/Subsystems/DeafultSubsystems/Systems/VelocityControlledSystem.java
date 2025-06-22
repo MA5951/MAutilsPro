@@ -23,6 +23,15 @@ public class VelocityControlledSystem extends StateSubsystem{
         }
     }
 
+    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO ,SubsystemState... subsystemStates) {
+        super(name, subsystemStates);
+        if (Robot.isReal()) {
+            systemIO = new VelocityIOReal(name, systemConstants);
+        } else {
+            systemIO = simIO;
+        }
+    }
+
     public double getAppliedVolts() {
         return systemIO.getAppliedVolts();
     }
