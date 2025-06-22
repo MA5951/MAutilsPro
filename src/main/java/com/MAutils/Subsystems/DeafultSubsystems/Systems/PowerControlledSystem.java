@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOSim;
 
 import frc.robot.Robot;
 
-public class PowerControlledSystem extends StateSubsystem{
+public abstract class PowerControlledSystem extends StateSubsystem{
 
     protected final PowerSystemIO systemIO;
 
@@ -20,6 +20,15 @@ public class PowerControlledSystem extends StateSubsystem{
             systemIO = new PowerIOReal(name, systemConstants);
         } else {
             systemIO = new PowerIOSim(name, systemConstants);
+        }
+    }
+
+    public PowerControlledSystem(String name,PowerSystemConstants systemConstants, PowerSystemIO simIO ,SubsystemState... subsystemStates) {
+        super(name, subsystemStates);
+        if (Robot.isReal()) {
+            systemIO = new PowerIOReal(name, systemConstants);
+        } else {
+            systemIO = simIO;
         }
     }
 

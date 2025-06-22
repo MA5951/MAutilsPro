@@ -5,10 +5,10 @@ import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Controllers.MAController;
 import com.MAutils.Controllers.PS5MAController;
 import com.MAutils.Logger.MALog;
-import com.MAutils.Utils.StatusSignalsRunner;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 

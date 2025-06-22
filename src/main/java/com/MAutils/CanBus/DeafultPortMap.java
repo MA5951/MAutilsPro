@@ -1,5 +1,5 @@
 
-package com.MAutils.Utils;
+package com.MAutils.CanBus;
 
 import com.ctre.phoenix6.CANBus;
 

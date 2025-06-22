@@ -4,6 +4,8 @@ package frc.robot.Subsystems.Arm;
 
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.PositionControlledSystem;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 public class Arm extends PositionControlledSystem{
     private static Arm arm;
 
@@ -25,6 +27,13 @@ public class Arm extends PositionControlledSystem{
             arm = new Arm();
         }
         return arm;
+    }
+
+
+    @Override
+    public Command getSelfTest() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSelfTest'");
     }
 
 }

@@ -1,10 +1,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
-import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -22,8 +22,8 @@ public class PowerIOReal implements PowerSystemIO {
 
     private final int numOfMotors;
     private final VoltageOut voltageRequest = new VoltageOut(0);
-    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    private MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
+    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
     private final StrictFollower[] followers;
 
     private StatusSignal<AngularVelocity> motorVelocity;
@@ -31,7 +31,7 @@ public class PowerIOReal implements PowerSystemIO {
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
-    private String logPath;
+    private final String logPath;
 
     private final PowerSystemConstants systemConstants;
 

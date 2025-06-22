@@ -10,6 +10,8 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
+import com.MAutils.CanBus.CANBusID;
+import com.MAutils.CanBus.SwerveModuleID;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroPiegon;
 import com.MAutils.Swerve.IOs.Gyro.GyroSim;
@@ -17,8 +19,6 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
-import com.MAutils.Swerve.Utils.SwerveModuleID;
-import com.MAutils.Utils.CANBusID;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;

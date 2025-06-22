@@ -1,5 +1,6 @@
 package com.MAutils.Swerve.Utils;
 
+import com.MAutils.Utils.DeafultRobotConstants;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
@@ -61,7 +62,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
    */
   public PPHolonomicDriveController(
       PIDConstants translationConstants, PIDConstants rotationConstants) {
-    this(translationConstants, translationConstants ,rotationConstants, 0.02);
+    this(translationConstants, translationConstants ,rotationConstants, DeafultRobotConstants.kD);
   }
 
   /**
@@ -73,7 +74,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
    */
   public PPHolonomicDriveController(
       PIDConstants xTranslationConstants, PIDConstants yTranslationConstants ,PIDConstants rotationConstants) {
-    this(xTranslationConstants, yTranslationConstants,rotationConstants, 0.02);
+    this(xTranslationConstants, yTranslationConstants,rotationConstants, DeafultRobotConstants.kD);
   }
 
   /**

@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityI
 
 import frc.robot.Robot;
 
-public class VelocityControlledSystem extends StateSubsystem{
+public abstract class VelocityControlledSystem extends StateSubsystem{
 
     protected final VelocitySystemIO systemIO;
 
@@ -20,6 +20,15 @@ public class VelocityControlledSystem extends StateSubsystem{
             systemIO = new VelocityIOReal(name, systemConstants);
         } else {
             systemIO = new VelocityIOSim(name, systemConstants);
+        }
+    }
+
+    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO ,SubsystemState... subsystemStates) {
+        super(name, subsystemStates);
+        if (Robot.isReal()) {
+            systemIO = new VelocityIOReal(name, systemConstants);
+        } else {
+            systemIO = simIO;
         }
     }
 

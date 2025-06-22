@@ -12,8 +12,10 @@ import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 import com.MAutils.Swerve.Utils.DriveFeedforwards;
+import com.MAutils.Swerve.Utils.SkidAndCollisionDetector;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
+import com.MAutils.Utils.DeafultRobotConstants;
 import com.MAutils.Swerve.Utils.DeafultSwerveSystem;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -33,6 +35,7 @@ public class SwerveSystem extends DeafultSwerveSystem {
     private final SwerveSetpointGenerator swerveSetpointGenerator;
     private final SwerveModuleState[] currentStates = new SwerveModuleState[4];
     private final DeafultPoseEstimator poseEstimator;
+    private final SkidAndCollisionDetector skidAndCollisionDetector;
 
     public SwerveSystem(SwerveSystemConstants swerveConstants, DeafultPoseEstimator poseEstimator) {
         super();
@@ -44,6 +47,9 @@ public class SwerveSystem extends DeafultSwerveSystem {
 
         swerveSetpointGenerator = new SwerveSetpointGenerator(swerveConstants.getRobotConfig(),
                 Units.rotationsToRadians(10.0));
+
+        skidAndCollisionDetector = new SkidAndCollisionDetector(swerveConstants, gyro::getGyroData,
+                this::getCurrentStates);
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 
@@ -78,6 +84,8 @@ public class SwerveSystem extends DeafultSwerveSystem {
 
         currentSpeeds = swerveConstants.kinematics.toChassisSpeeds(currentStates);
 
+        skidAndCollisionDetector.update();
+        
         proccedsOdometery();
 
         logSwerve();
@@ -95,11 +103,9 @@ public class SwerveSystem extends DeafultSwerveSystem {
 
     public void drive(ChassisSpeeds speeds) {
         swerveSetpoint = swerveSetpointGenerator.generateSetpoint(
-        swerveSetpoint,
-        speeds,
-        0.02
-        );
-
+                swerveSetpoint,
+                speeds,
+                DeafultRobotConstants.kD);
 
         MALog.logSwerveModuleStates("/Subsystems/Swerve/States/SetPoint", swerveSetpoint.moduleStates());
         runSwerveStates(swerveSetpoint.moduleStates());

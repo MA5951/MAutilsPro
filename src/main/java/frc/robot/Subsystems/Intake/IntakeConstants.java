@@ -1,10 +1,10 @@
 
 package frc.robot.Subsystems.Intake;
 
+import com.MAutils.CanBus.CANBusID;
 import com.MAutils.Components.Motor;
 import com.MAutils.RobotControl.SubsystemState;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
-import com.MAutils.Utils.CANBusID;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 

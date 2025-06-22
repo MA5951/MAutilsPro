@@ -1,5 +1,5 @@
 
-package com.MAutils.Swerve.Utils;
+package com.MAutils.Utils;
 
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -76,7 +76,7 @@ public final class PhoenixUtil {
         final double[] odometryTimeStamps = new double[SimulatedArena.getSimulationSubTicksIn1Period()];
         for (int i = 0; i < odometryTimeStamps.length; i++) {
             odometryTimeStamps[i] = Timer.getFPGATimestamp()
-                    - 0.02
+                    - DeafultRobotConstants.kD
                     + i * SimulatedArena.getSimulationDt().in(Seconds);
         }
 

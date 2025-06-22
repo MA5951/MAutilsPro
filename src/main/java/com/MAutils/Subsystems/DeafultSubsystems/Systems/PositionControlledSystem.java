@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionI
 
 import frc.robot.Robot;
 
-public class PositionControlledSystem extends StateSubsystem{
+public abstract class PositionControlledSystem extends StateSubsystem{
 
     protected final PositionSystemIO systemIO;
 
@@ -20,6 +20,16 @@ public class PositionControlledSystem extends StateSubsystem{
             systemIO = new PositionIOReal(name, systemConstants);
         } else {
             systemIO = new PositionIOSim(name, systemConstants);
+        }
+    }
+
+    
+    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, PositionSystemIO simIO ,SubsystemState... subsystemStates) {
+        super(name, subsystemStates);
+        if (Robot.isReal()) {
+            systemIO = new PositionIOReal(name, systemConstants);
+        } else {
+            systemIO = simIO;
         }
     }
 

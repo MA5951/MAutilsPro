@@ -1,10 +1,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
-import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -24,8 +24,8 @@ public class VelocityIOReal implements VelocitySystemIO {
     private final int numOfMotors;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    private MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
+    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
     private final StrictFollower[] followers;
 
     private StatusSignal<AngularVelocity> motorVelocity;
@@ -35,10 +35,8 @@ public class VelocityIOReal implements VelocitySystemIO {
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
-    private String logPath;
-
+    private final String logPath;
     private final VelocitySystemConstants systemConstants;
-
     private int i = 0;
 
     public VelocityIOReal(String subsystemName, VelocitySystemConstants systemConstants) {

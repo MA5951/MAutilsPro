@@ -1,10 +1,10 @@
 
 package frc.robot.Subsystems.Shooter;
 
+import com.MAutils.CanBus.CANBusID;
 import com.MAutils.Components.Motor;
 import com.MAutils.RobotControl.SubsystemState;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
-import com.MAutils.Utils.CANBusID;
 import com.MAutils.Utils.GainConfig;
 import com.ctre.phoenix6.signals.InvertedValue;
 

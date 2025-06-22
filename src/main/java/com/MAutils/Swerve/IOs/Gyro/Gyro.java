@@ -26,6 +26,8 @@ public class Gyro {
         MALog.log("/Subsystems/Swerve/" + name + "/Yaw Velocity", gyroData.yawVelocity);
         MALog.log("/Subsystems/Swerve/" + name + "/Pitch", gyroData.pitch);
         MALog.log("/Subsystems/Swerve/" + name + "/Roll", gyroData.roll);
+        MALog.log("/Subsystems/Swerve/" + name + "/Accel X", gyroData.accelX);
+        MALog.log("/Subsystems/Swerve/" + name + "/Accel Y", gyroData.accelY);
     }
 
     public GyroData getGyroData() {

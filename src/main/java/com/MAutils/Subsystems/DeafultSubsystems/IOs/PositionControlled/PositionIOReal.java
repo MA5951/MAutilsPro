@@ -1,10 +1,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
-import com.MAutils.Utils.StatusSignalsRunner;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -27,8 +27,8 @@ public class PositionIOReal implements PositionSystemIO {
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
-    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    private MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
+    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
     private final StrictFollower[] followers;
 
     private StatusSignal<AngularVelocity> motorVelocity;
@@ -39,9 +39,7 @@ public class PositionIOReal implements PositionSystemIO {
     private StatusSignal<Voltage> motorVoltage;
 
     private final PositionSystemConstants systemConstants;
-
-    private String logPath;
-
+    private final String logPath;
     private int i = 0;
 
     public PositionIOReal(String subsystemName ,PositionSystemConstants systemConstants) {
