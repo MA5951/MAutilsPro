@@ -3,6 +3,8 @@ package frc.robot.Subsystems.Shooter;
 
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.VelocityControlledSystem;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 public class Shooter extends VelocityControlledSystem{
     private static Shooter shooter;
 
@@ -21,5 +23,11 @@ public class Shooter extends VelocityControlledSystem{
             shooter = new Shooter();
         }
         return shooter;
+    }
+
+    @Override
+    public Command getSelfTest() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSelfTest'");
     }
 }

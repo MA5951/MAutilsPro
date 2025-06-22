@@ -52,11 +52,15 @@ public class SelfSystemTest{
         );
     }
 
-    public Command runTests() {
+    public Command createCommand() {
         for (Test test : testsList) {
             runTest(test);
         }
         return commandGroup;
+    }
+
+    public static SelfSystemTest systemTest(StateSubsystem subsystem) {
+        return new SelfSystemTest(subsystem);
     }
 
 }

@@ -36,9 +36,7 @@ public class VelocityIOReal implements VelocitySystemIO {
     private StatusSignal<Voltage> motorVoltage;
 
     private final String logPath;
-
     private final VelocitySystemConstants systemConstants;
-
     private int i = 0;
 
     public VelocityIOReal(String subsystemName, VelocitySystemConstants systemConstants) {

@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionI
 
 import frc.robot.Robot;
 
-public class PositionControlledSystem extends StateSubsystem{
+public abstract class PositionControlledSystem extends StateSubsystem{
 
     protected final PositionSystemIO systemIO;
 

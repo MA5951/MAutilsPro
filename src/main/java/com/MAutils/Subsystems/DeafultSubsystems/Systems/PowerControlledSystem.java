@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOSim;
 
 import frc.robot.Robot;
 
-public class PowerControlledSystem extends StateSubsystem{
+public abstract class PowerControlledSystem extends StateSubsystem{
 
     protected final PowerSystemIO systemIO;
 

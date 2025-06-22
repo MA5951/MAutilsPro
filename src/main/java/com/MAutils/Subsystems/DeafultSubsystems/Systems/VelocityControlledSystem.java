@@ -10,7 +10,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityI
 
 import frc.robot.Robot;
 
-public class VelocityControlledSystem extends StateSubsystem{
+public abstract class VelocityControlledSystem extends StateSubsystem{
 
     protected final VelocitySystemIO systemIO;
 

@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
+import com.MAutils.Utils.DeafultRobotConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -18,7 +19,7 @@ public class VelocityIOSim implements VelocitySystemIO {
     private final PIDController pid;
     private double voltage;
 
-    private final double kDampingRate = 13.0;
+    private static final double kDampingRate = 13.0;
     private final String logPath;
 
     public VelocityIOSim(String systemName, VelocitySystemConstants constants) {
@@ -112,9 +113,9 @@ public class VelocityIOSim implements VelocitySystemIO {
         // Simulate brake mode
         if (constants.IS_BRAKE && (!DriverStation.isEnabled() || Math.abs(getAppliedVolts()) < 1e-3)) {
             motorSim.setState(motorSim.getAngularPositionRad(),
-                    Math.max(0.0, 1.0 - kDampingRate * 0.02) * motorSim.getAngularVelocityRadPerSec());
+                    Math.max(0.0, 1.0 - kDampingRate * DeafultRobotConstants.kD) * motorSim.getAngularVelocityRadPerSec());
         }
-        motorSim.update(0.02);
+        motorSim.update(DeafultRobotConstants.kD);
 
         // Logging
         MALog.log(logPath + "/Velocity", getVelocity());

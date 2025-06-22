@@ -2,6 +2,10 @@
 package frc.robot.Subsystems.Intake;
 
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.PowerControlledSystem;
+import com.MAutils.Subsystems.SelfTests.SelfSystemTest;
+import com.MAutils.Subsystems.SelfTests.Test;
+
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class Intake extends PowerControlledSystem{
     private static Intake intake;
@@ -12,7 +16,6 @@ public class Intake extends PowerControlledSystem{
     }
 
 
-    @Override
     public boolean CAN_MOVE() {
         return true; // This can be modified based on specific conditions for the intake system
     }
@@ -22,5 +25,13 @@ public class Intake extends PowerControlledSystem{
             intake = new Intake();
         }
         return intake;
+    }
+
+
+    public Command getSelfTest() {
+        return SelfSystemTest.systemTest(this)
+        .addTest(new Test("Velocity Test", () -> getVelocity() > 1000, () -> setVoltage(12), 5d))
+        .addTest(new Test("Slowdown Test", () -> getVelocity() < 10, () -> setVoltage(5), 1d))
+        .createCommand();
     }
 }
