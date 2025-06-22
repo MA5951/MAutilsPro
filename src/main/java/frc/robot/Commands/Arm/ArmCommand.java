@@ -18,8 +18,8 @@ public class ArmCommand extends SubsystemCommand{
     public void Automatic() {
         switch (arm.getCurrentState().stateName) {
             case "IDLE":
-                //arm.setPosition(0);
-                arm.setVoltage(10);
+                arm.setPosition(180);
+                //arm.setVoltage(10);
                 break;
             case "UP":
                 arm.setPosition(180);

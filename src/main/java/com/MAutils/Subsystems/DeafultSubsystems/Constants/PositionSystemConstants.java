@@ -10,7 +10,7 @@ import frc.robot.Robot;
 public class PositionSystemConstants extends DeafultSystemConstants<PositionSystemConstants> {
     
     public GainConfig realGainConfig = new GainConfig();
-    public GainConfig simGainConfig = new GainConfig();
+    public GainConfig simGainConfig = new GainConfig().withKP(1);
     public double MIN_POSE = 0;
     public double MAX_POSE = 0;
     public double START_POSE = 0;
@@ -25,6 +25,7 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
         this.MIN_POSE = minPose;
         this.MAX_POSE = maxPose;
         this.START_POSE = startPose;
+        this.INERTIA = 0.000000001;
     }
 
     public PositionSystemConstants withTolerance(double tolerance) {

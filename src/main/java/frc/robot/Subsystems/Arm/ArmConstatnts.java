@@ -13,7 +13,6 @@ import frc.robot.PortMap;
 public class ArmConstatnts {
 
     public static final GainConfig REAL_GAINS = new GainConfig();
-    public static final GainConfig SIM_GAINS = new GainConfig().withKP(1);
 
     public static final PositionSystemConstants ARM_CONSTANTS = new PositionSystemConstants(
             0, 
@@ -21,8 +20,8 @@ public class ArmConstatnts {
             0, 
             new Motor(PortMap.Arm.ARM_MOTOR, DCMotor.getKrakenX60(1), "Arm Motor", InvertedValue.Clockwise_Positive) 
     ).withRealGains(REAL_GAINS)
-     .withSimGains(SIM_GAINS)
-     .withTolerance(2);
+     .withTolerance(2)
+     .withMotionMagic(100, 100, 0);
 
 
 
