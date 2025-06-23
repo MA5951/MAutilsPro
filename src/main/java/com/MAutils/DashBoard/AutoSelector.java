@@ -48,12 +48,15 @@ public class AutoSelector {
     private Supplier<Pose2d> poseSupplier;
     private String Auto;
 
-    public AutoSelector(Supplier<Pose2d> robotPoseSupplier) {
+    public AutoSelector() {
         commandChooser = new SendableChooser<>();
         Shuffleboard.getTab("Auto").add("AutoSelector", commandChooser);
         SmartDashboard.putData(field);
-        poseSupplier = robotPoseSupplier;
 
+    }
+
+    public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
+        poseSupplier = robotPoseSupplier;
     }
 
     public void setAutoOptions(AutoOption[] options, boolean preViz) {

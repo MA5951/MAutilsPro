@@ -29,6 +29,7 @@ nav:
         - Subsystem States: Pages/state_machine/subsystem_states.md
         - Can Move Logic: Pages/state_machine/subsystem_logic.md
         - Subsystem Command: Pages/state_machine/subsystem_command.md
+        - Self Test Subsystem: Pages/state_machine/self_test_subsystem.md
       - Robot State: Pages/state_machine/robot_state.md
       - Robot Container: 
         - Overview: Pages/state_machine/robot_container_methods.md
