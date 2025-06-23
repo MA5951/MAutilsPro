@@ -1,6 +1,6 @@
 # Subsystem Logic: `CAN_MOVE()`
 
-Each subsystem in MAutils should override the `CAN_MOVE()` method to define whether the system is currently allowed to move. This mechanism is essential for safe coordination between multiple subsystems and simplifies complex inter-subsystem logic.
+Each `StateSubsystem` in MAutils must implement the `CAN_MOVE()` method to define whether the system is currently allowed to move. This mechanism is essential for safe coordination between multiple subsystems and simplifies complex inter-subsystem logic.
 
 ---
 

@@ -59,8 +59,5 @@ public class SelfSystemTest{
         return commandGroup;
     }
 
-    public static SelfSystemTest systemTest(StateSubsystem subsystem) {
-        return new SelfSystemTest(subsystem);
-    }
 
 }

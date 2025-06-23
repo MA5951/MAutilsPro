@@ -29,6 +29,7 @@ nav:
         - Subsystem States: Pages/state_machine/subsystem_states.md
         - Can Move Logic: Pages/state_machine/subsystem_logic.md
         - Subsystem Command: Pages/state_machine/subsystem_command.md
+        - Self Testing: Pages/state_machine/self_test_subsystem.md
       - Robot State: Pages/state_machine/robot_state.md
       - Robot Container: 
         - Overview: Pages/state_machine/robot_container_methods.md
@@ -38,7 +39,7 @@ nav:
   - Swerve:
       - Features And Structure: swerve/swerve.md
       - Using Swerve: swerve/swerve_drive.md
-  - Subsystems:
+  - Deafult Subsystems:
       - Default Subsystems Structure: subsystems/default_subsystems.md
       - PowerControlledSubsystem: subsystems/power_controlled_subsystem.md
       - PositionControlledSubsystem: subsystems/position_controlled_subsystem.md
