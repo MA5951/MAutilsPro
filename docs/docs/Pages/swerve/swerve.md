@@ -9,5 +9,18 @@ MAutils provide a fully featured swerve code that includes:
 
 
 
-the swerve structure is the following
+the swerve structure is the following:
+
+the swerve subsystem hhs it own folder in the subsystem folder, 
+
+in the folder there are two files:
+SwerveConstants.java -=> Holds constatns fro subsystem
+Swerve.java -=> Holds Subsystem
+
+
+in the commands folder we will have a Swerve folder, and inseid will be two files 
+`SwerveTeleopController` -> controles the swerve in teleop
+`SwerveAutoController` -< controls the swerve in auto
+
+
 
