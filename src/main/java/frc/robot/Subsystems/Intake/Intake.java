@@ -2,7 +2,6 @@
 package frc.robot.Subsystems.Intake;
 
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.PowerControlledSystem;
-import com.MAutils.Subsystems.SelfTests.SelfSystemTest;
 import com.MAutils.Subsystems.SelfTests.Test;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,7 +28,7 @@ public class Intake extends PowerControlledSystem{
 
 
     public Command getSelfTest() {
-        return SelfSystemTest.systemTest(this)
+        return selfSystemTest
         .addTest(new Test("Velocity Test", () -> getVelocity() > 1000, () -> setVoltage(12), 5d))
         .addTest(new Test("Slowdown Test", () -> getVelocity() < 10, () -> setVoltage(5), 1d))
         .createCommand();

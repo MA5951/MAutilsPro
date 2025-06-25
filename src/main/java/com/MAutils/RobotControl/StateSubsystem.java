@@ -3,6 +3,7 @@ package com.MAutils.RobotControl;
 
 import com.MAutils.Logger.MALog;
 import com.MAutils.RobotControl.RobotControlConstants.SystemMode;
+import com.MAutils.Subsystems.SelfTests.SelfSystemTest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +13,7 @@ public abstract class StateSubsystem extends SubsystemBase {
     private SubsystemState currentState;
     private SystemMode systemMode;
     public final String subsystemName;
+    public final SelfSystemTest selfSystemTest;
 
     public StateSubsystem(String name, SubsystemState... subsystemStates) {
         for (SubsystemState state : subsystemStates) {
@@ -19,6 +21,8 @@ public abstract class StateSubsystem extends SubsystemBase {
                 state.setSubsystem(this);
             }
         }
+
+        selfSystemTest = new SelfSystemTest(this);
 
         currentState = new SubsystemState("IDLE", this);
         systemMode = SystemMode.AUTOMATIC;
@@ -46,6 +50,7 @@ public abstract class StateSubsystem extends SubsystemBase {
     public abstract Command getSelfTest();
 
     public abstract boolean CAN_MOVE();
+
 
     @Override
     public void periodic() {
