@@ -23,7 +23,7 @@ public class ArmConstatnts {
      .withTolerance(2)
      .withMotionMagic(100, 100, 0);
 
-
+     
 
     public static final SubsystemState IDLE = new SubsystemState("IDLE");
     public static final SubsystemState UP = new SubsystemState("UP");

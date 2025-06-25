@@ -17,12 +17,15 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 public class SelfSystemTest{
 
     private List<Test> testsList = new ArrayList<>();
-    private String logTable;
+    private final String logTable;
     private SequentialCommandGroup commandGroup;
+    private final StateSubsystem subsystem;
+    private boolean overallTestPassed;
 
     public SelfSystemTest(StateSubsystem  subsystem) {
-        super();
-        logTable = "/Subsystem/" + subsystem.subsystemName + "/SelfTest/" + "/Status";
+        commandGroup = new SequentialCommandGroup();
+        this.subsystem = subsystem;
+        logTable = "/Subsystem/" + subsystem.subsystemName + "/SelfTest/";
         commandGroup.addRequirements(subsystem);
     }
 
@@ -35,32 +38,35 @@ public class SelfSystemTest{
         commandGroup.addCommands(
 
         new SequentialCommandGroup(
-            new InstantCommand(() -> MALog.log(logTable, "Runing test: " + test.testName))),
+            new InstantCommand(() -> MALog.log(logTable + "Tests Status", "Runing test: " + test.testName))),
             new ParallelRaceGroup(
                 new SequentialCommandGroup(
                     new WaitUntilCommand(test.testTimeCap),
-                    new InstantCommand(() -> MALog.log(logTable, "Test timed out: " + test.testName))
+                    new InstantCommand(() -> MALog.log(logTable + "Tests Status", "Test timed out: " + test.testName)),
+                    new InstantCommand(() -> overallTestPassed = false)
                 ),
                 new ParallelDeadlineGroup(
                     new SequentialCommandGroup(
                         new WaitUntilCommand(test.testCondition),
-                        new InstantCommand(() -> MALog.log(logTable, "Test passed: " + test.testName))
+                        new InstantCommand(() -> overallTestPassed = test.testCondition.getAsBoolean()),
+                        new InstantCommand(() -> MALog.log(logTable + "Tests Status", "Test passed: " + test.testName))
+                        
                     ),
                     new InstantCommand(test.testAction).repeatedly())
             ),
-            new InstantCommand(() -> MALog.log(logTable, "Test Finished: " + test.testName))
+            new InstantCommand(() -> MALog.log(logTable + "Tests Status", "Test Finished: " + test.testName))
         );
     }
 
     public Command createCommand() {
+        overallTestPassed = false;
+        commandGroup.addCommands(new InstantCommand(() -> MALog.log(logTable + "Self Test Status", "Starting Self Test For " + subsystem.subsystemName)));
         for (Test test : testsList) {
             runTest(test);
         }
+        commandGroup.addCommands(new InstantCommand(() -> MALog.log(logTable + "Self Test Status", overallTestPassed ? "Passed" : "Failed" + ", Finished Self Test For " + subsystem.subsystemName)));
         return commandGroup;
     }
 
-    public static SelfSystemTest systemTest(StateSubsystem subsystem) {
-        return new SelfSystemTest(subsystem);
-    }
 
 }
