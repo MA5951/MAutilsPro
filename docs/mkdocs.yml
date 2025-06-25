@@ -21,6 +21,7 @@ nav:
   - Installation: Pages/installation.md
   - Logging: Pages/logger.md
   - Controllers: Pages/controllers.md
+  - Sensors: Pages/sensors.md
   - PortMap: Pages/port_map.md
   - Robot Control:
       - State Machine Structure: Pages/state_machine/state_machine_structure.md
