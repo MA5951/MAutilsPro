@@ -36,16 +36,16 @@ nav:
       - Robot Container: 
         - Overview: Pages/state_machine/robot_container_methods.md
         - Robot State Triggers: Pages/state_machine/robot_state_triggers.md
-  
-
   - Swerve:
-      - Features And Structure: swerve/swerve.md
-      - Using Swerve: swerve/swerve_drive.md
-  - Deafult Subsystems:
-      - Default Subsystems Structure: subsystems/default_subsystems.md
-      - PowerControlledSubsystem: subsystems/power_controlled_subsystem.md
-      - PositionControlledSubsystem: subsystems/position_controlled_subsystem.md
-      - VelocityControlledSubsystem: subsystems/velocity_controlled_subsystem.md
+      - Features And Structure: Pages/swerve/swerve.md
+      - Using SwerveSubsystem: Pages/swerve/swerve_drive.md
+      - Swerve Controllers: Pages/swerve/swerve_control.md
+      - Swerve State: Pages/swerve/swerve_state.md
+  - Default Subsystems:
+      - Default Subsystems Structure: Pages/subsystems/default_subsystems.md
+      - PowerControlledSubsystem: Pages/subsystems/power_controlled_subsystem.md
+      - PositionControlledSubsystem: Pages/subsystems/position_controlled_subsystem.md
+      - VelocityControlledSubsystem: Pages/subsystems/velocity_controlled_subsystem.md
 
 
 markdown_extensions:

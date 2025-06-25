@@ -47,7 +47,7 @@ public class AngleAdjustController extends SwerveController {
     }
 
     private void logController() {
-        MALog.log("Subsystems/Swerve/Controllers/AngleAdjustController/Speeds", speeds);
+        MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/Speeds", speeds);
         MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/Set Point", pidController.getSetpoint());
         MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/At Point", pidController.atSetpoint());
     }

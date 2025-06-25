@@ -3,10 +3,12 @@ package com.MAutils.Swerve.Controllers;
 
 import java.util.function.Supplier;
 
+import com.MAutils.Swerve.Utils.SwerveController;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
-public class XYAdjustController {
+public class XYAdjustController extends SwerveController{
 
     private PIDController xController;
     private PIDController yController;
@@ -16,6 +18,7 @@ public class XYAdjustController {
 
     public XYAdjustController(PIDController xController, PIDController yController,
             Supplier<Double> xSupplier, Supplier<Double> ySupplier) {
+        super("XY Adjust Controller");
         this.xController = xController;
         this.yController = yController;
         this.xSupplier = xSupplier;

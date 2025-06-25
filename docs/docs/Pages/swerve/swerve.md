@@ -20,7 +20,7 @@ Swerve.java -=> Holds Subsystem
 
 in the commands folder we will have a Swerve folder, and inseid will be two files 
 `SwerveTeleopController` -> controles the swerve in teleop
-`SwerveAutoController` -< controls the swerve in auto
+`SwerveAutoController` -> controls the swerve in auto
 
 
 
