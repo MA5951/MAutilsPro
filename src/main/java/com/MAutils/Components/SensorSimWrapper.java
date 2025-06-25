@@ -34,8 +34,9 @@ public class SensorSimWrapper<T> {
         return usingSupplier ? sensorSupplier.get() : value;
     }
 
-
-
+    public void useSupplier() {
+        usingSupplier = true;
+    }
 
 
 }
