@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://ma5951.github.io/MAutilsPro/Pages/controllers/">
+        <link rel="canonical" href="https://ma5951.github.io/MAutilsPro/Pages/sensors/">
       
       
-        <link rel="prev" href="../logger/">
+        <link rel="prev" href="../controllers/">
       
       
-        <link rel="next" href="../sensors/">
+        <link rel="next" href="../port_map/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Controllers - MAutils Documentation</title>
+        <title>Sensors - MAutils Documentation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#controller-support-in-mautils" class="md-skip">
+        <a href="#sensor-simulation-wrapper" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Controllers
+              Sensors
             
           </span>
         </div>
@@ -291,6 +291,28 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Controllers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -308,7 +330,7 @@
   
   
   <span class="md-ellipsis">
-    Controllers
+    Sensors
     
   </span>
   
@@ -321,7 +343,7 @@
   
   
   <span class="md-ellipsis">
-    Controllers
+    Sensors
     
   </span>
   
@@ -344,54 +366,78 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-controllers" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Supported Controllers
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#button-layout-unified-naming" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
-      Button Layout (Unified Naming)
+      Constructor
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#deadband-handling" class="md-nav__link">
+  <a href="#methods" class="md-nav__link">
     <span class="md-ellipsis">
-      Deadband Handling
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setsimsuppliersuppliert-sensorsimsupplier" class="md-nav__link">
+    <span class="md-ellipsis">
+      setSimSupplier(Supplier&lt;T&gt; sensorSimSupplier)
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#rumble-support" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#setvaluet-value" class="md-nav__link">
     <span class="md-ellipsis">
-      Rumble Support
+      setValue(T value)
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#controller-logging" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#usesupplier" class="md-nav__link">
     <span class="md-ellipsis">
-      Controller Logging
+      useSupplier()
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#getvalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      getValue()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#sample-implementation" class="md-nav__link">
+  <a href="#example-simulating-an-absolute-encoder" class="md-nav__link">
     <span class="md-ellipsis">
-      Sample Implementation
+      Example: Simulating an Absolute Encoder
     </span>
   </a>
   
@@ -401,28 +447,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sensors/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Sensors
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1117,54 +1141,78 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-controllers" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Supported Controllers
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#button-layout-unified-naming" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
-      Button Layout (Unified Naming)
+      Constructor
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#deadband-handling" class="md-nav__link">
+  <a href="#methods" class="md-nav__link">
     <span class="md-ellipsis">
-      Deadband Handling
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setsimsuppliersuppliert-sensorsimsupplier" class="md-nav__link">
+    <span class="md-ellipsis">
+      setSimSupplier(Supplier&lt;T&gt; sensorSimSupplier)
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#rumble-support" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#setvaluet-value" class="md-nav__link">
     <span class="md-ellipsis">
-      Rumble Support
+      setValue(T value)
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#controller-logging" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#usesupplier" class="md-nav__link">
     <span class="md-ellipsis">
-      Controller Logging
+      useSupplier()
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#getvalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      getValue()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#sample-implementation" class="md-nav__link">
+  <a href="#example-simulating-an-absolute-encoder" class="md-nav__link">
     <span class="md-ellipsis">
-      Sample Implementation
+      Example: Simulating an Absolute Encoder
     </span>
   </a>
   
@@ -1186,95 +1234,58 @@
 
 
 
-<h1 id="controller-support-in-mautils">Controller Support in MAutils</h1>
-<p>MAutils provides a unified and abstracted interface for game controllers, allowing seamless integration with multiple types of gamepads (e.g. PS5 and Xbox) without changing your robot control code.</p>
-<p>All controllers extend the <code>MAController</code> abstract class, which defines a consistent set of button mappings and input methods.</p>
+<h1 id="sensor-simulation-wrapper">Sensor Simulation Wrapper</h1>
+<p>MAutils provides the <code>SensorSimWrapper</code> class to make sensor simulation seamless and clean. It allows you to inject data into sensors during simulation, while preserving normal behavior on a real robot.</p>
 <hr />
-<h2 id="supported-controllers">Supported Controllers</h2>
+<h2 id="overview">Overview</h2>
+<p>The <code>SensorSimWrapper</code> class wraps a sensor's data source and lets you override that data while in simulation.</p>
+<p>It is a generic class (<code>&lt;T&gt;</code>), making it compatible with any data type such as:</p>
 <ul>
-<li><strong>PS5 DualSense</strong> – <code>PS5MAController</code></li>
-<li><strong>Xbox Series Controller</strong> – <code>XboxMAController</code></li>
+<li><code>Boolean</code> (e.g. DIO switches)</li>
+<li><code>Double</code> (e.g. encoders, IMUs)</li>
+<li>Custom sensor types</li>
 </ul>
-<p>Both use the same interface:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">MAController</span><span class="w"> </span><span class="n">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PS5MAController</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">// Or:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">XboxMAController</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<hr />
+<h2 id="constructor">Constructor</h2>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">public</span><span class="w"> </span><span class="n">SensorSimWrapper</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sensorData</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This sets the default data source. For example, wrapping a limit switch:</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">DigitalInput</span><span class="w"> </span><span class="n">limitSwitch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DigitalInput</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">SensorSimWrapper</span><span class="o">&lt;</span><span class="n">Boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="n">limitSwitchSim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SensorSimWrapper</span><span class="o">&lt;&gt;</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">limitSwitch</span><span class="p">.</span><span class="na">get</span><span class="p">());</span>
 </span></code></pre></div>
 <hr />
-<h2 id="button-layout-unified-naming">Button Layout (Unified Naming)</h2>
-<p>MAutils uses generic method names so your robot code works consistently across all supported controllers.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">PS5</label><label for="__tabbed_1_2">Xbox</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><img alt="PS5 Layout" src="../PS5Layout.png" /></p>
-</div>
-<div class="tabbed-block">
-<p><img alt="Xbox Layout" src="../XboxLayout.png" /></p>
-</div>
-</div>
-</div>
-<p>Example:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">getActionsUp</span><span class="p">();</span><span class="w"> </span><span class="c1">// Maps to the Triangle button on PS5 or the Y button on Xbox</span>
-</span></code></pre></div>
+<h2 id="methods">Methods</h2>
+<h3 id="setsimsuppliersuppliert-sensorsimsupplier"><code>setSimSupplier(Supplier&lt;T&gt; sensorSimSupplier)</code></h3>
+<p>Defines the simulation supplier. This is only used during simulation and provides dynamic sensor behavior.</p>
+<h3 id="setvaluet-value"><code>setValue(T value)</code></h3>
+<p>Force-sets a value to be returned during simulation, overriding the sim supplier. Useful for precise test cases.</p>
+<h3 id="usesupplier"><code>useSupplier()</code></h3>
+<p>Restores the sim supplier as the active data source, stopping the override.</p>
+<h3 id="getvalue"><code>getValue()</code></h3>
+<p>Returns the current value. Automatically returns real sensor data when not in simulation.</p>
 <hr />
-<h2 id="deadband-handling">Deadband Handling</h2>
-<p>Each controller has a calibrated deadband value to help eliminate small input noise:</p>
-<table>
-<thead>
-<tr>
-<th>Controller</th>
-<th>Default Deadband</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PS5</td>
-<td><code>0.1</code></td>
-</tr>
-<tr>
-<td>Xbox</td>
-<td><code>0.3</code></td>
-</tr>
-</tbody>
-</table>
-<p>To apply deadband filtering:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kt">double</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">rawValue</span><span class="p">);</span><span class="w">         </span><span class="c1">// Uses default for controller</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kt">double</span><span class="w"> </span><span class="n">custom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">rawValue</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">   </span><span class="c1">// Uses custom value</span>
+<h2 id="example-simulating-an-absolute-encoder">Example: Simulating an Absolute Encoder</h2>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Arm</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">PositionControlledSystem</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Encoder</span><span class="w"> </span><span class="n">absEncoder</span><span class="p">;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">SensorSimWrapper</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encoderSim</span><span class="p">;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Arm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="s">&quot;Arm&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ArmConstants</span><span class="p">.</span><span class="na">ARM_CONSTANTS</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">            </span><span class="n">ArmConstants</span><span class="p">.</span><span class="na">IDLE</span><span class="p">,</span><span class="w"> </span><span class="n">ArmConstants</span><span class="p">.</span><span class="na">UP</span><span class="p">,</span><span class="w"> </span><span class="n">ArmConstants</span><span class="p">.</span><span class="na">DOWN</span><span class="p">);</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="n">absEncoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Encoder</span><span class="p">(</span><span class="n">PortMap</span><span class="p">.</span><span class="na">ARM</span><span class="p">.</span><span class="na">ABS_ENCODER</span><span class="p">);</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="n">encoderSim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SensorSimWrapper</span><span class="o">&lt;&gt;</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">absEncoder</span><span class="p">.</span><span class="na">get</span><span class="p">());</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="n">encoderSim</span><span class="p">.</span><span class="na">setSimSupplier</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">getPosition</span><span class="p">());</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">getAbsAngle</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">encoderSim</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>This can be applied to stick positions or trigger axes as needed.</p>
-<hr />
-<h2 id="rumble-support">Rumble Support</h2>
-<p>The <code>setRumble()</code> method allows vibration feedback, but note:</p>
-<ul>
-<li>Xbox controllers support rumble natively through the Driver Station.</li>
-<li>PS5 controllers do <strong>not</strong> support rumble reliably unless emulated as Xbox controllers, which is <strong>not recommended</strong> due to inconsistent behavior.</li>
-</ul>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">setRumble</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span><span class="w"> </span><span class="c1">// Activate rumble at 50% power</span>
-</span></code></pre></div>
-<hr />
-<h2 id="controller-logging">Controller Logging</h2>
-<p>For diagnostics or special use cases, you can log controller input to NetworkTables:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
-</span></code></pre></div>
-<p>This records the current state of buttons and axes to:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/Controllers/{port}/[ButtonName]
-</span></code></pre></div>
-<p>Useful for testing in Shuffleboard or AdvantageScope.</p>
-<hr />
-<h2 id="sample-implementation">Sample Implementation</h2>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@Override</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">teleopPeriodic</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getL1</span><span class="p">())</span><span class="w"> </span><span class="n">intake</span><span class="p">.</span><span class="na">run</span><span class="p">();</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getR2</span><span class="p">())</span><span class="w"> </span><span class="n">shooter</span><span class="p">.</span><span class="na">shoot</span><span class="p">();</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">drivetrain</span><span class="p">.</span><span class="na">arcadeDrive</span><span class="p">(</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getLeftY</span><span class="p">()),</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getRightX</span><span class="p">())</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">);</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="n">controller</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="p">}</span>
-</span></code></pre></div>
+<p>In this example, the absolute encoder is simulated by returning the arm's position when running in simulation.</p>
 
 
 

@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://ma5951.github.io/MAutilsPro/Pages/controllers/">
+        <link rel="canonical" href="https://ma5951.github.io/MAutilsPro/Pages/swerve/swerve_state/">
       
       
-        <link rel="prev" href="../logger/">
+        <link rel="prev" href="../swerve_control/">
       
       
-        <link rel="next" href="../sensors/">
+        <link rel="next" href="../../subsystems/default_subsystems/">
       
       
-      <link rel="icon" href="../../assets/favicon.ico">
+      <link rel="icon" href="../../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Controllers - MAutils Documentation</title>
+        <title>Swerve State - MAutils Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,9 +48,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#controller-support-in-mautils" class="md-skip">
+        <a href="#swervestate-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -90,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="MAutils Documentation" class="md-header__button md-logo" aria-label="MAutils Documentation" data-md-component="logo">
+    <a href="../../.." title="MAutils Documentation" class="md-header__button md-logo" aria-label="MAutils Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Controllers
+              Swerve State
             
           </span>
         </div>
@@ -188,7 +188,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="MAutils Documentation" class="md-nav__button md-logo" aria-label="MAutils Documentation" data-md-component="logo">
+    <a href="../../.." title="MAutils Documentation" class="md-nav__button md-logo" aria-label="MAutils Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -206,7 +206,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
@@ -228,7 +228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../key_features/" class="md-nav__link">
+      <a href="../../key_features/" class="md-nav__link">
         
   
   
@@ -250,7 +250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation.md" class="md-nav__link">
+      <a href="../../installation.md" class="md-nav__link">
         
   
   
@@ -272,7 +272,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../logger/" class="md-nav__link">
+      <a href="../../logger/" class="md-nav__link">
         
   
   
@@ -291,32 +291,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Controllers
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../controllers/" class="md-nav__link">
         
   
   
@@ -327,80 +305,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-controllers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supported Controllers
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#button-layout-unified-naming" class="md-nav__link">
-    <span class="md-ellipsis">
-      Button Layout (Unified Naming)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deadband-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deadband Handling
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rumble-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rumble Support
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#controller-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      Controller Logging
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sample-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sample Implementation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -412,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sensors/" class="md-nav__link">
+      <a href="../../sensors/" class="md-nav__link">
         
   
   
@@ -434,7 +338,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../port_map/" class="md-nav__link">
+      <a href="../../port_map/" class="md-nav__link">
         
   
   
@@ -494,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/state_machine_structure.md" class="md-nav__link">
+      <a href="../../state_machine/state_machine_structure.md" class="md-nav__link">
         
   
   
@@ -555,7 +459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/subsystems_state_machine/" class="md-nav__link">
+      <a href="../../state_machine/subsystems_state_machine/" class="md-nav__link">
         
   
   
@@ -578,7 +482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/state_subsystems/" class="md-nav__link">
+      <a href="../../state_machine/state_subsystems/" class="md-nav__link">
         
   
   
@@ -601,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/subsystem_states/" class="md-nav__link">
+      <a href="../../state_machine/subsystem_states/" class="md-nav__link">
         
   
   
@@ -624,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/subsystem_logic/" class="md-nav__link">
+      <a href="../../state_machine/subsystem_logic/" class="md-nav__link">
         
   
   
@@ -647,7 +551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/subsystem_command/" class="md-nav__link">
+      <a href="../../state_machine/subsystem_command/" class="md-nav__link">
         
   
   
@@ -670,7 +574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/self_test_subsystem/" class="md-nav__link">
+      <a href="../../state_machine/self_test_subsystem/" class="md-nav__link">
         
   
   
@@ -701,7 +605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/robot_state/" class="md-nav__link">
+      <a href="../../state_machine/robot_state/" class="md-nav__link">
         
   
   
@@ -762,7 +666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/robot_container_methods/" class="md-nav__link">
+      <a href="../../state_machine/robot_container_methods/" class="md-nav__link">
         
   
   
@@ -785,7 +689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../state_machine/robot_state_triggers/" class="md-nav__link">
+      <a href="../../state_machine/robot_state_triggers/" class="md-nav__link">
         
   
   
@@ -820,18 +724,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
@@ -847,7 +753,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             Swerve
@@ -861,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swerve/swerve/" class="md-nav__link">
+      <a href="../swerve/" class="md-nav__link">
         
   
   
@@ -884,7 +790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swerve/swerve_drive.md" class="md-nav__link">
+      <a href="../swerve_drive.md" class="md-nav__link">
         
   
   
@@ -907,7 +813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swerve/swerve_control/" class="md-nav__link">
+      <a href="../swerve_control/" class="md-nav__link">
         
   
   
@@ -927,10 +833,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../swerve/swerve_state/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Swerve State
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -941,6 +869,62 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-speeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Speeds
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-entry-and-execution-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Entry and Execution Hooks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -998,7 +982,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../subsystems/default_subsystems/" class="md-nav__link">
+      <a href="../../subsystems/default_subsystems/" class="md-nav__link">
         
   
   
@@ -1021,7 +1005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../subsystems/power_controlled_subsystem.md" class="md-nav__link">
+      <a href="../../subsystems/power_controlled_subsystem.md" class="md-nav__link">
         
   
   
@@ -1044,7 +1028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../subsystems/position_controlled_subsystem.md" class="md-nav__link">
+      <a href="../../subsystems/position_controlled_subsystem.md" class="md-nav__link">
         
   
   
@@ -1067,7 +1051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../subsystems/velocity_controlled_subsystem.md" class="md-nav__link">
+      <a href="../../subsystems/velocity_controlled_subsystem.md" class="md-nav__link">
         
   
   
@@ -1117,54 +1101,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-controllers" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
-      Supported Controllers
+      Constructor
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#button-layout-unified-naming" class="md-nav__link">
+  <a href="#defining-speeds" class="md-nav__link">
     <span class="md-ellipsis">
-      Button Layout (Unified Naming)
+      Defining Speeds
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#deadband-handling" class="md-nav__link">
+  <a href="#state-entry-and-execution-hooks" class="md-nav__link">
     <span class="md-ellipsis">
-      Deadband Handling
+      State Entry and Execution Hooks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#rumble-support" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
-      Rumble Support
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#controller-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      Controller Logging
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sample-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sample Implementation
+      Example
     </span>
   </a>
   
@@ -1186,95 +1152,59 @@
 
 
 
-<h1 id="controller-support-in-mautils">Controller Support in MAutils</h1>
-<p>MAutils provides a unified and abstracted interface for game controllers, allowing seamless integration with multiple types of gamepads (e.g. PS5 and Xbox) without changing your robot control code.</p>
-<p>All controllers extend the <code>MAController</code> abstract class, which defines a consistent set of button mappings and input methods.</p>
+<h1 id="swervestate-guide">SwerveState Guide</h1>
+<p>The <code>SwerveState</code> class represents a defined operational state for a swerve drive. Each state encapsulates the drive commands (chassis speeds) that the robot should use when in that state.</p>
+<p>This abstraction makes it easier to manage complex behaviors like target locking, predefined trajectories, or driver input modes.</p>
 <hr />
-<h2 id="supported-controllers">Supported Controllers</h2>
+<h2 id="constructor">Constructor</h2>
+<p>Each state requires a name for logging and identification:</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">SwerveState</span><span class="w"> </span><span class="n">CORAL_STATION_LOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SwerveState</span><span class="p">(</span><span class="s">&quot;Coral Station Lock&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<hr />
+<h2 id="defining-speeds">Defining Speeds</h2>
+<p>You can configure how the state determines the robot's movement:</p>
 <ul>
-<li><strong>PS5 DualSense</strong> – <code>PS5MAController</code></li>
-<li><strong>Xbox Series Controller</strong> – <code>XboxMAController</code></li>
+<li><code>withXY(SwerveController controller)</code> – uses the X and Y speeds from the given controller</li>
+<li><code>withOmega(SwerveController controller)</code> – uses the rotational speed (omega) from the controller</li>
+<li><code>withSpeeds(SwerveController controller)</code> – uses full chassis speeds from the controller</li>
+<li><code>withSpeeds(ChassisSpeeds speeds)</code> – sets constant speeds</li>
+<li><code>withXY(double x, double y)</code> – sets constant X and Y speeds</li>
+<li><code>withOmega(double omega)</code> – sets a constant rotational speed</li>
+<li><code>withXY(Supplier&lt;Double&gt; x, Supplier&lt;Double&gt; y)</code> – sets dynamic X and Y speeds</li>
+<li><code>withOmega(Supplier&lt;Double&gt; omega)</code> – sets dynamic rotational speed</li>
 </ul>
-<p>Both use the same interface:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">MAController</span><span class="w"> </span><span class="n">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PS5MAController</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">// Or:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">XboxMAController</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span></code></pre></div>
 <hr />
-<h2 id="button-layout-unified-naming">Button Layout (Unified Naming)</h2>
-<p>MAutils uses generic method names so your robot code works consistently across all supported controllers.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">PS5</label><label for="__tabbed_1_2">Xbox</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><img alt="PS5 Layout" src="../PS5Layout.png" /></p>
-</div>
-<div class="tabbed-block">
-<p><img alt="Xbox Layout" src="../XboxLayout.png" /></p>
-</div>
-</div>
-</div>
-<p>Example:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">getActionsUp</span><span class="p">();</span><span class="w"> </span><span class="c1">// Maps to the Triangle button on PS5 or the Y button on Xbox</span>
-</span></code></pre></div>
-<hr />
-<h2 id="deadband-handling">Deadband Handling</h2>
-<p>Each controller has a calibrated deadband value to help eliminate small input noise:</p>
-<table>
-<thead>
-<tr>
-<th>Controller</th>
-<th>Default Deadband</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PS5</td>
-<td><code>0.1</code></td>
-</tr>
-<tr>
-<td>Xbox</td>
-<td><code>0.3</code></td>
-</tr>
-</tbody>
-</table>
-<p>To apply deadband filtering:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kt">double</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">rawValue</span><span class="p">);</span><span class="w">         </span><span class="c1">// Uses default for controller</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kt">double</span><span class="w"> </span><span class="n">custom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">rawValue</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">   </span><span class="c1">// Uses custom value</span>
-</span></code></pre></div>
-<p>This can be applied to stick positions or trigger axes as needed.</p>
-<hr />
-<h2 id="rumble-support">Rumble Support</h2>
-<p>The <code>setRumble()</code> method allows vibration feedback, but note:</p>
+<h2 id="state-entry-and-execution-hooks">State Entry and Execution Hooks</h2>
+<p>These allow you to run logic when entering or while running a swerve state:</p>
 <ul>
-<li>Xbox controllers support rumble natively through the Driver Station.</li>
-<li>PS5 controllers do <strong>not</strong> support rumble reliably unless emulated as Xbox controllers, which is <strong>not recommended</strong> due to inconsistent behavior.</li>
+<li><code>withOnStateEnter(Runnable onStateEnter)</code> – code to run once when the state is entered</li>
+<li><code>withOnStateRunning(Runnable onStateRunning)</code> – code to run periodically while in the state</li>
 </ul>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">setRumble</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span><span class="w"> </span><span class="c1">// Activate rumble at 50% power</span>
-</span></code></pre></div>
+<p>This is useful for Setting setpoints and parameters for controllers</p>
 <hr />
-<h2 id="controller-logging">Controller Logging</h2>
-<p>For diagnostics or special use cases, you can log controller input to NetworkTables:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">controller</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
+<h2 id="example">Example</h2>
+<p>Here is a complete example of defining a state that follows driver control for XY movement, but locks the robot's angle toward a target:</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">SwerveState</span><span class="w"> </span><span class="n">CORAL_STATION_LOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SwerveState</span><span class="p">(</span><span class="s">&quot;Coral Station Lock&quot;</span><span class="p">);</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">CORAL_STATION_LOCK</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">.</span><span class="na">withXY</span><span class="p">(</span><span class="n">fieldCentricDrive</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p">.</span><span class="na">withOmega</span><span class="p">(</span><span class="n">angleAdjustController</span><span class="p">)</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">.</span><span class="na">withOnStateEnter</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">angleAdjustController</span><span class="p">.</span><span class="na">withSetPoint</span><span class="p">(</span><span class="n">SuperStructure</span><span class="p">.</span><span class="na">getCoralAngle</span><span class="p">()));</span>
 </span></code></pre></div>
-<p>This records the current state of buttons and axes to:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/Controllers/{port}/[ButtonName]
+<p>This makes the robot follow driver field-centric translation while locking rotation toward a specific target.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">SwerveState</span><span class="w"> </span><span class="n">CORAL_STATION_LOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SwerveState</span><span class="p">(</span><span class="s">&quot;Coral Station Lock&quot;</span><span class="p">);</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">CORAL_STATION_LOCK</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="p">.</span><span class="na">withXY</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">.</span><span class="na">withOmega</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 </span></code></pre></div>
-<p>Useful for testing in Shuffleboard or AdvantageScope.</p>
-<hr />
-<h2 id="sample-implementation">Sample Implementation</h2>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@Override</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">teleopPeriodic</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getL1</span><span class="p">())</span><span class="w"> </span><span class="n">intake</span><span class="p">.</span><span class="na">run</span><span class="p">();</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getR2</span><span class="p">())</span><span class="w"> </span><span class="n">shooter</span><span class="p">.</span><span class="na">shoot</span><span class="p">();</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">drivetrain</span><span class="p">.</span><span class="na">arcadeDrive</span><span class="p">(</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getLeftY</span><span class="p">()),</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="n">controller</span><span class="p">.</span><span class="na">withDeadbound</span><span class="p">(</span><span class="n">controller</span><span class="p">.</span><span class="na">getRightX</span><span class="p">())</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">);</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="n">controller</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="p">}</span>
+<p>This makes the robot move at -1 meter per secound in X while 0 in Y and Omega while being in this state.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">SwerveState</span><span class="w"> </span><span class="n">CORAL_STATION_LOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SwerveState</span><span class="p">(</span><span class="s">&quot;Coral Station Lock&quot;</span><span class="p">);</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">CORAL_STATION_LOCK</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">.</span><span class="na">withSpeeds</span><span class="p">(</span><span class="n">fieldCentricDrive</span><span class="p">);</span>
 </span></code></pre></div>
+<p>This makes the robot folloe the driver field-centric translation.</p>
 
 
 
@@ -1323,10 +1253,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.path"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.path"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
