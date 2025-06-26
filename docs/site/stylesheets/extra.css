@@ -4,8 +4,20 @@
 
 }
 
+/* Global base size for desktop */
+html {
+  font-size: 150%;
+}
+
+/* Override for small screens (phones) */
+@media (max-width: 768px) {
+  html {
+    font-size: 120%;
+  }
+}
+
 :root  > * {
-  --md-primary-fg-color:        #ed1c24;
+  --md-primary-fg-color:        #ad1b20;
   --md-primary-bg-color:  #ffffff;
 }
 
