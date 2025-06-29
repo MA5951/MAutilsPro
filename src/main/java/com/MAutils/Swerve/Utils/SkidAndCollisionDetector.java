@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-public class SkidAndCollisionDetector {
+public class SkidAndCollisionDetector {//TODO" Split collision and skid
 
     private final Supplier<GyroData> gyroDataSupplier;
 

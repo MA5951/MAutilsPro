@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
@@ -22,7 +23,7 @@ import java.util.function.IntSupplier;
 
 public class MALog {
     private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("MALog");
+    private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("/MALog");
     private static final Map<String, NetworkTableEntry> entries = new HashMap<>();
     private static final Map<String, StructPublisher<Pose2d>> pose2dPublishers = new HashMap<>();
     private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();
@@ -31,7 +32,6 @@ public class MALog {
     private static final Map<String, StructPublisher<ChassisSpeeds>> chassisSpeedsPublishersArry = new HashMap<>();
     private static final String ID_FILE_PATH = "/home/lvuser/malog/lastLogID.txt";
     private static String sessionID = "0000";
-    private static boolean started = false;
     private static final NetworkTableEntry flagEntry = malogTable.getEntry("/System/Flag");
     private static final NetworkTableEntry statusEntry = malogTable.getEntry("/System/Status");
 
@@ -41,35 +41,28 @@ public class MALog {
         TEST
     }
 
-    public enum LogLevel {//TODO: implement log levels to console writes
+    public enum LogLevel {// TODO: implement log levels to console writes
         INFO, WARN, ERROR, DEBUG
     }
 
     public static void startLog(MALogMode mode) {
-        if (started) {
-            return;
-        }
-
-        sessionID = loadNextID();
-
         if (!DriverStation.isFMSAttached()) {
+            sessionID = loadNextID();
             String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp);
+            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp); // TODO ask cahtgpt to
+                                                                                                 // get the time fro the
+                                                                                                 // DS? and sync time
             malogTable.getEntry("LogName").setString(logName);
             malogTable.getEntry("LogID").setString(sessionID);
+            DataLogManager.start("", logName);
+        } else {
+            DataLogManager.start();
         }
-
-        DataLogManager.start();
-        DataLogManager.logNetworkTables(true); // Enable NT logging
-        started = true;
+        DataLogManager.logNetworkTables(true);//TOOD: Add compition mode in robot continer
     }
 
     public static void stopLog() {
-        if (!started) {
-            return;
-        }
         DataLogManager.stop();
-        started = false;
     }
 
     public static void log(String key, double value) {
@@ -80,7 +73,7 @@ public class MALog {
         getEntry(key).setBoolean(value);
     }
 
-    public static void log(String key, String value) {
+    public static void log(String key, String value) {//TODO Merge with supplier methods
         getEntry(key).setString(value);
     }
 
@@ -100,13 +93,15 @@ public class MALog {
         getEntry(key).setInteger(value);
     }
 
-    public static double get(String key) {
-        return getEntry(key).getDouble(0);
+    public static NetworkTableEntry get(String key) {
+        return getEntry(key);
     }
 
     public static void logSwerveModuleStates(String key, SwerveModuleState[] states) {
-        if (states == null)
+        if (states == null) {
+            states = new SwerveModuleState[] { new SwerveModuleState(100000, Rotation2d.kZero) };
             return;
+        }
 
         StructArrayPublisher<SwerveModuleState> publisher = swerveModuleStatePublishers.computeIfAbsent(key,
                 k -> nt
@@ -117,18 +112,18 @@ public class MALog {
     }
 
     public static void log(String key, Pose3d[] poses) {
-        if (poses == null) return;
-    
+        if (poses == null)//TODO dame as swerve mocule
+            return;
+
         StructArrayPublisher<Pose3d> publisher = pose3dPublishersArry.computeIfAbsent(
                 key,
-                k -> nt.getStructArrayTopic("MALog/" + k, Pose3d.struct).publish()
-        );
-    
+                k -> nt.getStructArrayTopic("MALog/" + k, Pose3d.struct).publish());
+
         publisher.set(poses);
     }
 
     public static void log(String key, Pose2d pose) {
-        if (pose == null)
+        if (pose == null)//TODO dame as swerve mocule
             return;
 
         StructPublisher<Pose2d> publisher = pose2dPublishers.computeIfAbsent(
@@ -139,7 +134,7 @@ public class MALog {
     }
 
     public static void log(String key, Pose3d pose) {
-        if (pose == null)
+        if (pose == null)//TODO dame as swerve mocule
             return;
 
         StructPublisher<Pose3d> publisher = pose3dPublishers.computeIfAbsent(
@@ -150,7 +145,7 @@ public class MALog {
     }
 
     public static void log(String key, ChassisSpeeds chassisSpeeds) {
-        if (chassisSpeeds == null)
+        if (chassisSpeeds == null)//TODO dame as swerve mocule
             return;
 
         StructPublisher<ChassisSpeeds> publisher = chassisSpeedsPublishersArry.computeIfAbsent(
@@ -164,8 +159,8 @@ public class MALog {
         return entries.computeIfAbsent(key, k -> malogTable.getEntry(k));
     }
 
-    public static void flag(String label) {
-        flagEntry.setString(label);
+    public static void flag(String label, LogLevel level) {//TODO make generic flags
+        flagEntry.setString(level.name() + " - " + label);
     }
 
     public static void addStatus(String status) {

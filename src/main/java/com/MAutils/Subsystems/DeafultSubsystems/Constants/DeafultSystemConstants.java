@@ -5,7 +5,8 @@ import com.MAutils.Components.Motor;
 
 @SuppressWarnings("unchecked")
 public class DeafultSystemConstants<T> {
-    public final Motor[] MOTORS;
+    public final Motor[] MOTORS;//Add master motor to all relevet files
+    public final Motor master;
     public double GEAR = 1;
     public double STATOR_CURRENT_LIMIT = 40;
     public boolean CURRENT_LIMIT_ENABLED = true;
@@ -19,8 +20,9 @@ public class DeafultSystemConstants<T> {
     public double POSITION_FACTOR = 360;
     public double VELOCITY_FACTOR = 60;
 
-    public DeafultSystemConstants(Motor... motors) {
+    public DeafultSystemConstants(Motor master,Motor... motors) {
         this.MOTORS = motors;
+        this.master = master;
     }
 
     
@@ -75,5 +77,6 @@ public class DeafultSystemConstants<T> {
         this.VELOCITY_FACTOR = velocityFactor;
         return (T) this;
     }
+
 
 }

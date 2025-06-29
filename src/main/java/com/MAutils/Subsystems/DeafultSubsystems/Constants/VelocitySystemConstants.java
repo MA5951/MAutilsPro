@@ -10,13 +10,16 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
     
     public GainConfig realGainConfig = new GainConfig();
     public GainConfig simGainConfig = new GainConfig()
-    .withKP(1);;
+    .withKP(1);
     public double MAX_VELOCITY = 0;
     public double TOLERANCE = 0;
+    public double WHEEL_RADIUS = 0;
 
-    public VelocitySystemConstants(double maxVelocity ,Motor... motors) {
+
+    public VelocitySystemConstants(double maxVelocity, double tolerance ,Motor... motors) {
         super(motors);
         this.MAX_VELOCITY = maxVelocity;
+        this.TOLERANCE = tolerance;
     }
 
 
@@ -32,6 +35,11 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
 
     public GainConfig getGainConfig() {
         return Robot.isReal() ? realGainConfig : simGainConfig;
+    }
+
+    public VelocitySystemConstants withWheelRadius(double wheelRadius) {
+        this.WHEEL_RADIUS = wheelRadius;
+        return this;
     }
 
     public VelocitySystemConstants withTolerance(double tolerance) {

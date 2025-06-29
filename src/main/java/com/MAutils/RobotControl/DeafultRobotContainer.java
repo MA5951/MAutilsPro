@@ -1,13 +1,10 @@
 package com.MAutils.RobotControl;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-
 
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
-import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Controllers.MAController;
 import com.MAutils.Controllers.PS5MAController;
 import com.MAutils.DashBoard.AutoOption;
@@ -17,13 +14,14 @@ import com.MAutils.Logger.MALog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
     protected static RobotState lastRobotState;
-    protected static MAController driverController = new PS5MAController(0);
-    protected static MAController operatorController = new PS5MAController(1);
+    protected static MAController driverController = new PS5MAController(0);//TODO port constants
+    protected static MAController operatorController = new PS5MAController(1);//TODO port constants
     private static SwerveDriveSimulation swerveDriveSimulation;
     private static AutoSelector autoSelector;
 
@@ -74,7 +72,6 @@ public class DeafultRobotContainer {
     public static void setSwerveDriveSimulation(SwerveDriveSimulation simulation) {
         swerveDriveSimulation = simulation;
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
-
     }
 
     public static void setGamePiecesList(String[] gamePieces) {
@@ -94,16 +91,11 @@ public class DeafultRobotContainer {
         return lastRobotState;
     }
 
-    public static StateTrigger T(BooleanSupplier condition, RobotState stateToSet) {
-        return StateTrigger.T(condition, stateToSet);
+    public static Trigger T(StateTrigger trigger) {
+        return trigger.build();
     }
 
-    public static void robotPeriodic() {
-        StatusSignalsRunner.updateSignals();
-        CommandScheduler.getInstance().run();
-    }
-
-    public static void simulationPeriodic() {
+    public static void simulationPeriodic() { //TODO split to SimManager;
         SimulatedArena.getInstance().simulationPeriodic();
         MALog.log("/Simulation/Simulation Pose", swerveDriveSimulation.getSimulatedDriveTrainPose());
         for (String type : gamePiecesList) {

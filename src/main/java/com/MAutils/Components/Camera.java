@@ -3,7 +3,7 @@ package com.MAutils.Components;
 
 public class Camera {
 
-    public enum Cameras {
+    public enum Cameras {//Todo add יחידות מידה
         LL4(1280, 800, 82, 50),
         LL3G(1280, 800, 86, 35),
         LL3(1280, 960, 70, 20),

@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class DeafultPoseEstimator {
 
-    protected final SwerveDrivePoseEstimator swervePoseEstimator;
+    protected final SwerveDrivePoseEstimator swervePoseEst0imator;
 
     public DeafultPoseEstimator(SwerveSystemConstants constants) {
         swervePoseEstimator = new SwerveDrivePoseEstimator(constants.kinematics, Rotation2d.fromDegrees(0),
@@ -31,5 +31,10 @@ public class DeafultPoseEstimator {
     public void resetPose(Pose2d pose, SwerveModulePosition[] wModulePositions, Rotation2d gyroAngle) {
         swervePoseEstimator.resetPosition(gyroAngle, wModulePositions, pose);
     }
+
+    //TODO add vision etc deviations see the seson code for more details
+  
+
+    
 
 }

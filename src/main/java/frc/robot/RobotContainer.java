@@ -1,8 +1,11 @@
 package frc.robot;
 
 
+import org.dyn4j.collision.narrowphase.FallbackCondition;
+
 import com.MAutils.Controllers.XboxMAController;
 import com.MAutils.RobotControl.DeafultRobotContainer;
+import com.MAutils.RobotControl.StateTrigger;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Commands.Arm.ArmCommand;
@@ -42,12 +45,6 @@ public class RobotContainer extends DeafultRobotContainer{
   }
 
   private void configureBindings() {
-
-    T(() -> driverController.getActionsDown(),  RobotConstatns.ARM_IDLE).build();
-
-    T(() -> driverController.getActionsRight(),  RobotConstatns.ARM_DOWN).build();
-
-    T(() -> driverController.getActionsUp(),  RobotConstatns.ARM_UP).build();
 
 
 

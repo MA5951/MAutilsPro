@@ -5,19 +5,17 @@ import java.util.function.Supplier;
 
 import frc.robot.Robot;
 
-public class SensorSimWrapper<T> {
+public class SensorSimWrapper<T> {//Todo "SensorWrapper?"
 
     private Supplier<T> sensorSupplier;
     private T value;
     private boolean usingSupplier;
 
 
-    public SensorSimWrapper(Supplier<T> sensorSupplier) {
+    public SensorSimWrapper(Supplier<T> sensorSupplier, Supplier<T> sensorSimSupplier) {
         this.sensorSupplier = sensorSupplier;
         usingSupplier = true;
-    }
 
-    public void setSimSupplier(Supplier<T> sensorSimSupplier) {
         if (!Robot.isReal()) {
             sensorSupplier = sensorSimSupplier;
         }
@@ -27,6 +25,8 @@ public class SensorSimWrapper<T> {
         if (!Robot.isReal()) {
             this.value = value;
             usingSupplier = false;
+        } else {
+            throw new UnsupportedOperationException("Cannot set value in real mode.");
         }
     }
 

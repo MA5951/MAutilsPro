@@ -1,0 +1,7 @@
+Folder with all sim stuff:
+
+
+SimManager -> Maneges all simulation:
+
+Field Simulatiuon -> Manages MapleSims field simulation
+Game Piece simulation 0> Managed Game piece simulation

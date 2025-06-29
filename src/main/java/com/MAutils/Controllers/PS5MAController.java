@@ -3,11 +3,13 @@ package com.MAutils.Controllers;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-public class PS5MAController extends MAController {
+public class PS5MAController implements MAController {
     private final PS5Controller controller;
+    private XboxMAController xboxController;//TODO: Add ghost rumble controller 
 
     public PS5MAController(int port) {
         this.controller = new PS5Controller(port);
+        
     }
 
     @Override
@@ -128,6 +130,11 @@ public class PS5MAController extends MAController {
     @Override
     public double getLeftY() {
         return controller.getLeftY(); 
+    }
+
+    @Override
+    public double withDeadbound(double value) {
+        return withDeadbound(value, 0.1);
     }
 
     @Override

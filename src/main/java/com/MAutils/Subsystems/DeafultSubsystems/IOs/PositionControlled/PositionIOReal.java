@@ -50,7 +50,7 @@ public class PositionIOReal implements PositionSystemIO {
 
         configMotors();
 
-        followers = new StrictFollower[numOfMotors - 1];
+        followers = new StrictFollower[numOfMotors - 1];//ONly One
         
 
         for (Motor motor : systemConstants.MOTORS) {
@@ -65,7 +65,7 @@ public class PositionIOReal implements PositionSystemIO {
                 motorError = motor.motorController.getClosedLoopError(false);
                 motorSetPoint = motor.motorController.getClosedLoopReference(false);
                 StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
-                        motorVoltage, motorError, motorSetPoint, motorPosition);
+                        motorVoltage, motorError, motorSetPoint, motorPosition);//TODO outside of loop shit
             }
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
@@ -96,6 +96,8 @@ public class PositionIOReal implements PositionSystemIO {
 
         motorConfig.CurrentLimits.StatorCurrentLimit = systemConstants.STATOR_CURRENT_LIMIT;
         motorConfig.CurrentLimits.StatorCurrentLimitEnable = systemConstants.CURRENT_LIMIT_ENABLED;
+
+      
     }
 
     @Override
@@ -140,19 +142,18 @@ public class PositionIOReal implements PositionSystemIO {
                 : NeutralModeValue.Coast;
 
         for (Motor motor : systemConstants.MOTORS) {
-            motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(brakeConfig);
         }
     }
 
     @Override
     public void setVoltage(double volt) {
-        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)
-        .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
+        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)//TODO move motor to Real IO in systems
+        .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)//TODO currnt a bsolute in all limits 
         .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
         i = 1;
         while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
+            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);//TODO cheack if possiable in config
         }
     }
 
@@ -215,6 +216,24 @@ public class PositionIOReal implements PositionSystemIO {
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
 
+    }
+
+    @Override
+    public void restPosition(double position) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'restPosition'");
+    }
+
+    @Override
+    public void setPID(double kP, double kI, double kD) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setPID'");
+    }
+
+    @Override
+    public boolean isMoving() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isMoving'");
     }
 
 }

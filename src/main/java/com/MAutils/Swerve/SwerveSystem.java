@@ -15,15 +15,18 @@ import com.MAutils.Swerve.Utils.DriveFeedforwards;
 import com.MAutils.Swerve.Utils.SkidAndCollisionDetector;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
+import com.MAutils.Swerve.Utils.SwerveState;
 import com.MAutils.Utils.DeafultRobotConstants;
-import com.MAutils.Swerve.Utils.DeafultSwerveSystem;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveSystem extends DeafultSwerveSystem {
+public class SwerveSystem extends SubsystemBase {
+    private SwerveState currentState;
+
 
     public static final Lock odometryLock = new ReentrantLock();
     private final SwerveSystemConstants swerveConstants;
@@ -34,7 +37,7 @@ public class SwerveSystem extends DeafultSwerveSystem {
     private SwerveSetpoint swerveSetpoint;;
     private final SwerveSetpointGenerator swerveSetpointGenerator;
     private final SwerveModuleState[] currentStates = new SwerveModuleState[4];
-    private final DeafultPoseEstimator poseEstimator;
+    private final DeafultPoseEstimator poseEstimator;//TODO: cahge to "PoseEstimator" 
     private final SkidAndCollisionDetector skidAndCollisionDetector;
 
     public SwerveSystem(SwerveSystemConstants swerveConstants, DeafultPoseEstimator poseEstimator) {
@@ -65,6 +68,15 @@ public class SwerveSystem extends DeafultSwerveSystem {
         }
 
         swerveSetpoint = new SwerveSetpoint(new ChassisSpeeds(0, 0, 0), currentStates, DriveFeedforwards.zeros(4));
+    }
+
+     public void setState(SwerveState state) {
+        this.currentState = state;
+        
+    }
+
+    public SwerveState getState() {
+        return currentState;
     }
 
     public void periodic() {
@@ -111,7 +123,7 @@ public class SwerveSystem extends DeafultSwerveSystem {
         runSwerveStates(swerveSetpoint.moduleStates());
     }
 
-    public void runSwerveStates(SwerveModuleState[] states) {
+    private void runSwerveStates(SwerveModuleState[] states) {
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setSetPoint(states[i]);
         }

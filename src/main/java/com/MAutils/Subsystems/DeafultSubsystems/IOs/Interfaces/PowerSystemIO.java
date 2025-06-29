@@ -18,4 +18,6 @@ public interface PowerSystemIO {
 
     void updatePeriodic();
 
+    boolean isMoving();
+
 }

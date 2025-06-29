@@ -3,13 +3,13 @@ package com.MAutils.Controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-public class XboxMAController extends MAController {
+public class XboxMAController implements MAController {
     private final XboxController controller;
     private static final double TRIGGER_THRESHOLD = 0.03;
 
     public XboxMAController(int port) {
         this.controller = new XboxController(port);
-        deadbound = 0.3;
+        
     }
 
     @Override
@@ -130,6 +130,11 @@ public class XboxMAController extends MAController {
     @Override
     public double getLeftY() {
         return controller.getLeftY();  
+    }
+
+    @Override
+    public double withDeadbound(double value) {
+        return withDeadbound(value, 0.3);
     }
 
     @Override

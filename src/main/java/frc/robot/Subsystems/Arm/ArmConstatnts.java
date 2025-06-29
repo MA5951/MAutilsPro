@@ -2,7 +2,7 @@
 package frc.robot.Subsystems.Arm;
 
 import com.MAutils.Components.Motor;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.RobotControl.State;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Utils.GainConfig;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -25,7 +25,7 @@ public class ArmConstatnts {
 
      
 
-    public static final SubsystemState IDLE = new SubsystemState("IDLE");
-    public static final SubsystemState UP = new SubsystemState("UP");
-    public static final SubsystemState DOWEN = new SubsystemState("DOWEN");
+    public static final State IDLE = new State("IDLE");
+    public static final State UP = new State("UP");
+    public static final State DOWEN = new State("DOWEN");
 }

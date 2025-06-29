@@ -22,8 +22,12 @@ public class Arm extends PositionControlledSystem{
         limitSwitchSim = new SensorSimWrapper<Boolean>(() -> limitSwitch.get());
     }
 
+    public void registerSignals() {
+        super.register(signal);
+    }
+
     public boolean isLimitSwitchPressed() {
-        return limitSwitchSim.getValue();
+        return limitSwitch.se
     }
 
     public SensorSimWrapper<Boolean> getLimitSwitchSim() {

@@ -2,7 +2,7 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.RobotControl.State;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
@@ -14,7 +14,7 @@ public abstract class PositionControlledSystem extends StateSubsystem{
 
     protected final PositionSystemIO systemIO;
 
-    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, SubsystemState... subsystemStates) {
+    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, State... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
             systemIO = new PositionIOReal(name, systemConstants);
@@ -24,7 +24,7 @@ public abstract class PositionControlledSystem extends StateSubsystem{
     }
 
     
-    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, PositionSystemIO simIO ,SubsystemState... subsystemStates) {
+    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, PositionSystemIO simIO ,State... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
             systemIO = new PositionIOReal(name, systemConstants);

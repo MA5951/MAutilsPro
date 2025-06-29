@@ -2,7 +2,7 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.RobotControl.State;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
@@ -14,7 +14,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem{
 
     protected final VelocitySystemIO systemIO;
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, SubsystemState... subsystemStates) {
+    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, State... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
             systemIO = new VelocityIOReal(name, systemConstants);
@@ -23,7 +23,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem{
         }
     }
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO ,SubsystemState... subsystemStates) {
+    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO ,State... subsystemStates) {
         super(name, subsystemStates);
         if (Robot.isReal()) {
             systemIO = new VelocityIOReal(name, systemConstants);

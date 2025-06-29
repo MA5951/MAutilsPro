@@ -2,7 +2,7 @@
 package com.MAutils.CanBus;
 
 
-public class SwerveModuleID {
+public class SwerveModuleID {///TODO Getters
 
     public final CANBusID driveMotor;
     public final CANBusID steerMotor;

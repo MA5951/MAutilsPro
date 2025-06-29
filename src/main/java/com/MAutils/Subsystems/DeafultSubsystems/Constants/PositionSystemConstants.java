@@ -2,9 +2,9 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 
+
 import com.MAutils.Components.Motor;
 import com.MAutils.Utils.GainConfig;
-
 import frc.robot.Robot;
 
 public class PositionSystemConstants extends DeafultSystemConstants<PositionSystemConstants> {
@@ -19,12 +19,14 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
     public double ACCELERATION = 0;
     public double JERK = 0;
     public boolean IS_MOTION_MAGIC = false;
+    public double MASS = -1;
 
-    public PositionSystemConstants(double minPose, double maxPose, double startPose,Motor... motors) {
+    public PositionSystemConstants(double minPose, double maxPose, double startPose,double tolerance ,Motor... motors) {
         super(motors);
         this.MIN_POSE = minPose;
         this.MAX_POSE = maxPose;
         this.START_POSE = startPose;
+        this.TOLERANCE = tolerance;
         this.INERTIA = 0.000000001;
     }
 
@@ -48,6 +50,11 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
         this.ACCELERATION = acceleration;
         this.JERK = jerk;
         this.IS_MOTION_MAGIC = true;
+        return this;
+    }
+
+    public PositionSystemConstants withMass(double mass) {
+        this.MASS = mass;
         return this;
     }
 

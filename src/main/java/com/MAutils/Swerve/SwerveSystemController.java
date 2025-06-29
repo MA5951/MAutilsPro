@@ -42,14 +42,12 @@ public abstract class SwerveSystemController extends Command {
   public void execute() {
     SetSwerveState();
 
-    if(lastState != swerveSystem.getState()) 
+    if(lastState != swerveSystem.getState()) //TODO: move to swerve subsystem, ste state
     {
       swerveSystem.getState().getOnStateEnter().run();
       lastState = swerveSystem.getState();
     }
-
-
-    swerveSystem.getState().getOnStateEnter().run();
+    swerveSystem.getState().getOnStateRuning().run();
 
 
     currentSpeeds = swerveSystem.getState().getSpeeds();

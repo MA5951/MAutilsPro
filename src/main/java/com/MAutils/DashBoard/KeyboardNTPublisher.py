@@ -8,7 +8,7 @@ keys_dict = {}
 ntcoreinst = None
 table = None #TODO test
 
-def connectNT():
+def connectNT():#TODO Move to folder
     global ntcoreinst, table
     ntcoreinst = ntcore.NetworkTableInstance.getDefault()
     print("Setting up NetworkTables client")

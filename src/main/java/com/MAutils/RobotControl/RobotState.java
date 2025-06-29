@@ -1,32 +1,44 @@
 
 package com.MAutils.RobotControl;
 
-
 public class RobotState {
 
-    private SubsystemState[] subsystemStates;
-    public final String stateName;
-    private Runnable onStateSet;
+    private static StateSubsystem[] subsystemsArry;
+    private State[] subsystemStates;
+    private final String stateName;
+    private Runnable onStateSet = () -> {
 
-    public RobotState(String name , SubsystemState... subsystemStates) {
+    };
+
+    public static void registerSubsystes(StateSubsystem... subsystems) {
+        subsystemsArry = subsystems;
+    }
+
+    public RobotState(String name, State... subsystemStates) {
         this.subsystemStates = subsystemStates;
         stateName = name;
     }
 
-    public RobotState(String name , Runnable onStateSet ,SubsystemState... subsystemStates) {
+    public RobotState(String name, Runnable onStateSet, State... subsystemStates) {
         this.subsystemStates = subsystemStates;
         stateName = name;
         this.onStateSet = onStateSet;
 
     }
 
-    public void setState() {
-        if (onStateSet != null) {
-            onStateSet.run();
-        }
+    public String getStateName() {
+        return stateName;
+    }
 
-        for (SubsystemState state : subsystemStates) {
-            state.setState();
+    public void setState() {
+        onStateSet.run();
+
+        for (StateSubsystem subsystem : subsystemsArry) {
+            for (State state : subsystemStates) {
+                if (state.getSubsystem() == subsystem) {
+                    subsystem.setState(state);
+                }
+            }
         }
     }
 

@@ -2,10 +2,13 @@
 package frc.robot;
 
 import com.MAutils.CanBus.CANBusID;
-import com.MAutils.CanBus.DeafultPortMap;
 import com.MAutils.CanBus.SwerveModuleID;
+import com.ctre.phoenix6.CANBus;
 
-public class PortMap extends DeafultPortMap{
+public class PortMap {
+
+    public static final CANBus Rio = new CANBus("rio");
+    public static final CANBus Canivore = new CANBus("*");
 
     public static class Swerve {
 
@@ -28,12 +31,12 @@ public class PortMap extends DeafultPortMap{
         public static final CANBusID PIGEON2 = new CANBusID(12, Canivore);
 
         public static final SwerveModuleID[] SWERVE_MODULE_IDS = {
-            new SwerveModuleID(LEFT_FRONT_ENCODER, LEFT_FRONT_DRIVE, LEFT_FRONT_TURNING),
-            new SwerveModuleID(LEFT_BACK_ENCODER, LEFT_BACK_DRIVE, LEFT_BACK_TURNING),
-            new SwerveModuleID(RIGHT_FRONT_ENCODER, RIGHT_FRONT_DRIVE, RIGHT_FRONT_TURNING),
-            new SwerveModuleID(RIGHT_BACK_ENCODER, RIGHT_BACK_DRIVE, RIGHT_BACK_TURNING)
+                new SwerveModuleID(LEFT_FRONT_ENCODER, LEFT_FRONT_DRIVE, LEFT_FRONT_TURNING),
+                new SwerveModuleID(LEFT_BACK_ENCODER, LEFT_BACK_DRIVE, LEFT_BACK_TURNING),
+                new SwerveModuleID(RIGHT_FRONT_ENCODER, RIGHT_FRONT_DRIVE, RIGHT_FRONT_TURNING),
+                new SwerveModuleID(RIGHT_BACK_ENCODER, RIGHT_BACK_DRIVE, RIGHT_BACK_TURNING)
         };
-        
+
     }
 
     public static class Arm {

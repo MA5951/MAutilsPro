@@ -3,52 +3,68 @@ package com.MAutils.Controllers;
 
 import com.MAutils.Logger.MALog;
 
-public abstract class MAController {
+public interface MAController {
 
-    protected double deadbound = 0.1;
 
-    public abstract int getPort();
+    public int getPort();
 
-    public abstract boolean getL1();
-    public abstract boolean getL2();
-    public abstract boolean getR1();
-    public abstract boolean getR2();
-    public abstract boolean getL3();
-    public abstract boolean getR3();
+    public boolean getL1();
 
-    public abstract boolean getActionsUp();
-    public abstract boolean getActionsDown();
-    public abstract boolean getActionsLeft();
-    public abstract boolean getActionsRight();
+    public boolean getL2();
 
-    public abstract boolean getDpadUp();
-    public abstract boolean getDpadDown();
-    public abstract boolean getDpadLeft();
-    public abstract boolean getDpadRight();
+    public boolean getR1();
 
-    public abstract boolean getOptionsLeft();
-    public abstract boolean getOptionsRight();
-    public abstract boolean getMiddle();
+    public boolean getR2();
 
-    public abstract double getRightTrigger();
-    public abstract double getLeftTrigger();
+    public boolean getL3();
 
-    public abstract double getRightX();
-    public abstract double getRightY();
-    public abstract double getLeftX();
-    public abstract double getLeftY();
+    public boolean getR3();
 
-    public abstract void setRumble(double power);
+    public boolean getActionsUp();
 
-    public double withDeadbound(double value) {
+    public boolean getActionsDown();
+
+    public boolean getActionsLeft();
+
+    public boolean getActionsRight();
+
+    public boolean getDpadUp();
+
+    public boolean getDpadDown();
+
+    public boolean getDpadLeft();
+
+    public boolean getDpadRight();
+
+    public boolean getOptionsLeft();
+
+    public boolean getOptionsRight();
+
+    public boolean getMiddle();
+
+    public double getRightTrigger();//TODO: Add option with deadband and sclar
+
+    public double getLeftTrigger();
+
+    public double getRightX();
+
+    public double getRightY();
+
+    public double getLeftX();
+
+    public double getLeftY();
+
+    public void setRumble(double power);
+
+    default public double withDeadbound(double value) {
+        return withDeadbound( value, 0.1);
+    }
+
+    default public double withDeadbound(double value, double deadbound) {
         return Math.abs(value) < deadbound ? 0 : value;
     }
 
-    public double withDeadbound(double value, double deadbound) {
-        return Math.abs(value) < deadbound ? 0 : value;
-    }
-
-    public void log() {
+    default public void log() {
         MALog.log("/Controllers/" + getPort() + "/L1", getL1());
         MALog.log("/Controllers/" + getPort() + "/L2", getL2());
         MALog.log("/Controllers/" + getPort() + "/R1", getR1());
@@ -73,5 +89,5 @@ public abstract class MAController {
         MALog.log("/Controllers/" + getPort() + "/LeftX", getLeftX());
         MALog.log("/Controllers/" + getPort() + "/LeftY", getLeftY());
     }
-    
-} 
+
+}

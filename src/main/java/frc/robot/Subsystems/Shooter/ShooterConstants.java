@@ -3,7 +3,7 @@ package frc.robot.Subsystems.Shooter;
 
 import com.MAutils.CanBus.CANBusID;
 import com.MAutils.Components.Motor;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.RobotControl.State;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Utils.GainConfig;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -22,7 +22,7 @@ public class ShooterConstants {
             .withSimGains(simGains)
             .withTolerance(100);
 
-    public static final SubsystemState IDLE = new SubsystemState( "IDLE");
-    public static final SubsystemState SHOOTING = new SubsystemState("SHOOTING");
+    public static final State IDLE = new State( "IDLE");
+    public static final State SHOOTING = new State("SHOOTING");
 
 }
