@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
@@ -16,12 +17,16 @@ import edu.wpi.first.networktables.StructPublisher;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 public class MALog {
+    public static final Flag DRIVER_FLAG = new Flag(LogLevel.DEBUG, "Driver Flag");
+    public static final Flag SOFTWARE_FLAG = new Flag(LogLevel.DEBUG, "Software Flag");
+
     private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
     private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("/MALog");
     private static final Map<String, NetworkTableEntry> entries = new HashMap<>();
@@ -41,24 +46,22 @@ public class MALog {
         TEST
     }
 
-    public enum LogLevel {// TODO: implement log levels to console writes
+    public enum LogLevel {
         INFO, WARN, ERROR, DEBUG
     }
 
     public static void startLog(MALogMode mode) {
         if (!DriverStation.isFMSAttached()) {
             sessionID = loadNextID();
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp); // TODO ask cahtgpt to
-                                                                                                 // get the time fro the
-                                                                                                 // DS? and sync time
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now());
+            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp); 
             malogTable.getEntry("LogName").setString(logName);
             malogTable.getEntry("LogID").setString(sessionID);
             DataLogManager.start("", logName);
         } else {
             DataLogManager.start();
         }
-        DataLogManager.logNetworkTables(true);//TOOD: Add compition mode in robot continer
+        DataLogManager.logNetworkTables(true);// TOOD: Add compition mode in robot continer
     }
 
     public static void stopLog() {
@@ -66,14 +69,14 @@ public class MALog {
     }
 
     public static void log(String key, double value) {
-        getEntry(key).setDouble(value);
+        log(key, () -> value);
     }
 
     public static void log(String key, boolean value) {
-        getEntry(key).setBoolean(value);
+        log(key, () -> value);
     }
 
-    public static void log(String key, String value) {//TODO Merge with supplier methods
+    public static void log(String key, String value) {
         getEntry(key).setString(value);
     }
 
@@ -112,8 +115,10 @@ public class MALog {
     }
 
     public static void log(String key, Pose3d[] poses) {
-        if (poses == null)//TODO dame as swerve mocule
+        if (poses == null) {
+            poses = new Pose3d[] { new Pose3d(0, 0, 1000, new Rotation3d()) };
             return;
+        }
 
         StructArrayPublisher<Pose3d> publisher = pose3dPublishersArry.computeIfAbsent(
                 key,
@@ -123,8 +128,10 @@ public class MALog {
     }
 
     public static void log(String key, Pose2d pose) {
-        if (pose == null)//TODO dame as swerve mocule
+        if (pose == null) {
+            pose = new Pose2d(100, 100, Rotation2d.kZero);
             return;
+        }
 
         StructPublisher<Pose2d> publisher = pose2dPublishers.computeIfAbsent(
                 key,
@@ -134,8 +141,10 @@ public class MALog {
     }
 
     public static void log(String key, Pose3d pose) {
-        if (pose == null)//TODO dame as swerve mocule
+        if (pose == null) {
+            pose = new Pose3d(0, 0, 1000, new Rotation3d());
             return;
+        }
 
         StructPublisher<Pose3d> publisher = pose3dPublishers.computeIfAbsent(
                 key,
@@ -145,8 +154,10 @@ public class MALog {
     }
 
     public static void log(String key, ChassisSpeeds chassisSpeeds) {
-        if (chassisSpeeds == null)//TODO dame as swerve mocule
+        if (chassisSpeeds == null) {
+            chassisSpeeds = new ChassisSpeeds(0, 0, 1000);
             return;
+        }
 
         StructPublisher<ChassisSpeeds> publisher = chassisSpeedsPublishersArry.computeIfAbsent(
                 key,
@@ -159,8 +170,8 @@ public class MALog {
         return entries.computeIfAbsent(key, k -> malogTable.getEntry(k));
     }
 
-    public static void flag(String label, LogLevel level) {//TODO make generic flags
-        flagEntry.setString(level.name() + " - " + label);
+    public static void flag(Flag falg) {
+        flagEntry.setString(falg.level.name() + " - " + falg.label);
     }
 
     public static void addStatus(String status) {
@@ -215,5 +226,17 @@ public class MALog {
             e.printStackTrace();
             return "0000";
         }
+    }
+
+    public static class  Flag {
+    
+        public final LogLevel level;
+        public final String label;
+
+        public Flag(LogLevel level, String label) {
+            this.level = level;
+            this.label = label;
+        }
+        
     }
 }

@@ -23,13 +23,12 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class PositionIOReal implements PositionSystemIO {
 
-    private final int numOfMotors;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
     private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
-    private final StrictFollower[] followers;
+    private StrictFollower follower;
 
     private StatusSignal<AngularVelocity> motorVelocity;
     private StatusSignal<Angle> motorPosition;
@@ -40,36 +39,29 @@ public class PositionIOReal implements PositionSystemIO {
 
     private final PositionSystemConstants systemConstants;
     private final String logPath;
-    private int i = 0;
 
-    public PositionIOReal(String subsystemName ,PositionSystemConstants systemConstants) {
+    public PositionIOReal(String subsystemName, PositionSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        numOfMotors = systemConstants.MOTORS.length;
         logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
-
 
         configMotors();
 
-        followers = new StrictFollower[numOfMotors - 1];//ONly One
-        
+        motorVelocity = systemConstants.master.motorController.getVelocity(false);
+        motorCurrent = systemConstants.master.motorController.getStatorCurrent(false);
+        motorVoltage = systemConstants.master.motorController.getMotorVoltage(false);
+        motorPosition = systemConstants.master.motorController.getPosition(false);
+        motorError = systemConstants.master.motorController.getClosedLoopError(false);
+        motorSetPoint = systemConstants.master.motorController.getClosedLoopReference(false);
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, motorVelocity, motorCurrent,
+                motorVoltage, motorError, motorSetPoint, motorPosition);
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
 
         for (Motor motor : systemConstants.MOTORS) {
-            if (i > 0) {
-                followers[i - 1] = new StrictFollower(systemConstants.MOTORS[0].motorController.getDeviceID());
-            } else {
-                System.out.println("Config");
-                motorVelocity = motor.motorController.getVelocity(false);
-                motorCurrent = motor.motorController.getStatorCurrent(false);
-                motorVoltage = motor.motorController.getMotorVoltage(false);
-                motorPosition = motor.motorController.getPosition(false);
-                motorError = motor.motorController.getClosedLoopError(false);
-                motorSetPoint = motor.motorController.getClosedLoopReference(false);
-                StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
-                        motorVoltage, motorError, motorSetPoint, motorPosition);//TODO outside of loop shit
-            }
+            follower = new StrictFollower(systemConstants.master.canBusID.id);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
-            i++;
         }
 
     }
@@ -96,8 +88,6 @@ public class PositionIOReal implements PositionSystemIO {
 
         motorConfig.CurrentLimits.StatorCurrentLimit = systemConstants.STATOR_CURRENT_LIMIT;
         motorConfig.CurrentLimits.StatorCurrentLimitEnable = systemConstants.CURRENT_LIMIT_ENABLED;
-
-      
     }
 
     @Override
@@ -148,36 +138,41 @@ public class PositionIOReal implements PositionSystemIO {
 
     @Override
     public void setVoltage(double volt) {
-        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)//TODO move motor to Real IO in systems
-        .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)//TODO currnt a bsolute in all limits 
-        .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);//TODO cheack if possiable in config
+        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)
+                .withLimitForwardMotion(
+                        Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                                || getPosition() > systemConstants.MAX_POSE)
+                .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                        || getPosition() < systemConstants.MIN_POSE));
+        for (Motor motor : systemConstants.MOTORS) {
+            motor.motorController.setControl(follower);
         }
     }
 
     @Override
     public void setPosition(double position) {
-        
+
         if (systemConstants.IS_MOTION_MAGIC) {
             systemConstants.MOTORS[0].motorController.setControl(
                     motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
                             .withFeedForward(systemConstants.getGainConfig().Kf)
-                            .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
-                            .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
+                            .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() > systemConstants.MAX_POSE)
+                            .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() < systemConstants.MIN_POSE));
         } else {
-             systemConstants.MOTORS[0].motorController.setControl(
+            systemConstants.MOTORS[0].motorController.setControl(
                     positionRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
                             .withFeedForward(systemConstants.getGainConfig().Kf)
-                            .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
-                            .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
+                            .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() > systemConstants.MAX_POSE)
+                            .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() < systemConstants.MIN_POSE));
         }
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
+        for (Motor motor : systemConstants.MOTORS) {
+            motor.motorController.setControl(follower);
         }
     }
 
@@ -188,26 +183,29 @@ public class PositionIOReal implements PositionSystemIO {
                     motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
                             .withFeedForward(voltageFeedForward)
-                            .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
-                            .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
+                            .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() > systemConstants.MAX_POSE)
+                            .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() < systemConstants.MIN_POSE));
         } else {
             systemConstants.MOTORS[0].motorController.setControl(
                     positionRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
                             .withFeedForward(voltageFeedForward)
-                            .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT || getPosition() > systemConstants.MAX_POSE)
-                            .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT || getPosition() < systemConstants.MIN_POSE));
+                            .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() > systemConstants.MAX_POSE)
+                            .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                                    || getPosition() < systemConstants.MIN_POSE));
         }
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
+        for (Motor motor : systemConstants.MOTORS) {
+            motor.motorController.setControl(follower);
         }
     }
 
     @Override
     public void updatePeriodic() {
         BaseStatusSignal.refreshAll(motorVelocity, motorCurrent,
-        motorVoltage, motorError, motorSetPoint, motorPosition);
+                motorVoltage, motorError, motorSetPoint, motorPosition);
         MALog.log(logPath + "/Velocity", getVelocity());
         MALog.log(logPath + "/Voltage", getAppliedVolts());
         MALog.log(logPath + "/Current", getCurrent());
@@ -218,22 +216,23 @@ public class PositionIOReal implements PositionSystemIO {
 
     }
 
-    @Override
     public void restPosition(double position) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'restPosition'");
+        systemConstants.master.motorController.setPosition(position / systemConstants.POSITION_FACTOR);
     }
 
     @Override
     public void setPID(double kP, double kI, double kD) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPID'");
+        motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
+        motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
+        motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
     }
 
     @Override
     public boolean isMoving() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isMoving'");
+        return motorVelocity.getValueAsDouble() > 1;
     }
 
 }

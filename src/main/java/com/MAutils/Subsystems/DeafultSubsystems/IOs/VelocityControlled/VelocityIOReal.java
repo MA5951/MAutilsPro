@@ -11,7 +11,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -21,12 +20,11 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class VelocityIOReal implements VelocitySystemIO {
 
-    private final int numOfMotors;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
     private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
     private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
-    private final StrictFollower[] followers;
+    private StrictFollower follower;
 
     private StatusSignal<AngularVelocity> motorVelocity;
     private StatusSignal<Angle> motorPosition;
@@ -37,34 +35,27 @@ public class VelocityIOReal implements VelocitySystemIO {
 
     private final String logPath;
     private final VelocitySystemConstants systemConstants;
-    private int i = 0;
 
     public VelocityIOReal(String subsystemName, VelocitySystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        numOfMotors = systemConstants.MOTORS.length;
         logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
-        followers = new StrictFollower[numOfMotors - 1];
+        motorVelocity = systemConstants.master.motorController.getVelocity(false);
+        motorCurrent = systemConstants.master.motorController.getStatorCurrent(false);
+        motorVoltage = systemConstants.master.motorController.getMotorVoltage(false);
+        motorPosition = systemConstants.master.motorController.getPosition(false);
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, motorVelocity, motorCurrent,
+                motorVoltage, motorPosition);
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
 
         for (Motor motor : systemConstants.MOTORS) {
-            if (i > 0) {
-                followers[i - 1] = new StrictFollower(systemConstants.MOTORS[0].motorController.getDeviceID());
-            } else {
-                motorVelocity = motor.motorController.getVelocity(false);
-                motorCurrent = motor.motorController.getStatorCurrent(false);
-                motorVoltage = motor.motorController.getMotorVoltage(false);
-                motorPosition = motor.motorController.getPosition(false);
-                motorError = motor.motorController.getClosedLoopError(false);
-                motorSetPoint = motor.motorController.getClosedLoopReference(false);
-                StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
-                        motorVoltage, motorError, motorSetPoint, motorPosition);
-            }
-            TalonFX.resetSignalFrequenciesForAll(motor.motorController);
+            follower = new StrictFollower(systemConstants.master.canBusID.id);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
-            i++;
         }
 
     }
@@ -138,11 +129,10 @@ public class VelocityIOReal implements VelocitySystemIO {
     @Override
     public void setVoltage(double volt) {
         systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)
-                .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT)
-                .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT));
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
+                .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
+                .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT));
+        for (Motor motor : systemConstants.MOTORS) {
+            motor.motorController.setControl(follower);
         }
     }
 
@@ -150,17 +140,20 @@ public class VelocityIOReal implements VelocitySystemIO {
     public void setVelocity(double Velocity) {
         if (Velocity > systemConstants.MAX_VELOCITY) {
             Velocity = systemConstants.MAX_VELOCITY;
-            System.out.println("Velocity exceeds maximum limit, setting to " + systemConstants.MAX_VELOCITY); // TODO
-                                                                                                              // normal
+            throw new IllegalArgumentException("Velocity exceeds maximum limit: " + systemConstants.MAX_VELOCITY);
         }
         systemConstants.MOTORS[0].motorController.setControl(velocityRequest.withVelocity(Velocity)
                 .withSlot(0)
-                .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT)
-                .withLimitReverseMotion(getCurrent() < systemConstants.MOTOR_LIMIT_CURRENT));
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
+                .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
+                .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT));
+        for (Motor motor : systemConstants.MOTORS) {
+            motor.motorController.setControl(follower);
         }
+    }
+
+    @Override
+    public boolean isMoving() {
+        return motorVelocity.getValueAsDouble() > 1;
     }
 
     @Override
@@ -173,6 +166,16 @@ public class VelocityIOReal implements VelocitySystemIO {
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
 
+    }
+
+    @Override
+    public void setPID(double kP, double kI, double kD) {
+        motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
+        motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
+        motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
     }
 
 }

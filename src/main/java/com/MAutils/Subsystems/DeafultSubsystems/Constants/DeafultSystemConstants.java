@@ -2,10 +2,16 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 import com.MAutils.Components.Motor;
+import com.MAutils.Components.Motor.MotorType;
+
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 
 @SuppressWarnings("unchecked")
 public class DeafultSystemConstants<T> {
-    public final Motor[] MOTORS;//Add master motor to all relevet files
+    public final Motor[] MOTORS;
     public final Motor master;
     public double GEAR = 1;
     public double STATOR_CURRENT_LIMIT = 40;
@@ -19,15 +25,19 @@ public class DeafultSystemConstants<T> {
     public double INERTIA = 0.01;
     public double POSITION_FACTOR = 360;
     public double VELOCITY_FACTOR = 60;
+    public LinearSystem<N2, N1, N2> systemID;
 
     public DeafultSystemConstants(Motor master,Motor... motors) {
         this.MOTORS = motors;
         this.master = master;
+
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length), INERTIA, GEAR);
     }
 
     
     public T withGear(double gear) {
         this.GEAR = gear;
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length), INERTIA, GEAR);
         return (T) this;
     }
 
@@ -65,6 +75,7 @@ public class DeafultSystemConstants<T> {
 
     public T withInertia(double inertia) {
         this.INERTIA = inertia;
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length), INERTIA, GEAR);
         return (T) this;
     }
 

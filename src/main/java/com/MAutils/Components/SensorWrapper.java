@@ -5,14 +5,14 @@ import java.util.function.Supplier;
 
 import frc.robot.Robot;
 
-public class SensorSimWrapper<T> {//Todo "SensorWrapper?"
+public class SensorWrapper<T> {
 
     private Supplier<T> sensorSupplier;
     private T value;
     private boolean usingSupplier;
 
 
-    public SensorSimWrapper(Supplier<T> sensorSupplier, Supplier<T> sensorSimSupplier) {
+    public SensorWrapper(Supplier<T> sensorSupplier, Supplier<T> sensorSimSupplier) {
         this.sensorSupplier = sensorSupplier;
         usingSupplier = true;
 

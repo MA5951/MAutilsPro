@@ -16,8 +16,8 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
     public double WHEEL_RADIUS = 0;
 
 
-    public VelocitySystemConstants(double maxVelocity, double tolerance ,Motor... motors) {
-        super(motors);
+    public VelocitySystemConstants(double maxVelocity, double tolerance ,Motor master,Motor... motors) {
+        super(master, motors);
         this.MAX_VELOCITY = maxVelocity;
         this.TOLERANCE = tolerance;
     }

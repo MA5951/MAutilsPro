@@ -10,6 +10,7 @@ import com.MAutils.Controllers.PS5MAController;
 import com.MAutils.DashBoard.AutoOption;
 import com.MAutils.DashBoard.AutoSelector;
 import com.MAutils.Logger.MALog;
+import com.MAutils.Utils.Constants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,8 +21,8 @@ public class DeafultRobotContainer {
 
     protected static RobotState currentRobotState;
     protected static RobotState lastRobotState;
-    protected static MAController driverController = new PS5MAController(0);//TODO port constants
-    protected static MAController operatorController = new PS5MAController(1);//TODO port constants
+    protected static MAController driverController = new PS5MAController(Constants.DRIVER_CONTROLLER_PORT);
+    protected static MAController operatorController = new PS5MAController(Constants.OPERATOR_CONTROLLER_PORT);
     private static SwerveDriveSimulation swerveDriveSimulation;
     private static AutoSelector autoSelector;
 

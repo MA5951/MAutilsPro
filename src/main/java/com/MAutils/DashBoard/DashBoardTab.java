@@ -1,6 +1,9 @@
 package com.MAutils.DashBoard;
 
 import java.util.HashMap;
+
+import com.MAutils.DashBoard.DashBoard.Notification.NotificationLevel;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -14,10 +17,10 @@ public class DashBoardTab extends DashBoard{
     public DashBoardTab(String tab) {
         board = Shuffleboard.getTab(tab);
         values = new HashMap<>();
+    }
 
-        sendNotification(null);//TODO implement
-        
-        
+    public void sendNotification(String title, String message, NotificationLevel level) {
+        DashBoard.sendNotification(level, title, message);
     }
 
 

@@ -1,15 +1,14 @@
 package com.MAutils.Controllers;
 
 import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class PS5MAController implements MAController {
     private final PS5Controller controller;
-    private XboxMAController xboxController;//TODO: Add ghost rumble controller 
+    private XboxMAController xboxController;
 
     public PS5MAController(int port) {
         this.controller = new PS5Controller(port);
-        
+        this.xboxController = new XboxMAController(5 - port); 
     }
 
     @Override
@@ -139,7 +138,7 @@ public class PS5MAController implements MAController {
 
     @Override
     public void setRumble(double power) {
-        controller.setRumble(RumbleType.kLeftRumble, power);
-        controller.setRumble(RumbleType.kRightRumble, power); 
+        xboxController.setRumble(power);
+        xboxController.setRumble(power); 
     }
 }
