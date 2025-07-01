@@ -23,9 +23,9 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
+import com.MAutils.Components.Motor;
+
 public class MALog {
-    public static final Flag DRIVER_FLAG = new Flag(LogLevel.DEBUG, "Driver Flag");
-    public static final Flag SOFTWARE_FLAG = new Flag(LogLevel.DEBUG, "Software Flag");
 
     private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
     private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("/MALog");
@@ -54,7 +54,7 @@ public class MALog {
         if (!DriverStation.isFMSAttached()) {
             sessionID = loadNextID();
             String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now());
-            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp); 
+            String logName = String.format("MALog_%s_%s_%s", mode.name(), sessionID, timeStamp);
             malogTable.getEntry("LogName").setString(logName);
             malogTable.getEntry("LogID").setString(sessionID);
             DataLogManager.start("", logName);
@@ -226,10 +226,13 @@ public class MALog {
             e.printStackTrace();
             return "0000";
         }
+
     }
 
-    public static class  Flag {
-    
+    public static class Flag {
+        public static final Flag DRIVER_FLAG = new Flag(LogLevel.DEBUG, "Driver Flag");
+        public static final Flag SOFTWARE_FLAG = new Flag(LogLevel.DEBUG, "Software Flag");
+
         public final LogLevel level;
         public final String label;
 
@@ -237,6 +240,14 @@ public class MALog {
             this.level = level;
             this.label = label;
         }
-        
+
+        public static void getMaxPose(Motor motor) {
+            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Max Pose"));
+        }
+
+        public static void getMinPose(Motor motor) {
+            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Min Pose"));
+        }
+
     }
 }

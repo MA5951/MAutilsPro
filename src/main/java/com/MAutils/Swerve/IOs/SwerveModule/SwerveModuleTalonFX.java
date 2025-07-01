@@ -96,7 +96,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
         ParentDevice.optimizeBusUtilizationForAll(driveTalon, turnTalon, cancoder);
 
-        StatusSignalsRunner.registerSignals(drivePosition, driveVelocity, driveAppliedVolts,
+        StatusSignalsRunner.registerSignals(constants.MODULES_ID_ARRY[0].driveMotor ,drivePosition, driveVelocity, driveAppliedVolts,
                 driveCurrent, turnAbsolutePosition, turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
 
     }

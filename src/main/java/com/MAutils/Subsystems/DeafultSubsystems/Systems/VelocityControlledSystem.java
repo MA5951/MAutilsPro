@@ -1,28 +1,33 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOSim;
+import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
-public abstract class VelocityControlledSystem extends StateSubsystem{
+public abstract class VelocityControlledSystem extends StateSubsystem {
 
     protected final VelocitySystemIO systemIO;
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants) {
+    public VelocityControlledSystem(String name, VelocitySystemConstants systemConstants,
+            @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
         super(name);
         if (Robot.isReal()) {
             systemIO = new VelocityIOReal(name, systemConstants);
         } else {
             systemIO = new VelocityIOSim(name, systemConstants);
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO) {
+    public VelocityControlledSystem(String name, VelocitySystemConstants systemConstants, VelocitySystemIO simIO) {
         super(name);
         if (Robot.isReal()) {
             systemIO = new VelocityIOReal(name, systemConstants);
@@ -76,6 +81,5 @@ public abstract class VelocityControlledSystem extends StateSubsystem{
         super.periodic();
         systemIO.updatePeriodic();
     }
-    
 
 }
