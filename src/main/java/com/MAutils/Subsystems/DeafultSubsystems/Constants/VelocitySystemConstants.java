@@ -4,7 +4,6 @@ package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 import com.MAutils.Components.Motor;
 import com.MAutils.Utils.GainConfig;
 
-import frc.robot.Robot;
 
 public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
     
@@ -34,8 +33,12 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
     }
 
     public GainConfig getGainConfig() {
-        return Robot.isReal() ? realGainConfig : simGainConfig;
+        return simGainConfig;
     }
+
+    // public GainConfig getGainConfig() {
+    //     return Robot.isReal() ? realGainConfig : simGainConfig;
+    // }
 
     public VelocitySystemConstants withWheelRadius(double wheelRadius) {
         this.WHEEL_RADIUS = wheelRadius;

@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    StatusSignalsRunner.updateSignals();
+    //StatusSignalsRunner.updateSignals();
     CommandScheduler.getInstance().run();
   }
 
@@ -57,7 +57,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-frc.robot.Subsystems.Arm.Arm.getInstance().getLimitSwitchSim().setValue(false);
   }
 
   @Override

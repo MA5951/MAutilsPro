@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class DeafultPoseEstimator {
 
-    protected final SwerveDrivePoseEstimator swervePoseEst0imator;
+    protected final SwerveDrivePoseEstimator swervePoseEstimator;
 
     public DeafultPoseEstimator(SwerveSystemConstants constants) {
         swervePoseEstimator = new SwerveDrivePoseEstimator(constants.kinematics, Rotation2d.fromDegrees(0),

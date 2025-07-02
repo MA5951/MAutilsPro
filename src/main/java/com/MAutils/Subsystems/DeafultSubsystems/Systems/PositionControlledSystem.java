@@ -6,14 +6,13 @@ import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOSim;
 import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
 public abstract class PositionControlledSystem extends StateSubsystem {
 
-    protected final PositionSystemIO systemIO;
+    protected PositionSystemIO systemIO;//FINA;L
 
     public PositionControlledSystem(String name, PositionSystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
@@ -21,7 +20,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         if (Robot.isReal()) {
             systemIO = new PositionIOReal(name, systemConstants);
         } else {
-            systemIO = new PositionIOSim(name, systemConstants);
+            //systemIO = new PositionIOSim(name, systemConstants);
         }
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);

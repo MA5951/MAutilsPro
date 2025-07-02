@@ -6,14 +6,13 @@ import com.MAutils.RobotControl.StateSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOSim;
 import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
 public abstract class VelocityControlledSystem extends StateSubsystem {
 
-    protected final VelocitySystemIO systemIO;
+    protected VelocitySystemIO systemIO;
 
     public VelocityControlledSystem(String name, VelocitySystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
@@ -21,7 +20,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
         if (Robot.isReal()) {
             systemIO = new VelocityIOReal(name, systemConstants);
         } else {
-            systemIO = new VelocityIOSim(name, systemConstants);
+            //systemIO = new VelocityIOSim(name, systemConstants);
         }
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);

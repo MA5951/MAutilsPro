@@ -8,9 +8,6 @@ import com.MAutils.RobotControl.DeafultRobotContainer;
 import com.MAutils.RobotControl.StateTrigger;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Arm.ArmCommand;
-import frc.robot.Commands.Intake.IntakeCommand;
-import frc.robot.Commands.Shooter.ShooterCommand;
 import frc.robot.Commands.Swerve.SwerveTeleopController;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveConstants;
@@ -29,9 +26,9 @@ public class RobotContainer extends DeafultRobotContainer{
     setDriverController(new XboxMAController(0));
     setSwerveDriveSimulation(SwerveConstants.SWERVE_CONSTANTS.SWERVE_DRIVE_SIMULATION);
 
-    addSystemCommand(new ArmCommand());
-    addSystemCommand(new ShooterCommand());
-    addSystemCommand(new IntakeCommand());
+    // addSystemCommand(new ArmCommand());
+    // addSystemCommand(new ShooterCommand());
+    // addSystemCommand(new IntakeCommand());
 
     Swerve.getInstance();
 
