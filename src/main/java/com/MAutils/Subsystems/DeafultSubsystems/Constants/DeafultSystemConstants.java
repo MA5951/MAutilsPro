@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 @SuppressWarnings("unchecked")
 public class DeafultSystemConstants<T> {
-    public final Motor[] MOTORS;
+    public Motor[] MOTORS = new Motor[]{};
     public final Motor master;
     public final TalonFXSimState masterSimState;
     public DCMotorSim motorSim;
