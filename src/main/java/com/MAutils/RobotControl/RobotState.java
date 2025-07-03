@@ -35,7 +35,7 @@ public class RobotState {
 
         for (StateSubsystem subsystem : subsystemsArry) {
             for (State state : subsystemStates) {
-                if (state.getSubsystem() == subsystem) {
+                if (state.getSubsystem().getName() == subsystem.getName()) {
                     subsystem.setState(state);
                 }
             }

@@ -1,6 +1,7 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces;
 
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 
 public interface PowerSystemIO {
 
@@ -19,5 +20,9 @@ public interface PowerSystemIO {
     void updatePeriodic();
 
     boolean isMoving();
+
+    void restPosition(double position);
+
+    PowerSystemConstants getSystemConstants();
 
 }

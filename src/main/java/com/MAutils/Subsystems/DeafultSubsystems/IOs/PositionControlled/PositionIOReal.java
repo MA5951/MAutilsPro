@@ -1,31 +1,23 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled;
 
-import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
-import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Voltage;
 
 public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
-    private PositionSystemConstants systemConstants;
+    public final PositionSystemConstants systemConstants;
+
+    private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+    private PositionVoltage positionRequest = new PositionVoltage(0);
 
     private StatusSignal<Double> motorError;
     private StatusSignal<Double> motorSetPoint;
@@ -36,11 +28,14 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
         motorError = systemConstants.master.motorController.getClosedLoopError(false);
         motorSetPoint = systemConstants.master.motorController.getClosedLoopReference(false);
+
+        configMotors();
     }
 
+    
+
     @Override
-    protected void configMotors() {//TODO cheack inthritance
-        super.configMotors();
+    protected void configMotors() {
         motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
         motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
         motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
@@ -50,6 +45,15 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         motorConfig.MotionMagic.MotionMagicAcceleration = systemConstants.ACCELERATION;
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
         motorConfig.MotionMagic.MotionMagicJerk = systemConstants.JERK;
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
+
+        for (Motor motor : systemConstants.MOTORS) {
+            follower = new StrictFollower(systemConstants.master.canBusID.id);
+            motorConfig.MotorOutput.Inverted = motor.invert;
+            motor.motorController.getConfigurator().apply(motorConfig);
+        }
     }
 
     @Override
@@ -85,7 +89,7 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
         if (systemConstants.IS_MOTION_MAGIC) {
             systemConstants.MOTORS[0].motorController.setControl(
-                    motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
+                motionMagicRequest.withPosition(position / systemConstants.POSITION_FACTOR)
                             .withSlot(0)
                             .withFeedForward(systemConstants.getGainConfig().Kf)
                             .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
@@ -135,15 +139,15 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
     @Override
     public void updatePeriodic() {
+        super.updatePeriodic();
+
         MALog.log(logPath + "/Set Point", getSetPoint());
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
 
     }
 
-    public void restPosition(double position) {
-        systemConstants.master.motorController.setPosition(position / systemConstants.POSITION_FACTOR);
-    }
+    
 
     @Override
     public void setPID(double kP, double kI, double kD) {
@@ -155,9 +159,5 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         systemConstants.master.motorController.getConfigurator().apply(motorConfig);
     }
 
-    @Override
-    public boolean isMoving() {
-        return getVelocity() > 1;
-    }
 
 }

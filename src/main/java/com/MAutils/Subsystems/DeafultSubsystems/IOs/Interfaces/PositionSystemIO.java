@@ -13,7 +13,7 @@ public interface PositionSystemIO extends PowerSystemIO {
 
     void setPosition(double position, double voltageFeedForward); 
 
-    void restPosition(double position);
+
 
     void setPID(double kP, double kI, double kD);
     

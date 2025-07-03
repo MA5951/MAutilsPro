@@ -1,15 +1,16 @@
 
-// package frc.robot;
+package frc.robot;
 
-// import com.MAutils.RobotControl.RobotState;
+import com.MAutils.RobotControl.RobotState;
 
-// import frc.robot.Subsystems.Arm.ArmConstatnts;
-
-// public class RobotConstatns {
+import frc.robot.Subsystems.Intake.IntakeConstants;
 
 
-//     public static final RobotState ARM_UP = new RobotState("ARM_UP", ArmConstatnts.UP);
-//     public static final RobotState ARM_DOWN = new RobotState("ARM_DOWN", ArmConstatnts.DOWEN);
-//     public static final RobotState ARM_IDLE = new RobotState("ARM_IDLE", ArmConstatnts.IDLE);
+public class RobotConstatns {
 
-// }
+
+    public static final RobotState INTAKE_IDLE = new RobotState("INTAKE_IDLE", IntakeConstants.IDLE);
+    public static final RobotState INTAKE_FORWARD = new RobotState("INTAKE_FORWARD", IntakeConstants.FORWARD);
+    public static final RobotState INTAKE_REVERSE = new RobotState("INTAKE_REVERSE", IntakeConstants.REVERSE);
+
+}

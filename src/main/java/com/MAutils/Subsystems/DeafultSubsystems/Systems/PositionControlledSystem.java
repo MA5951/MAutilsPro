@@ -3,6 +3,7 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
+import com.MAutils.Simulation.SimulatedSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
@@ -20,7 +21,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         if (Robot.isReal()) {
             systemIO = new PositionIOReal(name, systemConstants);
         } else {
-            systemIO = SystemSimulationFactory.simulateSystem(new PositionIOReal(name, systemConstants));
+            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PositionIOReal) new PositionIOReal(name, systemConstants));
         }
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);

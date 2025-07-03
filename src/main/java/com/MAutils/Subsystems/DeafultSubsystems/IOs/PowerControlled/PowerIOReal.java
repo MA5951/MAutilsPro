@@ -5,6 +5,7 @@ import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Utils.ConvUtil;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -57,6 +58,10 @@ public class PowerIOReal implements PowerSystemIO {
 
     }
 
+    public PowerSystemConstants getSystemConstants() {
+        return systemConstants;
+    }
+
     protected void configMotors() {
         motorConfig.Feedback.SensorToMechanismRatio = systemConstants.GEAR;
 
@@ -105,7 +110,7 @@ public class PowerIOReal implements PowerSystemIO {
 
     @Override
     public void setVoltage(double volt) {
-        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)
+        systemConstants.master.motorController.setControl(voltageRequest.withOutput(volt)
                 .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
                 .withLimitReverseMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT));
         for (Motor motor : systemConstants.MOTORS) {
@@ -124,7 +129,12 @@ public class PowerIOReal implements PowerSystemIO {
 
     @Override
     public boolean isMoving() {
-        return motorVelocity.getValueAsDouble() > 1;
+        return ConvUtil.RPStoRPM(motorVelocity.getValueAsDouble()) > 1;
+    }
+
+    @Override
+    public void restPosition(double position) {
+        systemConstants.master.motorController.setPosition(position / systemConstants.POSITION_FACTOR);
     }
 
 }

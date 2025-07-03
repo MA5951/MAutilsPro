@@ -17,14 +17,11 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-
-    
-
   }
 
   @Override
   public void robotPeriodic() {
-    //StatusSignalsRunner.updateSignals();
+    StatusSignalsRunner.refreshAll();
     CommandScheduler.getInstance().run();
   }
 

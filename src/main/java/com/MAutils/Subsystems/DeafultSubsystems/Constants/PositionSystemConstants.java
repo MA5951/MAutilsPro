@@ -26,7 +26,6 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
         this.MAX_POSE = maxPose;
         this.START_POSE = startPose;
         this.TOLERANCE = tolerance;
-        this.INERTIA = 0.000000001;
     }
 
     public PositionSystemConstants withTolerance(double tolerance) {
