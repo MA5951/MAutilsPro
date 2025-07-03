@@ -27,10 +27,15 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
     private PositionSystemConstants systemConstants;
 
+    private StatusSignal<Double> motorError;
+    private StatusSignal<Double> motorSetPoint;
+
     public PositionIOReal(String subsystemName, PositionSystemConstants systemConstants) {
         super(subsystemName, systemConstants.toPowerSystemConstants());
         this.systemConstants = systemConstants;
 
+        motorError = systemConstants.master.motorController.getClosedLoopError(false);
+        motorSetPoint = systemConstants.master.motorController.getClosedLoopReference(false);
     }
 
     @Override
@@ -45,7 +50,6 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         motorConfig.MotionMagic.MotionMagicAcceleration = systemConstants.ACCELERATION;
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
         motorConfig.MotionMagic.MotionMagicJerk = systemConstants.JERK;
-
     }
 
     @Override
@@ -62,8 +66,6 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
     public boolean atPoint() {
         return Math.abs(getError()) < systemConstants.TOLERANCE;
     }
-
-
 
     @Override
     public void setVoltage(double volt) {
@@ -133,12 +135,6 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
     @Override
     public void updatePeriodic() {
-        BaseStatusSignal.refreshAll(motorVelocity, motorCurrent,
-                motorVoltage, motorError, motorSetPoint, motorPosition);
-        MALog.log(logPath + "/Velocity", getVelocity());
-        MALog.log(logPath + "/Voltage", getAppliedVolts());
-        MALog.log(logPath + "/Current", getCurrent());
-        MALog.log(logPath + "/Position", getPosition());
         MALog.log(logPath + "/Set Point", getSetPoint());
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
@@ -161,7 +157,7 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
     @Override
     public boolean isMoving() {
-        return motorVelocity.getValueAsDouble() > 1;
+        return getVelocity() > 1;
     }
 
 }

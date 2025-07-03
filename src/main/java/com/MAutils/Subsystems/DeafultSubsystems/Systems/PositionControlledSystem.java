@@ -12,7 +12,7 @@ import frc.robot.Robot;
 
 public abstract class PositionControlledSystem extends StateSubsystem {
 
-    protected PositionSystemIO systemIO;//FINA;L
+    protected final PositionSystemIO systemIO;
 
     public PositionControlledSystem(String name, PositionSystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
@@ -20,7 +20,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         if (Robot.isReal()) {
             systemIO = new PositionIOReal(name, systemConstants);
         } else {
-            //systemIO = new PositionIOSim(name, systemConstants);
+            systemIO = SystemSimulationFactory.simulateSystem(new PositionIOReal(name, systemConstants));
         }
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
@@ -35,6 +35,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         }
     }
 
+    
     public double getAppliedVolts() {
         return systemIO.getAppliedVolts();
     }
