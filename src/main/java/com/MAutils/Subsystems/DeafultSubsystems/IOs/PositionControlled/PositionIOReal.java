@@ -4,7 +4,9 @@ import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -21,58 +23,19 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 
-public class PositionIOReal implements PositionSystemIO {
+public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
-    private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final PositionVoltage positionRequest = new PositionVoltage(0);
-    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
-    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
-    private StrictFollower follower;
-
-    private StatusSignal<AngularVelocity> motorVelocity;
-    private StatusSignal<Angle> motorPosition;
-    private StatusSignal<Double> motorError;
-    private StatusSignal<Double> motorSetPoint;
-    private StatusSignal<Current> motorCurrent;
-    private StatusSignal<Voltage> motorVoltage;
-
-    private final PositionSystemConstants systemConstants;
-    private final String logPath;
+    private PositionSystemConstants systemConstants;
 
     public PositionIOReal(String subsystemName, PositionSystemConstants systemConstants) {
+        super(subsystemName, systemConstants.toPowerSystemConstants());
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
-
-        configMotors();
-
-        motorVelocity = systemConstants.master.motorController.getVelocity(false);
-        motorCurrent = systemConstants.master.motorController.getStatorCurrent(false);
-        motorVoltage = systemConstants.master.motorController.getMotorVoltage(false);
-        motorPosition = systemConstants.master.motorController.getPosition(false);
-        motorError = systemConstants.master.motorController.getClosedLoopError(false);
-        motorSetPoint = systemConstants.master.motorController.getClosedLoopReference(false);
-        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, motorVelocity, motorCurrent,
-                motorVoltage, motorError, motorSetPoint, motorPosition);
-
-        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
-        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
-
-        for (Motor motor : systemConstants.MOTORS) {
-            follower = new StrictFollower(systemConstants.master.canBusID.id);
-            motorConfig.MotorOutput.Inverted = motor.invert;
-            motor.motorController.getConfigurator().apply(motorConfig);
-        }
 
     }
 
-    protected void configMotors() {
-        motorConfig.Feedback.SensorToMechanismRatio = systemConstants.GEAR;
-
-        motorConfig.MotorOutput.NeutralMode = systemConstants.IS_BRAKE
-                ? NeutralModeValue.Brake
-                : NeutralModeValue.Coast;
-
+    @Override
+    protected void configMotors() {//TODO cheack inthritance
+        super.configMotors();
         motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
         motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
         motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
@@ -83,31 +46,6 @@ public class PositionIOReal implements PositionSystemIO {
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
         motorConfig.MotionMagic.MotionMagicJerk = systemConstants.JERK;
 
-        motorConfig.Voltage.PeakForwardVoltage = systemConstants.PEAK_FORWARD_VOLTAGE;
-        motorConfig.Voltage.PeakReverseVoltage = systemConstants.PEAK_REVERSE_VOLTAGE;
-
-        motorConfig.CurrentLimits.StatorCurrentLimit = systemConstants.STATOR_CURRENT_LIMIT;
-        motorConfig.CurrentLimits.StatorCurrentLimitEnable = systemConstants.CURRENT_LIMIT_ENABLED;
-    }
-
-    @Override
-    public double getCurrent() {
-        return motorCurrent.getValueAsDouble();
-    }
-
-    @Override
-    public double getAppliedVolts() {
-        return motorVoltage.getValueAsDouble();
-    }
-
-    @Override
-    public double getVelocity() {
-        return motorVelocity.getValueAsDouble() * systemConstants.VELOCITY_FACTOR;
-    }
-
-    @Override
-    public double getPosition() {
-        return motorPosition.getValueAsDouble() * systemConstants.POSITION_FACTOR;
     }
 
     @Override
@@ -125,16 +63,7 @@ public class PositionIOReal implements PositionSystemIO {
         return Math.abs(getError()) < systemConstants.TOLERANCE;
     }
 
-    @Override
-    public void setBrakeMode(boolean isBrake) {
-        brakeConfig.NeutralMode = isBrake
-                ? NeutralModeValue.Brake
-                : NeutralModeValue.Coast;
 
-        for (Motor motor : systemConstants.MOTORS) {
-            motor.motorController.getConfigurator().apply(brakeConfig);
-        }
-    }
 
     @Override
     public void setVoltage(double volt) {

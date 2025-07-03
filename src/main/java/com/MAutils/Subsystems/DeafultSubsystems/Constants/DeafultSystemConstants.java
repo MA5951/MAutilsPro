@@ -89,5 +89,18 @@ public class DeafultSystemConstants<T> {
         return (T) this;
     }
 
+    public PowerSystemConstants toPowerSystemConstants() {
+        return new PowerSystemConstants(master , MOTORS)
+        .withFOC(FOC)
+        .withGear(GEAR)
+        .withInertia(INERTIA)
+        .withIsBrake(IS_BRAKE)
+        .withLogPath(LOG_PATH)
+        .withMotorCurrentLimit(MOTOR_LIMIT_CURRENT)
+        .withPeakVoltage(PEAK_FORWARD_VOLTAGE, PEAK_REVERSE_VOLTAGE)
+        .withStatorCurrentLimit(CURRENT_LIMIT_ENABLED, STATOR_CURRENT_LIMIT)
+        .withPositionFactor(POSITION_FACTOR)
+        .withVelocityFactor(VELOCITY_FACTOR);
+    }
 
 }

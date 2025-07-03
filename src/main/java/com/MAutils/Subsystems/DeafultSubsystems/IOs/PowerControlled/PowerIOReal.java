@@ -19,17 +19,17 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class PowerIOReal implements PowerSystemIO {
 
-    private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    protected final VoltageOut voltageRequest = new VoltageOut(0);
+    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
     private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
-    private StrictFollower follower;
+    protected StrictFollower follower;
 
     private StatusSignal<AngularVelocity> motorVelocity;
     private StatusSignal<Angle> motorPosition;
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
-    private final String logPath;
+    protected final String logPath;
 
     private final PowerSystemConstants systemConstants;
 

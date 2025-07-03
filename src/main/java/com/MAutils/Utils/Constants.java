@@ -7,8 +7,4 @@ public class Constants {
     public static final int OPERATOR_CONTROLLER_PORT = 1;
 
 
-
-
-
-
 }

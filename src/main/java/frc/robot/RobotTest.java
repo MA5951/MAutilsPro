@@ -1,9 +1,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.MAutils.Logger.MALog;
+import com.MAutils.Utils.ConvUtil;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -23,7 +25,7 @@ public class RobotTest extends TimedRobot {
     private TalonFX testMotor = new TalonFX(37);
     private TalonFXSimState testMotorSimState = testMotor.getSimState();
     private DCMotorSim testeMotorSim = new DCMotorSim(
-        LinearSystemId.createDCMotorSystem(1.0 , 0.05), DCMotor.getKrakenX60(2));
+        LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(2), 0.00001, 4), DCMotor.getKrakenX60(2));
     //Gear 4
 
     private StatusSignal<AngularVelocity> motorVelocity = testMotor.getVelocity();
@@ -32,7 +34,7 @@ public class RobotTest extends TimedRobot {
     private StatusSignal<Voltage> motorVoltage = testMotor.getMotorVoltage();
 
     public RobotTest() {
-        MALog.log("/Test/Velocity", motorVelocity.getValueAsDouble());
+        MALog.log("/Test/Velocity", ConvUtil.RPStoRPM(motorVelocity.getValueAsDouble()));
         MALog.log("/Test/Position", motorPosition.getValueAsDouble());
         MALog.log("/Test/Current", motorCurrent.getValueAsDouble());
         MALog.log("/Test/Voltage", motorVoltage.getValueAsDouble());
@@ -40,15 +42,17 @@ public class RobotTest extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        testMotor.setVoltage(3);
+        testMotor.setVoltage(12);
 
         testMotorSimState.setSupplyVoltage(12);
 
         testeMotorSim.setInputVoltage(testMotorSimState.getMotorVoltage());
         testeMotorSim.update(0.020);
 
+        
+
         testMotorSimState.setRawRotorPosition(testeMotorSim.getAngularPositionRotations() * 4);
-        testMotorSimState.setRotorVelocity(testeMotorSim.getAngularVelocity().in(RotationsPerSecond) * 4);
+        testMotorSimState.setRotorVelocity(ConvUtil.RPMtoRPS(testeMotorSim.getAngularVelocityRPM()) * 4);
 
 
         BaseStatusSignal.refreshAll(
@@ -58,7 +62,7 @@ public class RobotTest extends TimedRobot {
             motorVoltage
         );
 
-        MALog.log("/Test/Velocity", motorVelocity.getValueAsDouble());
+        MALog.log("/Test/Velocity", ConvUtil.RPStoRPM(motorVelocity.getValueAsDouble()));
         MALog.log("/Test/Position", motorPosition.getValueAsDouble());
         MALog.log("/Test/Current", motorCurrent.getValueAsDouble());
         MALog.log("/Test/Voltage", motorVoltage.getValueAsDouble());
