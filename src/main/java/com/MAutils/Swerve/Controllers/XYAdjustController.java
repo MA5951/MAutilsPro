@@ -14,7 +14,6 @@ public class XYAdjustController extends SwerveController{
     private PIDController yController;
     private Supplier<Double> xSupplier;
     private Supplier<Double> ySupplier;
-    private ChassisSpeeds speeds = new ChassisSpeeds();
 
     public XYAdjustController(PIDController xController, PIDController yController,
             Supplier<Double> xSupplier, Supplier<Double> ySupplier) {

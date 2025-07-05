@@ -3,18 +3,16 @@ package com.MAutils.Swerve.Utils;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
-public class SwerveController {
+public abstract class SwerveController {
 
     private String name;
+    protected ChassisSpeeds speeds = new ChassisSpeeds();
 
-    public SwerveController(String name) {//TODO cahnge to have deafult speeds and speeds go through this object
+    public SwerveController(String name) {
         this.name = name;
     }
 
-
-    public ChassisSpeeds getSpeeds() {
-        return null;
-    }
+    public abstract ChassisSpeeds getSpeeds();
 
     public String getName() {
         return name;

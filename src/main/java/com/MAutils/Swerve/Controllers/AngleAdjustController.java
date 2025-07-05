@@ -13,7 +13,6 @@ public class AngleAdjustController extends SwerveController {
 
     private PIDController pidController;
     private Supplier<Double> angleSupplier;
-    private ChassisSpeeds speeds = new ChassisSpeeds();
 
     public AngleAdjustController(PIDController pidController, Supplier<Double> angleSupplier) {
         super("Angle Adjust Controller");
