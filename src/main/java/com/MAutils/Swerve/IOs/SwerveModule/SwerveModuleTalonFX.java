@@ -58,12 +58,12 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
     public SwerveModuleTalonFX(SwerveSystemConstants constants, int index) {
         this.constants = constants;
-        driveTalon = new TalonFX(constants.MODULES_ID_ARRY[index].driveMotor.id,
-                constants.MODULES_ID_ARRY[index].driveMotor.bus);
-        turnTalon = new TalonFX(constants.MODULES_ID_ARRY[index].steerMotor.id,
-                constants.MODULES_ID_ARRY[index].steerMotor.bus);
-        cancoder = new CANcoder(constants.MODULES_ID_ARRY[index].steerEncoder.id,
-                constants.MODULES_ID_ARRY[index].steerEncoder.bus);
+        driveTalon = new TalonFX(constants.MODULES_ID_ARRY[index].getDriveMotor().id,
+                constants.MODULES_ID_ARRY[index].getDriveMotor().bus);
+        turnTalon = new TalonFX(constants.MODULES_ID_ARRY[index].getSteerMotor().id,
+                constants.MODULES_ID_ARRY[index].getSteerMotor().bus);
+        cancoder = new CANcoder(constants.MODULES_ID_ARRY[index].getSteerEncoder().id,
+                constants.MODULES_ID_ARRY[index].getSteerEncoder().bus);
 
         configDevices(index);
 
@@ -96,7 +96,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
         ParentDevice.optimizeBusUtilizationForAll(driveTalon, turnTalon, cancoder);
 
-        StatusSignalsRunner.registerSignals(constants.MODULES_ID_ARRY[0].driveMotor ,drivePosition, driveVelocity, driveAppliedVolts,
+        StatusSignalsRunner.registerSignals(constants.MODULES_ID_ARRY[0].getDriveMotor() ,drivePosition, driveVelocity, driveAppliedVolts,
                 driveCurrent, turnAbsolutePosition, turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
 
     }
@@ -108,19 +108,19 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         driveTalonConfig.CurrentLimits.StatorCurrentLimit = constants.DRIVE__SLIP_LIMIT;
         driveTalonConfig.CurrentLimits.StatorCurrentLimitEnable = constants.DRIVE_ENABLE_CURRENT_LIMIT;
 
-        driveTalonConfig.Slot0.kP = constants.TELEOP_DRIVE_kP;
-        driveTalonConfig.Slot0.kI = constants.TELEOP_DRIVE_kI;
-        driveTalonConfig.Slot0.kD = constants.TELEOP_DRIVE_kD;
-        driveTalonConfig.Slot0.kS = constants.TELEOP_DRIVE_kS;
-        driveTalonConfig.Slot0.kV = constants.TELEOP_DRIVE_kV;
-        driveTalonConfig.Slot0.kA = constants.TELEOP_DRIVE_kA;
+        driveTalonConfig.Slot0.kP = constants.DRIVE_TELEOP_GainConfig.Kp;
+        driveTalonConfig.Slot0.kI = constants.DRIVE_TELEOP_GainConfig.Ki;
+        driveTalonConfig.Slot0.kD = constants.DRIVE_TELEOP_GainConfig.Kd;
+        driveTalonConfig.Slot0.kS = constants.DRIVE_TELEOP_GainConfig.Ks;
+        driveTalonConfig.Slot0.kV = constants.DRIVE_TELEOP_GainConfig.Kv;
+        driveTalonConfig.Slot0.kA = constants.DRIVE_TELEOP_GainConfig.Ka;
 
-        driveTalonConfig.Slot1.kP = constants.AUTO_DRIVE_kP;
-        driveTalonConfig.Slot1.kI = constants.AUTO_DRIVE_kI;
-        driveTalonConfig.Slot1.kD = constants.AUTO_DRIVE_kD;
-        driveTalonConfig.Slot1.kS = constants.AUTO_DRIVE_kS;
-        driveTalonConfig.Slot1.kV = constants.AUTO_DRIVE_kV;
-        driveTalonConfig.Slot1.kA = constants.AUTO_DRIVE_kA;
+        driveTalonConfig.Slot1.kP = constants.DRIVE_AUTO_GainConfig.Kp;
+        driveTalonConfig.Slot1.kI = constants.DRIVE_AUTO_GainConfig.Ki;
+        driveTalonConfig.Slot1.kD = constants.DRIVE_AUTO_GainConfig.Kd;
+        driveTalonConfig.Slot1.kS = constants.DRIVE_AUTO_GainConfig.Ks;
+        driveTalonConfig.Slot1.kV = constants.DRIVE_AUTO_GainConfig.Kv;
+        driveTalonConfig.Slot1.kA = constants.DRIVE_AUTO_GainConfig.Ka;
 
         driveTalon.getConfigurator().apply(driveTalonConfig);
         driveTalon.setPosition(0);
@@ -131,12 +131,13 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         turnTalonConfig.ClosedLoopGeneral.ContinuousWrap = true;
         turnTalonConfig.CurrentLimits.StatorCurrentLimit = constants.TURNING__CURRENT_LIMIT;
         turnTalonConfig.CurrentLimits.StatorCurrentLimitEnable = constants.TURNING_ENABLE_CURRENT_LIMIT;
-        turnTalonConfig.Slot0.kP = constants.TURNING_kP;
-        turnTalonConfig.Slot0.kI = constants.TURNING_kI;
-        turnTalonConfig.Slot0.kD = constants.TURNING_kD;
-        turnTalonConfig.Slot0.kS = constants.TURNING_kS;
-        turnTalonConfig.Slot0.kV = constants.TURNING_kV;
-        turnTalonConfig.Slot0.kA = constants.TURNING_kA;
+        
+        turnTalonConfig.Slot0.kP = constants.STEER_GainConfig.Kp;
+        turnTalonConfig.Slot0.kI = constants.STEER_GainConfig.Ki;
+        turnTalonConfig.Slot0.kD = constants.STEER_GainConfig.Kd;
+        turnTalonConfig.Slot0.kS = constants.STEER_GainConfig.Ks;
+        turnTalonConfig.Slot0.kV = constants.STEER_GainConfig.Kv;
+        turnTalonConfig.Slot0.kA = constants.STEER_GainConfig.Ka;
 
         turnTalon.getConfigurator().apply(turnTalonConfig);
         turnTalon.setPosition(0);

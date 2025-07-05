@@ -17,9 +17,6 @@ public class SwerveConstants {
     .withOdometryUpdateRate(250)
     .withDriveCurrentLimit(120, true)//45
     .withTurningCurrentLimit(30, true)
-    .withGearRatio(GearRatio.L2)
-    .withDriveTuning(0, 0, 0, 0, 0.857, 0)
-    .withTurningTuning(93, 0, 0, 0, 0, 0);
-
+    .withGearRatio(GearRatio.L2);
 
 }

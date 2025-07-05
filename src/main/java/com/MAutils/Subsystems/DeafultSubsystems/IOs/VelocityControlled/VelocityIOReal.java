@@ -36,6 +36,8 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
         motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
         motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
         motorConfig.Slot0.kS = systemConstants.getGainConfig().Ks;
+        motorConfig.Slot0.kV = systemConstants.getGainConfig().Kv;
+        motorConfig.Slot0.kA = systemConstants.getGainConfig().Ka;
         motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
         motorConfig.MotorOutput.Inverted = systemConstants.master.invert;

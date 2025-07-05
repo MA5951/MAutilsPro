@@ -19,6 +19,7 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
+import com.MAutils.Utils.GainConfig;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -127,26 +128,11 @@ public class SwerveSystemConstants {
         public static int TELEOP_SLOT_CONFIG = 0;
         public static int AUTO_SLOT_CONFIG = 1;
 
-        public double TURNING_kP = 93;
-        public double TURNING_kI = 0;
-        public double TURNING_kD = 0;
-        public double TURNING_kS = 0;
-        public double TURNING_kV = 0;
-        public double TURNING_kA = 0;
+        public GainConfig STEER_GainConfig = new GainConfig();
 
-        public double AUTO_DRIVE_kP = 0;
-        public double AUTO_DRIVE_kI = 0;
-        public double AUTO_DRIVE_kD = 0;
-        public double AUTO_DRIVE_kS = 0;
-        public double AUTO_DRIVE_kV = 0.857;
-        public double AUTO_DRIVE_kA = 0;
+        public GainConfig DRIVE_TELEOP_GainConfig = new GainConfig();
 
-        public double TELEOP_DRIVE_kP = 0;
-        public double TELEOP_DRIVE_kI = 0;
-        public double TELEOP_DRIVE_kD = 0;
-        public double TELEOP_DRIVE_kS = 0;
-        public double TELEOP_DRIVE_kV = 0.857;
-        public double TELEOP_DRIVE_kA = 0;
+        public GainConfig DRIVE_AUTO_GainConfig = new GainConfig();
 
         public double TURNING__CURRENT_LIMIT = 35;
         public boolean TURNING_ENABLE_CURRENT_LIMIT = true;
@@ -216,53 +202,24 @@ public class SwerveSystemConstants {
                 return this;
         }
 
-        public SwerveSystemConstants withTurningTuning(double Kp,
-                        double Ki, double Kd, double Ks, double Kv, double Ka) {
-                this.TURNING_kP = Kp;
-                this.TURNING_kI = Ki;
-                this.TURNING_kD = Kd;
-                this.TURNING_kS = Ks;
-                this.TURNING_kV = Kv;
-                this.TURNING_kA = Ka;
+        public SwerveSystemConstants withTurningTuning(GainConfig gainConfig) {
+                this.STEER_GainConfig = gainConfig;
                 return this;
         }
 
-        public SwerveSystemConstants withDriveTuning(double Kp,
-                        double Ki, double Kd, double Ks, double Kv, double Ka) {//TODO use gain configs
-                this.TELEOP_DRIVE_kP = Kp;
-                this.TELEOP_DRIVE_kI = Ki;
-                this.TELEOP_DRIVE_kD = Kd;
-                this.TELEOP_DRIVE_kS = Ks;
-                this.TELEOP_DRIVE_kV = Kv;
-                this.TELEOP_DRIVE_kA = Ka;
-                this.AUTO_DRIVE_kP = Kp;
-                this.AUTO_DRIVE_kI = Ki;
-                this.AUTO_DRIVE_kD = Kd;
-                this.AUTO_DRIVE_kS = Ks;
-                this.AUTO_DRIVE_kV = Kv;
-                this.AUTO_DRIVE_kA = Ka;
+        public SwerveSystemConstants withDriveTuning(GainConfig gainConfig) {
+                this.DRIVE_AUTO_GainConfig = gainConfig;
+                this.DRIVE_TELEOP_GainConfig = gainConfig;
                 return this;
         }
 
-        public SwerveSystemConstants withDriveTuningTeleop(double Kp,
-                        double Ki, double Kd, double Ks, double Kv, double Ka) {
-                this.TELEOP_DRIVE_kP = Kp;
-                this.TELEOP_DRIVE_kI = Ki;
-                this.TELEOP_DRIVE_kD = Kd;
-                this.TELEOP_DRIVE_kS = Ks;
-                this.TELEOP_DRIVE_kV = Kv;
-                this.TELEOP_DRIVE_kA = Ka;
+        public SwerveSystemConstants withDriveTuningTeleop(GainConfig gainConfig) {
+                this.DRIVE_TELEOP_GainConfig = gainConfig;
                 return this;
         }
 
-        public SwerveSystemConstants withDriveAuto(double Kp,
-                        double Ki, double Kd, double Ks, double Kv, double Ka) {
-                this.AUTO_DRIVE_kP = Kp;
-                this.AUTO_DRIVE_kI = Ki;
-                this.AUTO_DRIVE_kD = Kd;
-                this.AUTO_DRIVE_kS = Ks;
-                this.AUTO_DRIVE_kV = Kv;
-                this.AUTO_DRIVE_kA = Ka;
+        public SwerveSystemConstants withDriveAuto(GainConfig gainConfig) {
+                this.DRIVE_AUTO_GainConfig = gainConfig;
                 return this;
         }
 

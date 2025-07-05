@@ -10,6 +10,7 @@ public class GainConfig {
     public double Kf = 0;
     public double Ks = 0;
     public double Kv = 0;
+    public double Ka = 0; 
 
     public GainConfig() {
 
@@ -42,6 +43,11 @@ public class GainConfig {
 
     public GainConfig withKV(double Kv) {
         this.Kv = Kv;
+        return this;
+    }
+
+    public GainConfig withKA(double Ka) {
+        this.Ka = Ka;
         return this;
     }
 }
