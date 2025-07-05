@@ -6,8 +6,8 @@ import com.MAutils.Components.Motor;
 public class PowerSystemConstants extends DeafultSystemConstants<PowerSystemConstants> {
 
 
-    public PowerSystemConstants(Motor master,Motor... motors) {
-        super(master, motors);
+    public PowerSystemConstants(String name, Motor master,Motor... motors) {
+        super(name, master, motors);
     }
 
     

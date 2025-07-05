@@ -32,11 +32,12 @@ public class PowerIOReal implements PowerSystemIO {
 
     protected final String logPath;
 
+
     private final PowerSystemConstants systemConstants;
 
-    public PowerIOReal(String subsystemName, PowerSystemConstants systemConstants) {
+    public PowerIOReal(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.systemName + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
@@ -50,10 +51,12 @@ public class PowerIOReal implements PowerSystemIO {
         motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
         systemConstants.master.motorController.getConfigurator().apply(motorConfig);
 
+        follower = new StrictFollower(systemConstants.master.canBusID.id);
+
         for (Motor motor : systemConstants.MOTORS) {
-            follower = new StrictFollower(systemConstants.master.canBusID.id);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
+            motor.motorController.setControl(follower);
         }
 
     }
@@ -113,9 +116,6 @@ public class PowerIOReal implements PowerSystemIO {
         systemConstants.master.motorController.setControl(voltageRequest.withOutput(volt)
                 .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
                 .withLimitReverseMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT));
-        for (Motor motor : systemConstants.MOTORS) {
-            motor.motorController.setControl(follower);
-        }
     }
 
     @Override

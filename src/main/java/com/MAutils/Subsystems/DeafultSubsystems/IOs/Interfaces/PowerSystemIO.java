@@ -5,6 +5,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 
 public interface PowerSystemIO {
 
+
     double getVelocity(); 
 
     double getPosition();

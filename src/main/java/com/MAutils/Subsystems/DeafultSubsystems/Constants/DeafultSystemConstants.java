@@ -29,11 +29,13 @@ public class DeafultSystemConstants<T> {
     public double INERTIA = 0.00001;
     public double POSITION_FACTOR = 360;
     public double VELOCITY_FACTOR = 60;
+    public final String systemName;
     public LinearSystem<N2, N1, N2> systemID;
 
-    public DeafultSystemConstants(Motor master, Motor... motors) {
+    public DeafultSystemConstants(String systemName,Motor master, Motor... motors) {
         this.MOTORS = motors;
         this.master = master;
+        this.systemName = systemName;
 
         masterSimState = master.motorController.getSimState();
 
@@ -111,7 +113,7 @@ public class DeafultSystemConstants<T> {
     }
 
     public PowerSystemConstants toPowerSystemConstants() {
-        return new PowerSystemConstants(master, MOTORS)
+        return new PowerSystemConstants(systemName, master, MOTORS)
                 .withFOC(FOC)
                 .withGear(GEAR)
                 .withInertia(INERTIA)

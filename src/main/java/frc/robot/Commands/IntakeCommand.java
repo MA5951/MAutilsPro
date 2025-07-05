@@ -18,10 +18,10 @@ public class IntakeCommand extends SubsystemCommand {
                 intake.setVoltage(0);
                 break;
             case "FORWARD":
-                intake.setVoltage(1);
+                intake.setVoltage(12);
                 break;
             case "REVERSE":
-                intake.setVoltage(-1);
+                intake.setVoltage(-12);
                 break;
 
         }

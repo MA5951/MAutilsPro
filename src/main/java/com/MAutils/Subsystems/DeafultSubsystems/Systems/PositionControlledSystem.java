@@ -15,22 +15,22 @@ public abstract class PositionControlledSystem extends StateSubsystem {
 
     protected final PositionSystemIO systemIO;
 
-    public PositionControlledSystem(String name, PositionSystemConstants systemConstants,
+    public PositionControlledSystem(PositionSystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
-        super(name);
+        super(systemConstants.systemName);
         if (Robot.isReal()) {
-            systemIO = new PositionIOReal(name, systemConstants);
+            systemIO = new PositionIOReal(systemConstants);
         } else {
-            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PositionIOReal) new PositionIOReal(name, systemConstants));
+            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PositionIOReal) new PositionIOReal(systemConstants));
         }
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public PositionControlledSystem(String name, PositionSystemConstants systemConstants, PositionSystemIO simIO) {
-        super(name);
+    public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO) {
+        super(systemConstants.systemName);
         if (Robot.isReal()) {
-            systemIO = new PositionIOReal(name, systemConstants);
+            systemIO = new PositionIOReal(systemConstants);
         } else {
             systemIO = simIO;
         }

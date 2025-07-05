@@ -13,7 +13,7 @@ import frc.robot.PortMap;
 public class IntakeConstants {
 
 
-    public static final PowerSystemConstants POWER_SYSTEM_CONSTANTS = new PowerSystemConstants(
+    public static final PowerSystemConstants POWER_SYSTEM_CONSTANTS = new PowerSystemConstants("Intake",
         new Motor(new CANBusID(30, PortMap.Canivore), MotorType.KRAKEN, "Intake Motor", InvertedValue.Clockwise_Positive));
 
 

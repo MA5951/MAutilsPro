@@ -13,20 +13,20 @@ public abstract class PowerControlledSystem extends StateSubsystem{
 
     protected final PowerSystemIO systemIO;
 
-    public PowerControlledSystem(String name,PowerSystemConstants systemConstants) {
-        super(name);
+    public PowerControlledSystem(PowerSystemConstants systemConstants) {
+        super(systemConstants.systemName);
         if (Robot.isReal()) {
-            systemIO = new PowerIOReal(name, systemConstants);
+            systemIO = new PowerIOReal(systemConstants);
         } else {
-            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PowerIOReal) new PowerIOReal(name, systemConstants)
+            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PowerIOReal) new PowerIOReal(systemConstants)
             );
         }
     }
 
-    public PowerControlledSystem(String name,PowerSystemConstants systemConstants, PowerSystemIO simIO) {
-        super(name);
+    public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO) {
+        super(systemConstants.systemName);
         if (Robot.isReal()) {
-            systemIO = new PowerIOReal(name, systemConstants);
+            systemIO = new PowerIOReal(systemConstants);
         } else {
             systemIO = simIO;
         }

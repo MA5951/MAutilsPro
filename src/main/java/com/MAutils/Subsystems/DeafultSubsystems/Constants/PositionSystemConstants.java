@@ -20,8 +20,8 @@ public class PositionSystemConstants extends DeafultSystemConstants<PositionSyst
     public boolean IS_MOTION_MAGIC = false;
     public double MASS = -1;
 
-    public PositionSystemConstants(double minPose, double maxPose, double startPose,double tolerance ,Motor master,Motor... motors) {
-        super(master,motors);
+    public PositionSystemConstants(String name, double minPose, double maxPose, double startPose,double tolerance ,Motor master,Motor... motors) {
+        super(name, master,motors);
         this.MIN_POSE = minPose;
         this.MAX_POSE = maxPose;
         this.START_POSE = startPose;

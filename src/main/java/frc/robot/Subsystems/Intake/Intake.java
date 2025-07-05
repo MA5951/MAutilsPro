@@ -10,7 +10,7 @@ public class Intake extends PowerControlledSystem {
     private static Intake instance;
 
     private Intake() {
-        super("Intake", IntakeConstants.POWER_SYSTEM_CONSTANTS);
+        super(IntakeConstants.POWER_SYSTEM_CONSTANTS);
     }
 
     @Override
