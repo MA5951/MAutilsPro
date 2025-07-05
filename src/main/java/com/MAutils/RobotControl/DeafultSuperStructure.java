@@ -30,8 +30,8 @@ public abstract class DeafultSuperStructure {
 
     public abstract boolean hasGamePiece();
     
-    //TODO implement this method properly see the seson code for more details
-
     public abstract void updateSwerveControllers();
+
+    public abstract void update();
 
 }
