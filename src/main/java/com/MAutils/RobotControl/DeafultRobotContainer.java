@@ -3,7 +3,6 @@ package com.MAutils.RobotControl;
 import java.util.function.Supplier;
 
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 import com.MAutils.Controllers.MAController;
 import com.MAutils.Controllers.PS5MAController;
@@ -23,10 +22,8 @@ public class DeafultRobotContainer {
     protected static RobotState lastRobotState;
     protected static MAController driverController = new PS5MAController(Constants.DRIVER_CONTROLLER_PORT);
     protected static MAController operatorController = new PS5MAController(Constants.OPERATOR_CONTROLLER_PORT);
-    private static SwerveDriveSimulation swerveDriveSimulation;
     private static AutoSelector autoSelector;
 
-    private static String[] gamePiecesList;
 
     public DeafultRobotContainer() {
         SimulatedArena.getInstance();
@@ -70,15 +67,6 @@ public class DeafultRobotContainer {
         return operatorController;
     }
 
-    public static void setSwerveDriveSimulation(SwerveDriveSimulation simulation) {
-        swerveDriveSimulation = simulation;
-        SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
-    }
-
-    public static void setGamePiecesList(String[] gamePieces) {
-        gamePiecesList = gamePieces;
-    }
-
     public static void setRobotState(RobotState robotState) {
         lastRobotState = currentRobotState;
         currentRobotState = robotState;
@@ -98,17 +86,13 @@ public class DeafultRobotContainer {
 
     public static void simulationPeriodic() { //TODO split to SimManager;
         SimulatedArena.getInstance().simulationPeriodic();
-        MALog.log("/Simulation/Simulation Pose", swerveDriveSimulation.getSimulatedDriveTrainPose());
-        for (String type : gamePiecesList) {
-            MALog.log("Simulation/GamePices/" + type, SimulatedArena.getInstance().getGamePiecesArrayByType(type));
-        }
+        
+        
     }
 
     public static void simulationInit(boolean autoGamePices) {
-        SimulatedArena.getInstance().clearGamePieces();
-        if (autoGamePices) {
-            SimulatedArena.getInstance().resetFieldForAuto();
-        }
+        
+        
     }
 
     public static void runSelfTestCommands(StateSubsystem... subsystems) {
