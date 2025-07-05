@@ -5,14 +5,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.DeafultPoseEstimator;
+import com.MAutils.PoseEstimation.PoseEstimator;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 import com.MAutils.Swerve.Utils.DriveFeedforwards;
-import com.MAutils.Swerve.Utils.SkidAndCollisionDetector;
+import com.MAutils.Swerve.Utils.SkidDetector;
+import com.MAutils.Swerve.Utils.CollisionDetector;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
 import com.MAutils.Swerve.Utils.SwerveState;
@@ -25,8 +26,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSystem extends SubsystemBase {
-    private SwerveState currentState;
+    private static SwerveSystem instance;
 
+    private SwerveState currentState;
 
     public static final Lock odometryLock = new ReentrantLock();
     private final SwerveSystemConstants swerveConstants;
@@ -37,10 +39,12 @@ public class SwerveSystem extends SubsystemBase {
     private SwerveSetpoint swerveSetpoint;;
     private final SwerveSetpointGenerator swerveSetpointGenerator;
     private final SwerveModuleState[] currentStates = new SwerveModuleState[4];
-    private final DeafultPoseEstimator poseEstimator;//TODO: cahge to "PoseEstimator" 
-    private final SkidAndCollisionDetector skidAndCollisionDetector;
+    private final SwerveModulePosition[] currentPositions = new SwerveModulePosition[4];
+    private final PoseEstimator poseEstimator;
+    private final CollisionDetector collisionDetector;
+    private final SkidDetector skidDetector;
 
-    public SwerveSystem(SwerveSystemConstants swerveConstants, DeafultPoseEstimator poseEstimator) {
+    private SwerveSystem(SwerveSystemConstants swerveConstants, PoseEstimator poseEstimator) {
         super();
         this.swerveConstants = swerveConstants;
         this.poseEstimator = poseEstimator;
@@ -51,13 +55,14 @@ public class SwerveSystem extends SubsystemBase {
         swerveSetpointGenerator = new SwerveSetpointGenerator(swerveConstants.getRobotConfig(),
                 Units.rotationsToRadians(10.0));
 
-        skidAndCollisionDetector = new SkidAndCollisionDetector(swerveConstants, gyro::getGyroData,
-                this::getCurrentStates);
+        collisionDetector = new CollisionDetector(gyro::getGyroData);
+
+        skidDetector = new SkidDetector(swerveConstants, this::getCurrentStates);
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 
         odometryLock.lock();
-        gyro.update();
+        gyro.update(); 
         for (var module : swerveModules) {
             module.update();
         }
@@ -67,12 +72,16 @@ public class SwerveSystem extends SubsystemBase {
             currentStates[i] = swerveModules[i].getState();
         }
 
+        for (int i = 0; i < swerveModules.length; i++) {
+            currentPositions[i] = swerveModules[i].getPosition();
+        }
+
         swerveSetpoint = new SwerveSetpoint(new ChassisSpeeds(0, 0, 0), currentStates, DriveFeedforwards.zeros(4));
     }
 
-     public void setState(SwerveState state) {
+    public void setState(SwerveState state) {
         this.currentState = state;
-        
+
     }
 
     public SwerveState getState() {
@@ -90,15 +99,20 @@ public class SwerveSystem extends SubsystemBase {
         odometryLock.unlock();
 
         for (int i = 0; i < swerveModules.length; i++) {
-            currentStates[i] = swerveModules[i].getState();
             swerveModuleData[i] = swerveModules[i].getModuleData();
+            currentStates[i] = swerveModules[i].getState();
+        }
+
+        for (int i = 0; i < swerveModules.length; i++) {
+            currentPositions[i] = swerveModules[i].getPosition();
         }
 
         currentSpeeds = swerveConstants.kinematics.toChassisSpeeds(currentStates);
 
-        skidAndCollisionDetector.update();
-        
         proccedsOdometery();
+
+        collisionDetector.getForceVectorSize();
+        skidDetector.getSkiddingRatio();
 
         logSwerve();
 
@@ -107,6 +121,10 @@ public class SwerveSystem extends SubsystemBase {
     // Public Methods
     public SwerveModuleState[] getCurrentStates() {
         return currentStates;
+    }
+
+    public SwerveModulePosition[] getCurrentPositions() {
+        return currentPositions;
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -123,7 +141,7 @@ public class SwerveSystem extends SubsystemBase {
         runSwerveStates(swerveSetpoint.moduleStates());
     }
 
-    private void runSwerveStates(SwerveModuleState[] states) {
+    public void runSwerveStates(SwerveModuleState[] states) {
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setSetPoint(states[i]);
         }
@@ -148,7 +166,7 @@ public class SwerveSystem extends SubsystemBase {
 
     // Private Methods
     private void proccedsOdometery() {
-        double[] sampleTimestamps = gyro.getGyroData().odometryYawTimestamps; // All signals are sampled together
+        double[] sampleTimestamps = gyro.getGyroData().odometryYawTimestamps;
         int sampleCount = sampleTimestamps.length;
         for (int i = 0; i < sampleCount; i++) {
             SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
@@ -163,6 +181,13 @@ public class SwerveSystem extends SubsystemBase {
     private void logSwerve() {
         MALog.log("/Subsystems/Swerve/Chassis Speeds/Current", currentSpeeds);
         MALog.logSwerveModuleStates("/Subsystems/Swerve/States/Current", currentStates);
+    }
+
+    public SwerveSystem getInstance() {
+        if (instance == null) {
+            instance = new SwerveSystem(swerveConstants, poseEstimator);
+        }
+        return instance;
     }
 
 }
