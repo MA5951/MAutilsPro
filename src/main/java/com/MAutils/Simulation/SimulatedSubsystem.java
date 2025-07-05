@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Notifier;
 public class SimulatedSubsystem<T extends PowerSystemIO> {
 
     @SuppressWarnings("resource")
-    public static <T extends PowerSystemIO> T createSimulatedSubsystem(T subsystem) {//Add current Invert
+    public static <T extends PowerSystemIO> T createSimulatedSubsystem(T subsystem) {//Add current Invert?
         SimulatedBattery.addElectricalAppliances(() -> Current.ofBaseUnits(subsystem.getCurrent(), Amps));
 
         Notifier simulationNotifier = new Notifier(
