@@ -17,7 +17,6 @@ public class FieldCentricDrive extends SwerveController{
 
     private MAController controller;
     private final SwerveSystemConstants constants;
-    private ChassisSpeeds speeds = new ChassisSpeeds();
     private Supplier<Boolean> reductionBoolean;
     private double reductionFactor = 1.0;
 
@@ -51,9 +50,10 @@ public class FieldCentricDrive extends SwerveController{
     }
 
     public ChassisSpeeds getSpeeds() {
-        speeds.vxMetersPerSecond = controller.withDeadbound(-controller.getLeftY()) * xyScaler * constants.MAX_VELOCITY;
-        speeds.vyMetersPerSecond = controller.withDeadbound(-controller.getLeftX()) * xyScaler * constants.MAX_VELOCITY;
-        speeds.omegaRadiansPerSecond = controller.withDeadbound(-controller.getRightX()) * omegaScaler * constants.MAX_ANGULAR_VELOCITY;
+        speeds.vxMetersPerSecond = -controller.getLeftY(true, xyScaler) * constants.MAX_VELOCITY;
+        speeds.vyMetersPerSecond = -controller.getLeftX(true, xyScaler) * constants.MAX_VELOCITY;
+        speeds.omegaRadiansPerSecond = -controller.getRightX(true, omegaScaler) * constants.MAX_ANGULAR_VELOCITY;
+
 
         if (reductionBoolean != null && reductionBoolean.get()) {
             speeds.vxMetersPerSecond *= reductionFactor;

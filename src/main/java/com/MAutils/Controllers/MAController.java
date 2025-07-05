@@ -42,17 +42,17 @@ public interface MAController {
 
     public boolean getMiddle();
 
-    public double getRightTrigger();//TODO: Add option with deadband and sclar
+    public double getRightTrigger(boolean withDeadbound, double sclar);
 
-    public double getLeftTrigger();
+    public double getLeftTrigger(boolean withDeadbound, double sclar);
 
-    public double getRightX();
+    public double getRightX(boolean withDeadbound, double sclar);
 
-    public double getRightY();
+    public double getRightY(boolean withDeadbound, double sclar);
 
-    public double getLeftX();
+    public double getLeftX(boolean withDeadbound, double sclar);
 
-    public double getLeftY();
+    public double getLeftY(boolean withDeadbound, double sclar);
 
     public void setRumble(double power);
 
@@ -82,12 +82,12 @@ public interface MAController {
         MALog.log("/Controllers/" + getPort() + "/Options/Left", getOptionsLeft());
         MALog.log("/Controllers/" + getPort() + "/Options/Right", getOptionsRight());
         MALog.log("/Controllers/" + getPort() + "/Middle", getMiddle());
-        MALog.log("/Controllers/" + getPort() + "/RightTrigger", getRightTrigger());
-        MALog.log("/Controllers/" + getPort() + "/LeftTrigger", getLeftTrigger());
-        MALog.log("/Controllers/" + getPort() + "/RightX", getRightX());
-        MALog.log("/Controllers/" + getPort() + "/RightY", getRightY());
-        MALog.log("/Controllers/" + getPort() + "/LeftX", getLeftX());
-        MALog.log("/Controllers/" + getPort() + "/LeftY", getLeftY());
+        MALog.log("/Controllers/" + getPort() + "/RightTrigger", getRightTrigger(false, 1.0));
+        MALog.log("/Controllers/" + getPort() + "/LeftTrigger", getLeftTrigger(false, 1.0));
+        MALog.log("/Controllers/" + getPort() + "/RightX", getRightX(false, 1.0));
+        MALog.log("/Controllers/" + getPort() + "/RightY", getRightY(false, 1.0));
+        MALog.log("/Controllers/" + getPort() + "/LeftX", getLeftX(false, 1.0));
+        MALog.log("/Controllers/" + getPort() + "/LeftY", getLeftY(false, 1.0));
     }
 
 }

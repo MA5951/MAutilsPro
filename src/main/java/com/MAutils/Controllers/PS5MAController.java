@@ -8,7 +8,7 @@ public class PS5MAController implements MAController {
 
     public PS5MAController(int port) {
         this.controller = new PS5Controller(port);
-        this.xboxController = new XboxMAController(5 - port); 
+        this.xboxController = new XboxMAController(5 - port);
     }
 
     @Override
@@ -18,52 +18,52 @@ public class PS5MAController implements MAController {
 
     @Override
     public boolean getL1() {
-        return controller.getL1Button();  
+        return controller.getL1Button();
     }
 
     @Override
     public boolean getL2() {
-        return controller.getL2Button(); 
+        return controller.getL2Button();
     }
 
     @Override
     public boolean getR1() {
-        return controller.getR1Button();  
+        return controller.getR1Button();
     }
 
     @Override
     public boolean getR2() {
-        return controller.getR2Button();  
+        return controller.getR2Button();
     }
 
     @Override
     public boolean getL3() {
-        return controller.getL3Button();  
+        return controller.getL3Button();
     }
 
     @Override
     public boolean getR3() {
-        return controller.getR3Button();  
+        return controller.getR3Button();
     }
 
     @Override
     public boolean getActionsUp() {
-        return controller.getTriangleButton(); 
+        return controller.getTriangleButton();
     }
 
     @Override
     public boolean getActionsDown() {
-        return controller.getCrossButton(); 
+        return controller.getCrossButton();
     }
 
     @Override
     public boolean getActionsLeft() {
-        return controller.getSquareButton();  
+        return controller.getSquareButton();
     }
 
     @Override
     public boolean getActionsRight() {
-        return controller.getCircleButton();  
+        return controller.getCircleButton();
     }
 
     @Override
@@ -73,62 +73,80 @@ public class PS5MAController implements MAController {
 
     @Override
     public boolean getDpadDown() {
-        return controller.getPOV() == 180; 
+        return controller.getPOV() == 180;
     }
 
     @Override
     public boolean getDpadLeft() {
-        return controller.getPOV() == 270; 
+        return controller.getPOV() == 270;
     }
 
     @Override
     public boolean getDpadRight() {
-        return controller.getPOV() == 90;  
+        return controller.getPOV() == 90;
     }
 
     @Override
     public boolean getOptionsLeft() {
-        return controller.getCreateButton();  
+        return controller.getCreateButton();
     }
 
     @Override
     public boolean getOptionsRight() {
-        return controller.getOptionsButton(); 
+        return controller.getOptionsButton();
     }
 
     @Override
     public boolean getMiddle() {
-        return controller.getPSButton(); 
+        return controller.getPSButton();
     }
 
     @Override
-    public double getRightTrigger() {
-        return controller.getR2Axis();
+    public double getRightTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getR2Axis()) * scalar;
+        }
+        return controller.getR2Axis() * scalar;
     }
 
     @Override
-    public double getLeftTrigger() {
-        return controller.getL2Axis(); 
+    public double getLeftTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getL2Axis()) * scalar;
+        }
+        return controller.getL2Axis() * scalar;
     }
 
     @Override
-    public double getRightX() {
-        return controller.getRightX();  
+    public double getRightX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightX()) * scalar;
+        }
+        return controller.getRightX() * scalar;
     }
 
     @Override
-    public double getRightY() {
-        return controller.getRightY();
+    public double getRightY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightY()) * scalar;
+        }
+        return controller.getRightY() * scalar;
     }
 
     @Override
-    public double getLeftX() {
-        return controller.getLeftX(); 
+    public double getLeftX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftX()) * scalar;
+        }
+        return controller.getLeftX() * scalar;
     }
 
     @Override
-    public double getLeftY() {
-        return controller.getLeftY(); 
+    public double getLeftY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftY()) * scalar;
+        }
+        return controller.getLeftY() * scalar;
     }
 
     @Override
@@ -139,6 +157,6 @@ public class PS5MAController implements MAController {
     @Override
     public void setRumble(double power) {
         xboxController.setRumble(power);
-        xboxController.setRumble(power); 
+        xboxController.setRumble(power);
     }
 }

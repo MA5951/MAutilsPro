@@ -103,33 +103,51 @@ public class XboxMAController implements MAController {
     }
 
     @Override
-    public double getRightTrigger() {
-        return controller.getRightTriggerAxis(); 
+    public double getRightTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightTriggerAxis()) * scalar;
+        }
+        return controller.getRightTriggerAxis() * scalar;
     }
 
     @Override
-    public double getLeftTrigger() {
-        return controller.getLeftTriggerAxis();  
+    public double getLeftTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftTriggerAxis()) * scalar;
+        }
+        return controller.getLeftTriggerAxis() * scalar;
     }
 
     @Override
-    public double getRightX() {
-        return controller.getRightX(); 
+    public double getRightX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightX()) * scalar;
+        }
+        return controller.getRightX() * scalar;
     }
 
     @Override
-    public double getRightY() {
-        return controller.getRightY();  
+    public double getRightY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightY()) * scalar;
+        }
+        return controller.getRightY() * scalar;
     }
 
     @Override
-    public double getLeftX() {
-        return controller.getLeftX();  
+    public double getLeftX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftX()) * scalar;
+        }
+        return controller.getLeftX() * scalar;
     }
 
     @Override
-    public double getLeftY() {
-        return controller.getLeftY();  
+    public double getLeftY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftY()) * scalar;
+        }
+        return controller.getLeftY() * scalar;
     }
 
     @Override
