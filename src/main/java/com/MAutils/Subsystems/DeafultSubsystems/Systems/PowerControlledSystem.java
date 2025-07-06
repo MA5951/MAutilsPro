@@ -2,7 +2,6 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.Simulation.SimulatedSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
@@ -15,12 +14,7 @@ public abstract class PowerControlledSystem extends StateSubsystem{
 
     public PowerControlledSystem(PowerSystemConstants systemConstants) {
         super(systemConstants.systemName);
-        if (Robot.isReal()) {
-            systemIO = new PowerIOReal(systemConstants);
-        } else {
-            systemIO = SimulatedSubsystem.createSimulatedSubsystem((PowerIOReal) new PowerIOReal(systemConstants)
-            );
-        }
+        systemIO = new PowerIOReal(systemConstants);
     }
 
     public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO) {

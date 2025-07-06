@@ -1,8 +1,37 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package com.MAutils.Simulation.Simulatables;
 
-/** Add your docs here. */
-public class SubsystemSimulation {}
+import org.ironmaple.simulation.motorsims.SimulatedBattery;
+
+import com.MAutils.Simulation.Utils.Simulatable;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.ConvUtil;
+
+public class SubsystemSimulation implements Simulatable {
+
+    private PowerSystemConstants powerSystemConstants;
+
+    public SubsystemSimulation(PowerIOReal powerSystemConstants) {
+        this.powerSystemConstants = powerSystemConstants.getSystemConstants();
+    }
+
+    @Override
+    public void updateSimulation() {
+        powerSystemConstants.masterSimState
+                .setSupplyVoltage(SimulatedBattery.getBatteryVoltage());
+
+        powerSystemConstants.motorSim
+                .setInputVoltage(powerSystemConstants.masterSimState.getMotorVoltage());
+        powerSystemConstants.motorSim.update(Constants.LOOP_TIME);
+
+        powerSystemConstants.masterSimState
+                .setRawRotorPosition(powerSystemConstants.motorSim.getAngularPositionRotations()
+                        * powerSystemConstants.GEAR);
+        powerSystemConstants.masterSimState
+                .setRotorVelocity(ConvUtil.RPMtoRPS(powerSystemConstants.motorSim.getAngularVelocityRPM())
+                        * powerSystemConstants.GEAR);
+    }
+
+}

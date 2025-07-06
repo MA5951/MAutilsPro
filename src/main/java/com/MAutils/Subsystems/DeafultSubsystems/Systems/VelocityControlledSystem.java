@@ -3,7 +3,6 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.Simulation.SimulatedSubsystem;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
@@ -18,11 +17,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
     public VelocityControlledSystem(VelocitySystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
         super(systemConstants.systemName);
-        if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(systemConstants);
-        } else {
-            systemIO = SimulatedSubsystem.createSimulatedSubsystem((VelocityIOReal) new VelocityIOReal(systemConstants));
-        }
+        systemIO = new VelocityIOReal(systemConstants);
 
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
