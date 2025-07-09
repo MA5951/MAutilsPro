@@ -6,12 +6,12 @@ import org.ironmaple.simulation.SimulatedArena;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Simulation.Utils.Simulatable;
 
-public class GamePieceSimulation implements Simulatable{
+public class FieldGamePieceSimulation implements Simulatable{
 
     private String[] gamePieces;
     private boolean resetForAuto;
 
-    public GamePieceSimulation(boolean resetForAuto, String... gamePieces) {
+    public FieldGamePieceSimulation(boolean resetForAuto, String... gamePieces) {
         this.gamePieces = gamePieces;
         this.resetForAuto = resetForAuto;
     }

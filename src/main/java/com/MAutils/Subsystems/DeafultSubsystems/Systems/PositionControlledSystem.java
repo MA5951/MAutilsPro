@@ -3,9 +3,12 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
@@ -28,6 +31,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
             systemIO = new PositionIOReal(systemConstants);
         } else {
             systemIO = simIO;
+            SimulationManager.registerSimulatable(new SubsystemSimulation((PowerIOReal) systemIO));
         }
     }
 

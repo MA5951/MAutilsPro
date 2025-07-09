@@ -3,8 +3,11 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
 import com.ctre.phoenix6.StatusSignal;
 
@@ -28,6 +31,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
             systemIO = new VelocityIOReal(systemConstants);
         } else {
             systemIO = simIO;
+            SimulationManager.registerSimulatable(new SubsystemSimulation((PowerIOReal) systemIO));
         }
     }
 
