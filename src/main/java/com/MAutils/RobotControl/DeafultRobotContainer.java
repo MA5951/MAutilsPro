@@ -84,17 +84,6 @@ public class DeafultRobotContainer {
         return trigger.build();
     }
 
-    public static void simulationPeriodic() { //TODO split to SimManager;
-        SimulatedArena.getInstance().simulationPeriodic();
-        
-        
-    }
-
-    public static void simulationInit(boolean autoGamePices) {
-        
-        
-    }
-
     public static void runSelfTestCommands(StateSubsystem... subsystems) {
         for (StateSubsystem subsystem : subsystems) {
             Command selfTestCommand = subsystem.getSelfTest();
