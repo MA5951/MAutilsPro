@@ -11,7 +11,7 @@ public class DashboardPID implements Sendable {
      * A function that accepts (p, i, d).
      */
     @FunctionalInterface
-    public interface TriConsumer {//Todo provate 
+    public interface TriConsumer {//Todo private 
         void accept(double p, double i, double d);
     }
 
@@ -40,7 +40,7 @@ public class DashboardPID implements Sendable {
         this.pidSetter       = pidSetter;
         this.targetSetter    = targetSetter;
         this.targetSupplier  = targetSupplier;
-        this.positionSupplier = positionSupplier;//TODO: fix homo gay
+        this.positionSupplier = positionSupplier;//TODO: fix this class
     }
 
     @Override

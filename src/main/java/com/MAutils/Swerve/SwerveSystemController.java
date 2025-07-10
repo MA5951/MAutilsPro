@@ -28,6 +28,7 @@ public abstract class SwerveSystemController extends Command {
   }
 
   protected void setState(SwerveState state) {
+    //TODO add st runable
     swerveSystem.setState(state);
   }
 
