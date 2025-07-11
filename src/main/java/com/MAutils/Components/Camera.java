@@ -1,10 +1,13 @@
 
 package com.MAutils.Components;
 
+import org.photonvision.simulation.SimCameraProperties;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class Camera {
 
     public enum Cameras {
-        //Pixels, Pixels Degrees, Frames per secound
         LL4(1280, 800, 82, 50),
         LL3G(1280, 800, 86, 35),
         LL3(1280, 960, 70, 20),
@@ -20,6 +23,14 @@ public class Camera {
             this.height = height;
             this.fov = fov;
             this.simFps = simFps;
+        }
+
+        public SimCameraProperties getSimulationProp() {
+            return new SimCameraProperties().setCalibration(width, height, Rotation2d.fromDegrees(fov))
+                    .setCalibError(0.25, 0.08)
+                    .setFPS(40)
+                    .setAvgLatencyMs(35)
+                    .setLatencyStdDevMs(5);
         }
     }
 

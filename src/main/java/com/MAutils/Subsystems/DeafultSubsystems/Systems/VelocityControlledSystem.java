@@ -7,7 +7,6 @@ import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
 import com.ctre.phoenix6.StatusSignal;
 
@@ -22,16 +21,19 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
         super(systemConstants.systemName);
         systemIO = new VelocityIOReal(systemConstants);
 
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+        }
+
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
     public VelocityControlledSystem(VelocitySystemConstants systemConstants, VelocitySystemIO simIO) {
         super(systemConstants.systemName);
-        if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(systemConstants);
-        } else {
-            systemIO = simIO;
-            SimulationManager.registerSimulatable(new SubsystemSimulation((PowerIOReal) systemIO));
+        systemIO = new VelocityIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
     }
 

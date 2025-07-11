@@ -5,7 +5,6 @@ import org.ironmaple.simulation.motorsims.SimulatedBattery;
 
 import com.MAutils.Simulation.Utils.Simulatable;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.MAutils.Utils.Constants;
 import com.MAutils.Utils.ConvUtil;
 
@@ -13,8 +12,8 @@ public class SubsystemSimulation implements Simulatable {
 
     private PowerSystemConstants powerSystemConstants;
 
-    public SubsystemSimulation(PowerIOReal powerSystemConstants) {
-        this.powerSystemConstants = powerSystemConstants.getSystemConstants();
+    public SubsystemSimulation(PowerSystemConstants powerSystemConstants) {
+        this.powerSystemConstants = powerSystemConstants;
     }
 
     @Override

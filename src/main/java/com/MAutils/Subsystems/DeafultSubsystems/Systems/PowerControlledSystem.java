@@ -17,15 +17,19 @@ public abstract class PowerControlledSystem extends StateSubsystem{
     public PowerControlledSystem(PowerSystemConstants systemConstants) {
         super(systemConstants.systemName);
         systemIO = new PowerIOReal(systemConstants);
+
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+        }
     }
 
     public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO) {
         super(systemConstants.systemName);
-        if (Robot.isReal()) {
-            systemIO = new PowerIOReal(systemConstants);
-        } else {
-            systemIO = simIO;
-            SimulationManager.registerSimulatable(new SubsystemSimulation((PowerIOReal) systemIO));
+        systemIO = new PowerIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
     }
 
