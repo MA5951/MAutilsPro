@@ -2,10 +2,13 @@
 package frc.robot;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SwerveSimulation;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -13,9 +16,10 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
 
 
-
   public Robot() {
     m_robotContainer = new RobotContainer();
+
+    SimulationManager.registerSimulatable(new SwerveSimulation(SwerveConstants.SWERVE_CONSTANTS));
 
   }
 
@@ -36,6 +40,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    SimulationManager.autoInit();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -66,7 +71,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    //RobotContainer.runSelfTestCommands(null);
   }
 
   @Override
@@ -77,13 +81,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    RobotContainer.simulationInit(true);
+    SimulationManager.simulationInit();
   }
 
   @Override
   public void simulationPeriodic() {
-    RobotContainer.simulationPeriodic();
-    
+    SimulationManager.updateSimulation();
   }
 
 }

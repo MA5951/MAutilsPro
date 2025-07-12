@@ -7,6 +7,7 @@ import com.MAutils.Controllers.MAController;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
+import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.Utils.SwerveController;
 import com.MAutils.Utils.ChassisSpeedsUtil;
 
@@ -23,14 +24,14 @@ public class FieldCentricDrive extends SwerveController{
     private double xyScaler = 1;
     private double omegaScaler = 1;
     
-    private Supplier<Double> angleSupplier;
+    private Supplier<GyroData> gyroDataSupplier;
     private double angleOffset = 90;
 
     public FieldCentricDrive(MAController controller, SwerveSystem system, SwerveSystemConstants constants) {
         super("Field Centric Drive");
         this.constants = constants;
         this.controller = controller;
-        this.angleSupplier = () -> system.getGyroData().yaw;
+        this.gyroDataSupplier = () -> system.getGyroData();
     }
 
     public FieldCentricDrive withReduction(Supplier<Boolean> reductionBoolean, double reductionFactor) {
@@ -46,7 +47,7 @@ public class FieldCentricDrive extends SwerveController{
     }
 
     public void updateHeading() {
-        angleOffset = angleSupplier.get();
+        angleOffset = gyroDataSupplier.get().yaw;
     }
 
     public ChassisSpeeds getSpeeds() {
@@ -61,7 +62,7 @@ public class FieldCentricDrive extends SwerveController{
             speeds.omegaRadiansPerSecond *= reductionFactor;
         }
 
-        speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds, Rotation2d.fromDegrees(angleSupplier.get() - angleOffset));
+        speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds, Rotation2d.fromDegrees(gyroDataSupplier.get().yaw - angleOffset));
 
         logController();
 

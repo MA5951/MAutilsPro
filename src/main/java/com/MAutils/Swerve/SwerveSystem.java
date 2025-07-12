@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.PoseEstimator;
+import com.MAutils.PoseEstimation.PoseEstimatorOld;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
@@ -24,6 +24,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class SwerveSystem extends SubsystemBase {
     private static SwerveSystem instance;
@@ -40,14 +41,12 @@ public class SwerveSystem extends SubsystemBase {
     private final SwerveSetpointGenerator swerveSetpointGenerator;
     private final SwerveModuleState[] currentStates = new SwerveModuleState[4];
     private final SwerveModulePosition[] currentPositions = new SwerveModulePosition[4];
-    private final PoseEstimator poseEstimator;
     private final CollisionDetector collisionDetector;
     private final SkidDetector skidDetector;
 
-    private SwerveSystem(SwerveSystemConstants swerveConstants, PoseEstimator poseEstimator) {
+    private SwerveSystem(SwerveSystemConstants swerveConstants) {
         super();
         this.swerveConstants = swerveConstants;
-        this.poseEstimator = poseEstimator;
 
         swerveModules = swerveConstants.getModules();
         gyro = swerveConstants.getGyro();
@@ -173,8 +172,8 @@ public class SwerveSystem extends SubsystemBase {
             for (int j = 0; j < 4; j++) {
                 wheelPositions[j] = swerveModules[j].getOdometryPositions()[i];
             }
-            poseEstimator.addSwerveData(wheelPositions, gyro.getGyroData().odometryYawPositions[i],
-                    sampleTimestamps[i]);
+            // poseEstimator.addSwerveData(wheelPositions, gyro.getGyroData().odometryYawPositions[i],
+            //         sampleTimestamps[i]);
         }
     }
 
@@ -183,9 +182,9 @@ public class SwerveSystem extends SubsystemBase {
         MALog.logSwerveModuleStates("/Subsystems/Swerve/States/Current", currentStates);
     }
 
-    public SwerveSystem getInstance() {
+    public static SwerveSystem getInstance(SwerveSystemConstants swerveConstants) {
         if (instance == null) {
-            instance = new SwerveSystem(swerveConstants, poseEstimator);
+            instance = new SwerveSystem(swerveConstants);
         }
         return instance;
     }

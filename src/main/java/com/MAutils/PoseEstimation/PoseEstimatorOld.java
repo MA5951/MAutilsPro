@@ -11,19 +11,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
-public class PoseEstimator {
-    private static PoseEstimator instance;
+public class PoseEstimatorOld {
+    private static PoseEstimatorOld instance;
 
     protected final SwerveDrivePoseEstimator swervePoseEstimator;
     private final SwerveSystem swerveSystem;
     private Pose2d lookAhedPose = new Pose2d();
     private ChassisSpeeds fieldRelativSpeeds = new ChassisSpeeds();
 
-    private PoseEstimator(SwerveSystemConstants constants, SwerveSystem swerveSystem) {
+    private PoseEstimatorOld(SwerveSystemConstants constants, SwerveSystem swerveSystem) {
         swervePoseEstimator = new SwerveDrivePoseEstimator(constants.kinematics, Rotation2d.fromDegrees(0),
                 new SwerveModulePosition[] { new SwerveModulePosition(0, Rotation2d.kZero),
                         new SwerveModulePosition(0, Rotation2d.kZero), new SwerveModulePosition(0, Rotation2d.kZero),
@@ -65,9 +66,9 @@ public class PoseEstimator {
         return lookAhedPose;
     }// TODO filters?
 
-    public PoseEstimator getInstance(SwerveSystemConstants constants, SwerveSystem swerveSystem) {
+    public PoseEstimatorOld getInstance(SwerveSystemConstants constants, SwerveSystem swerveSystem) {
         if (instance == null) {
-            instance = new PoseEstimator(constants, swerveSystem);
+            instance = new PoseEstimatorOld(constants, swerveSystem);
         }
         return instance;
     }

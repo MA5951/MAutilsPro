@@ -1,7 +1,7 @@
 
 package com.MAutils.Swerve.Controllers;
 
-import com.MAutils.PoseEstimation.PoseEstimator;
+import com.MAutils.PoseEstimation.PoseEstimatorOld;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PPController extends SwerveController {
 
 
-    public PPController(SwerveSystemConstants constants, PoseEstimator poseEstimator, SwerveSystem swerveSystem, PPHolonomicDriveController holonomicDriveController) {
+    public PPController(SwerveSystemConstants constants, PoseEstimatorOld poseEstimator, SwerveSystem swerveSystem, PPHolonomicDriveController holonomicDriveController) {
         super("PPController");
 
         AutoBuilder.configure(
