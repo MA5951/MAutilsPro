@@ -5,7 +5,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.PoseEstimatorOld;
+import com.MAutils.PoseEstimation.FOMPoseEstimator;
+import com.MAutils.PoseEstimation.SwerveDriveEstimator;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
@@ -19,6 +20,7 @@ import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
 import com.MAutils.Swerve.Utils.SwerveState;
 import com.MAutils.Utils.DeafultRobotConstants;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,6 +32,7 @@ public class SwerveSystem extends SubsystemBase {
     private static SwerveSystem instance;
 
     private SwerveState currentState;
+    private SwerveDriveEstimator swerveDriveEstimator;
 
     public static final Lock odometryLock = new ReentrantLock();
     private final SwerveSystemConstants swerveConstants;
@@ -58,10 +61,13 @@ public class SwerveSystem extends SubsystemBase {
 
         skidDetector = new SkidDetector(swerveConstants, this::getCurrentStates);
 
+        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this);
+
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 
         odometryLock.lock();
-        gyro.update(); 
+        gyro.update();
+        System.out.println(gyro.getGyroData().yaw);
         for (var module : swerveModules) {
             module.update();
         }
@@ -172,8 +178,14 @@ public class SwerveSystem extends SubsystemBase {
             for (int j = 0; j < 4; j++) {
                 wheelPositions[j] = swerveModules[j].getOdometryPositions()[i];
             }
-            // poseEstimator.addSwerveData(wheelPositions, gyro.getGyroData().odometryYawPositions[i],
-            //         sampleTimestamps[i]);
+            FOMPoseEstimator.getInstance().addTranslationDelta(
+                    swerveDriveEstimator.getTranslationDelta(wheelPositions),
+                    swerveDriveEstimator.getTranslationFOM());
+
+            FOMPoseEstimator.getInstance().addRotationDelta(
+                    swerveDriveEstimator.getGyroDelta(gyro.getGyroData().odometryYawPositions[i]),
+                    swerveDriveEstimator.getRotationFOM());
+
         }
     }
 

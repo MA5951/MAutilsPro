@@ -14,7 +14,7 @@ import com.MAutils.Utils.ChassisSpeedsUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
-public class FieldCentricDrive extends SwerveController{
+public class FieldCentricDrive extends SwerveController {
 
     private MAController controller;
     private final SwerveSystemConstants constants;
@@ -23,7 +23,7 @@ public class FieldCentricDrive extends SwerveController{
 
     private double xyScaler = 1;
     private double omegaScaler = 1;
-    
+
     private Supplier<GyroData> gyroDataSupplier;
     private double angleOffset = 90;
 
@@ -55,14 +55,14 @@ public class FieldCentricDrive extends SwerveController{
         speeds.vyMetersPerSecond = -controller.getLeftX(true, xyScaler) * constants.MAX_VELOCITY;
         speeds.omegaRadiansPerSecond = -controller.getRightX(true, omegaScaler) * constants.MAX_ANGULAR_VELOCITY;
 
-
         if (reductionBoolean != null && reductionBoolean.get()) {
             speeds.vxMetersPerSecond *= reductionFactor;
             speeds.vyMetersPerSecond *= reductionFactor;
             speeds.omegaRadiansPerSecond *= reductionFactor;
         }
 
-        speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds, Rotation2d.fromDegrees(gyroDataSupplier.get().yaw - angleOffset));
+        speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds,
+                Rotation2d.fromDegrees(gyroDataSupplier.get().yaw - angleOffset));
 
         logController();
 
@@ -71,9 +71,10 @@ public class FieldCentricDrive extends SwerveController{
 
     private void logController() {
         MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/Speeds", speeds);
-        MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/On Reduction", reductionBoolean.get());
+        if (reductionBoolean != null) {
+            MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/On Reduction", reductionBoolean.get());
+        }
         MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/Angle Offset", angleOffset);
     }
-
 
 }

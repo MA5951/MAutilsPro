@@ -19,6 +19,7 @@ public class SwerveSimulation implements Simulatable {
 
     @Override
     public void updateSimulation() {
+        SimulatedArena.getInstance().simulationPeriodic();
         MALog.log("/Simulation/Simulation Pose", swerveDriveSimulation.getSimulatedDriveTrainPose());
     }
 

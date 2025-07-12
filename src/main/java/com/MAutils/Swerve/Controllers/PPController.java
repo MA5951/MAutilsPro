@@ -1,7 +1,6 @@
 
 package com.MAutils.Swerve.Controllers;
 
-import com.MAutils.PoseEstimation.PoseEstimatorOld;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
@@ -16,25 +15,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PPController extends SwerveController {
 
 
-    public PPController(SwerveSystemConstants constants, PoseEstimatorOld poseEstimator, SwerveSystem swerveSystem, PPHolonomicDriveController holonomicDriveController) {
+    public PPController(SwerveSystemConstants constants, SwerveSystem swerveSystem, PPHolonomicDriveController holonomicDriveController) {
         super("PPController");
 
-        AutoBuilder.configure(
-            () -> poseEstimator.getEstimatedPose(), 
-            (pose2d) -> poseEstimator.resetPose(pose2d), 
-            () -> swerveSystem.getChassisSpeeds(), 
-            (speeds, feedforwards) -> setChassisSpeeds(speeds), 
-            holonomicDriveController , 
-            constants.getRobotConfig(), 
-            () -> {
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            }, new SubsystemBase("Virtual PPController Subssystem") {
+        // AutoBuilder.configure(
+        //     () -> poseEstimator.getEstimatedPose(), 
+        //     (pose2d) -> poseEstimator.resetPose(pose2d), 
+        //     () -> swerveSystem.getChassisSpeeds(), 
+        //     (speeds, feedforwards) -> setChassisSpeeds(speeds), 
+        //     holonomicDriveController , 
+        //     constants.getRobotConfig(), 
+        //     () -> {
+        //       var alliance = DriverStation.getAlliance();
+        //       if (alliance.isPresent()) {
+        //         return alliance.get() == DriverStation.Alliance.Red;
+        //       }
+        //       return false;
+        //     }, new SubsystemBase("Virtual PPController Subssystem") {
      
-            });
+        //     });//TODO
     }
 
     public void startPath(String pathName) {

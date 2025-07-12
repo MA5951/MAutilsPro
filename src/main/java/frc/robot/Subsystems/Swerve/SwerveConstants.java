@@ -1,6 +1,7 @@
 
 package frc.robot.Subsystems.Swerve;
 
+import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Controllers.FieldCentricDrive;
 import com.MAutils.Swerve.SwerveSystemConstants.GearRatio;
@@ -25,7 +26,7 @@ public class SwerveConstants {
 
     public static final FieldCentricDrive fieldCentricController = new FieldCentricDrive(
             RobotContainer.getDriverController(),
-            RobotContainer.swerve,
+            SwerveSystem.getInstance(SwerveConstants.SWERVE_CONSTANTS),
             SWERVE_CONSTANTS);
 
     public static final SwerveState FIELD_DRIVE = new SwerveState("Field Drive").withSpeeds(fieldCentricController);

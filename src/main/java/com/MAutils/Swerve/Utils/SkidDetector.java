@@ -32,6 +32,8 @@ public class SkidDetector {
     }
 
     public double getSkiddingRatio() {
+        minimumTranslationalSpeed = Integer.MAX_VALUE;
+        maximumTranslationalSpeed = -Integer.MAX_VALUE;
         measurSpeeds = kinematics.toChassisSpeeds(statesSupplier.get());
         swerveStatesRotationalPart = kinematics
                 .toSwerveModuleStates(new ChassisSpeeds(0, 0, measurSpeeds.omegaRadiansPerSecond));
@@ -48,10 +50,13 @@ public class SkidDetector {
             maximumTranslationalSpeed = Math.max(maximumTranslationalSpeed, translationalSpeed);
             minimumTranslationalSpeed = Math.min(minimumTranslationalSpeed, translationalSpeed);
         }
+        MALog.log("/Subsystems/Swerve/Skid/Max Speed", maximumTranslationalSpeed);
+        MALog.log("/Subsystems/Swerve/Skid/Min Speed", minimumTranslationalSpeed);
+
 
         skiddingRatio = maximumTranslationalSpeed / minimumTranslationalSpeed;
 
-        MALog.log("/Subsystems/Swerve/Collision Skid/Skidding Ratio", skiddingRatio);
+        MALog.log("/Subsystems/Swerve/Skid/Skidding Ratio", skiddingRatio);
         return skiddingRatio;
     }
 
