@@ -12,7 +12,7 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.MAutils.Components.Camera.Cameras;
+import com.MAutils.Components.CameraTypes.Cameras;
 import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.VisionWorldSimulation;
 import com.MAutils.Vision.Util.VisionUtil;
@@ -128,6 +128,11 @@ public class CameraSimIO implements VisionCameraIO {
         }
 
         return blankPoseEstimate;
+    }
+
+    @Override
+    public String getName() {
+        return camera.getName();
     }
 
 }

@@ -5,7 +5,7 @@ import org.photonvision.simulation.SimCameraProperties;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class Camera {
+public class CameraTypes {
 
     public enum Cameras {
         LL4(1280, 800, 82, 50),

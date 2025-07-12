@@ -13,6 +13,8 @@ public interface VisionCameraIO {
         MT1
     }
 
+    String getName();
+
     void setCameraPosition(Transform3d positionRelaticToRobot);
 
     void setPipline(int pipeline);

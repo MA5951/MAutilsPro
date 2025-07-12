@@ -7,6 +7,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.MAutils.Logger.MALog;
 import com.MAutils.PoseEstimation.FOMPoseEstimator;
 import com.MAutils.PoseEstimation.SwerveDriveEstimator;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SwerveSimulation;
 import com.MAutils.Swerve.IOs.PhoenixOdometryThread;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
@@ -20,12 +22,12 @@ import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
 import com.MAutils.Swerve.Utils.SwerveState;
 import com.MAutils.Utils.DeafultRobotConstants;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class SwerveSystem extends SubsystemBase {
@@ -60,6 +62,11 @@ public class SwerveSystem extends SubsystemBase {
         collisionDetector = new CollisionDetector(gyro::getGyroData);
 
         skidDetector = new SkidDetector(swerveConstants, this::getCurrentStates);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SwerveSimulation(SwerveConstants.SWERVE_CONSTANTS));
+
+        }
 
         swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this);
 

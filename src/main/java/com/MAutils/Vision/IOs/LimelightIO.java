@@ -64,4 +64,9 @@ public class LimelightIO implements VisionCameraIO {
 
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
 }

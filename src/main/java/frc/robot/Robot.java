@@ -19,8 +19,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    SimulationManager.registerSimulatable(new SwerveSimulation(SwerveConstants.SWERVE_CONSTANTS));
-
+    
   }
 
   @Override
