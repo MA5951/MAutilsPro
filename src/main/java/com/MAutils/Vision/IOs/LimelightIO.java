@@ -1,7 +1,6 @@
 
 package com.MAutils.Vision.IOs;
 
-import com.MAutils.Logger.MALog;
 import com.MAutils.Vision.Util.LimelightHelpers;
 import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
@@ -63,10 +62,6 @@ public class LimelightIO implements VisionCameraIO {
 
         return poseEstimate != null ? poseEstimate : blankPoseEstimate;
 
-    }
-
-    public void update() {
-        
     }
 
 }

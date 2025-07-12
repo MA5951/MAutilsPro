@@ -31,6 +31,4 @@ public interface VisionCameraIO {
 
     PoseEstimate getPoseEstimate(PoseEstimateType type);
 
-    void update();
-
 }
