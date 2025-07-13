@@ -21,6 +21,7 @@ public class SkidDetector {
     private SwerveModuleState[] swerveStatesRotationalPart;
     private double[] swerveStatesTranslationalPartMagnitudes = new double[4];
     private boolean[] isSkidding = new boolean[4];
+    private double[] skidRatio = new double[4];
 
     private Translation2d swerveStateMeasuredAsVector;
     private Translation2d swerveStatesRotationalPartAsVector;
@@ -55,22 +56,29 @@ public class SkidDetector {
             }
         }
 
-        for (int i = 0; i < 4; i++) {
-            if (i == lowestSpeedIndex) {
-                swerveStatesTranslationalPartMagnitudes[i] = 0;
-                continue;
-            } 
+        if (minimumTranslationalSpeed > 0.000000000000000000000000001) {
+            MALog.log("/Pose Estimator/Skid/Minimum Translational Speed",
+                    minimumTranslationalSpeed);
+            for (int i = 0; i < 4; i++) {
+                skidRatio[i] = swerveStatesTranslationalPartMagnitudes[i]
+                        / minimumTranslationalSpeed;
 
-            swerveStatesTranslationalPartMagnitudes[i] = swerveStatesTranslationalPartMagnitudes[i]
-                    / swerveStatesTranslationalPartMagnitudes[lowestSpeedIndex];
+            }
 
-        }
+            for (int i = 0; i < 4; i++) {
+                isSkidding[i] = skidRatio[i] > skidThreshold;
+                MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
+                MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i,
+                skidRatio[i]);
+            }
 
-        for (int i = 0; i < 4; i++) {
-            isSkidding[i] = swerveStatesTranslationalPartMagnitudes[i] > skidThreshold;
-            MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
-            MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i,
-                    swerveStatesTranslationalPartMagnitudes[i]);
+            numOfSkiddingModules = 0;
+
+            for (int i = 0; i < 4; i++) {
+                if (isSkidding[i]) {
+                    numOfSkiddingModules++;
+                }
+            }
         }
 
     }
@@ -80,13 +88,6 @@ public class SkidDetector {
     }
 
     public int getNumOfSkiddingModules() {
-        numOfSkiddingModules = 0;
-        
-        for (int i = 0; i < 4; i++) {
-            if (isSkidding[i]) {
-                numOfSkiddingModules++;
-            }
-        }
         return numOfSkiddingModules;
     }
 

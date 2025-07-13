@@ -9,10 +9,11 @@ import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class CollisionDetector {
+    private final double G_THRESHLOD = 2.5;
 
     private final Supplier<GyroData> gyroDataSupplier;
     private double collisionVectorSize = 0;
-
+    private boolean isColliding = false;
 
     public CollisionDetector(Supplier<GyroData> gyroDataSupplierr) {
         this.gyroDataSupplier = gyroDataSupplierr;
@@ -26,8 +27,16 @@ public class CollisionDetector {
         return collisionVectorSize;
     }
 
-    public Translation2d getCollisionVector() {
+    private Translation2d getCollisionVector() {
         return new Translation2d(gyroDataSupplier.get().accelX, gyroDataSupplier.get().accelY);
+    }
+
+    public void calculateCollision() {
+        isColliding = getForceVectorSize() > G_THRESHLOD;
+    }
+
+    public boolean getIsColliding() {
+        return isColliding;
     }
 
 }

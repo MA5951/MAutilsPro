@@ -173,7 +173,7 @@ public class SwerveSystemConstants {
                         DRIVE_TRAIN_SIMULATION_CONFIG, new Pose2d(2, 2, new Rotation2d()));
 
         // Module Limits
-        public double ODOMETRY_UPDATE_RATE = 250;
+        public double ODOMETRY_UPDATE_RATE = 50;
 
         public SwerveSystemConstants() {
 

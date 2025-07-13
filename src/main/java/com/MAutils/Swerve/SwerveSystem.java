@@ -56,11 +56,10 @@ public class SwerveSystem extends SubsystemBase {
                 Units.rotationsToRadians(10.0));
 
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SwerveSimulation(SwerveConstants.SWERVE_CONSTANTS));
-
+            SimulationManager.registerSimulatable(new SwerveSimulation(swerveConstants));
         }
 
-        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this);
+        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this, FOMPoseEstimator.getInstance());
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 
@@ -113,9 +112,7 @@ public class SwerveSystem extends SubsystemBase {
 
         currentSpeeds = swerveConstants.kinematics.toChassisSpeeds(currentStates);
 
-        proccedsOdometery();
-        swerveDriveEstimator.update();
-
+        swerveDriveEstimator.updateOdometry();
         logSwerve();
 
     }
@@ -164,26 +161,6 @@ public class SwerveSystem extends SubsystemBase {
 
     public SwerveModule[] getSwerveModules() {
         return swerveModules;
-    }
-
-    // Private Methods
-    private void proccedsOdometery() {
-        double[] sampleTimestamps = gyro.getGyroData().odometryYawTimestamps;
-        int sampleCount = sampleTimestamps.length;
-        for (int i = 0; i < sampleCount; i++) {
-            SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-            for (int j = 0; j < 4; j++) {
-                wheelPositions[j] = swerveModules[j].getOdometryPositions()[i];
-            }
-            FOMPoseEstimator.getInstance().addTranslationDelta(
-                    swerveDriveEstimator.getTranslationDelta(wheelPositions),
-                    swerveDriveEstimator.getTranslationFOM());
-
-            FOMPoseEstimator.getInstance().addRotationDelta(
-                    swerveDriveEstimator.getGyroDelta(gyro.getGyroData().odometryYawPositions[i]),
-                    swerveDriveEstimator.getRotationFOM());
-
-        }
     }
 
     private void logSwerve() {

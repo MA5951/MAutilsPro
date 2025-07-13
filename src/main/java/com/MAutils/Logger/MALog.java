@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -33,6 +34,7 @@ public class MALog {
     private static final Map<String, StructPublisher<Pose2d>> pose2dPublishers = new HashMap<>();
     private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();
     private static final Map<String, StructArrayPublisher<SwerveModuleState>> swerveModuleStatePublishers = new HashMap<>();
+    private static final Map<String, StructArrayPublisher<SwerveModulePosition>> swerveModulePositionPublishers = new HashMap<>();
     private static final Map<String, StructArrayPublisher<Pose3d>> pose3dPublishersArry = new HashMap<>();
     private static final Map<String, StructPublisher<ChassisSpeeds>> chassisSpeedsPublishersArry = new HashMap<>();
     private static final String ID_FILE_PATH = "/home/lvuser/malog/lastLogID.txt";
@@ -109,6 +111,20 @@ public class MALog {
         StructArrayPublisher<SwerveModuleState> publisher = swerveModuleStatePublishers.computeIfAbsent(key,
                 k -> nt
                         .getStructArrayTopic("MALog/" + k, SwerveModuleState.struct)
+                        .publish());
+
+        publisher.set(states);
+    }
+
+    public static void logSwerveModulePositions(String key, SwerveModulePosition[] states) {
+        if (states == null) {
+            states = new SwerveModulePosition[] { new SwerveModulePosition(100000, Rotation2d.kZero) };
+            return;
+        }
+
+        StructArrayPublisher<SwerveModulePosition> publisher = swerveModulePositionPublishers.computeIfAbsent(key,
+                k -> nt
+                        .getStructArrayTopic("MALog/" + k, SwerveModulePosition.struct)
                         .publish());
 
         publisher.set(states);

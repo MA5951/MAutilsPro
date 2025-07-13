@@ -17,13 +17,12 @@ public class FOMPoseEstimator extends SubsystemBase {
     private double maxGyroWeight = 1.0;
     private double maxVisionWeight = 1.0;
 
+
     public FOMPoseEstimator(Pose2d initialPose) {
         this.currentPose = initialPose;
     }
 
     public void addTranslationDelta(Twist2d delta, double translationFOM) {
-        if (translationFOM <= 0.0)
-            return;
         double weight = MathUtil.clamp(translationFOM, 0.0, 1.0) * maxOdometryWeight;
         currentPose = currentPose.exp(new Twist2d(delta.dx * weight, delta.dy * weight, 0.0));
     }
@@ -70,6 +69,6 @@ public class FOMPoseEstimator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        MALog.log("/Subsystems/Pose Estimation/Pose", currentPose);
+        MALog.log("/Pose Estimator/Pose", currentPose);
     }
 }
