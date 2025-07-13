@@ -17,7 +17,6 @@ public class VisionSystem extends SubsystemBase{
     @Override
     public void periodic() {
         for (VisionCameraIO visionCameraIO : cameras) {
-            visionCameraIO.
         }
     }
 

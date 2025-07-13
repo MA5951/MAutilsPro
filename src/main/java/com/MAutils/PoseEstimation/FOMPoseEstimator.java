@@ -22,19 +22,22 @@ public class FOMPoseEstimator extends SubsystemBase {
     }
 
     public void addTranslationDelta(Twist2d delta, double translationFOM) {
-        if (translationFOM <= 0.0) return;
+        if (translationFOM <= 0.0)
+            return;
         double weight = MathUtil.clamp(translationFOM, 0.0, 1.0) * maxOdometryWeight;
         currentPose = currentPose.exp(new Twist2d(delta.dx * weight, delta.dy * weight, 0.0));
     }
 
     public void addRotationDelta(double dtheta, double rotationFOM) {
-        if (rotationFOM <= 0.0) return;
+        if (rotationFOM <= 0.0)
+            return;
         double weight = MathUtil.clamp(rotationFOM, 0.0, 1.0) * maxGyroWeight;
         currentPose = currentPose.exp(new Twist2d(0.0, 0.0, dtheta * weight));
     }
 
     public void addVisionMeasurement(Pose2d visionPose, double visionFOM) {
-        if (visionFOM <= 0.0) return;
+        if (visionFOM <= 0.0)
+            return;
         double weight = MathUtil.clamp(visionFOM, 0.0, 1.0) * maxVisionWeight;
         currentPose = weightedAverage(currentPose, visionPose, weight);
     }
@@ -47,17 +50,15 @@ public class FOMPoseEstimator extends SubsystemBase {
         this.currentPose = newPose;
     }
 
-    public void setMaxWeights(double odometryWeight, double gyroWeight ,double visionWeight) {
+    public void setMaxWeights(double odometryWeight, double gyroWeight, double visionWeight) {
         this.maxOdometryWeight = odometryWeight;
         this.maxVisionWeight = visionWeight;
         this.maxGyroWeight = gyroWeight;
     }
 
     private Pose2d weightedAverage(Pose2d a, Pose2d b, double weight) {
-        double x = MathUtil.interpolate(a.getX(), b.getX(), weight);
-        double y = MathUtil.interpolate(a.getY(), b.getY(), weight);
-        Rotation2d rot = a.getRotation().interpolate(b.getRotation(), weight);
-        return new Pose2d(x, y, rot);
+        return new Pose2d(MathUtil.interpolate(a.getX(), b.getX(), weight),
+                MathUtil.interpolate(a.getY(), b.getY(), weight), a.getRotation().interpolate(b.getRotation(), weight));
     }
 
     public static FOMPoseEstimator getInstance() {

@@ -15,8 +15,6 @@ import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleIO.SwerveModuleData;
 import com.MAutils.Swerve.Utils.DriveFeedforwards;
-import com.MAutils.Swerve.Utils.SkidDetector;
-import com.MAutils.Swerve.Utils.CollisionDetector;
 import com.MAutils.Swerve.Utils.SwerveSetpoint;
 import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
 import com.MAutils.Swerve.Utils.SwerveState;
@@ -46,8 +44,6 @@ public class SwerveSystem extends SubsystemBase {
     private final SwerveSetpointGenerator swerveSetpointGenerator;
     private final SwerveModuleState[] currentStates = new SwerveModuleState[4];
     private final SwerveModulePosition[] currentPositions = new SwerveModulePosition[4];
-    private final CollisionDetector collisionDetector;
-    private final SkidDetector skidDetector;
 
     private SwerveSystem(SwerveSystemConstants swerveConstants) {
         super();
@@ -58,10 +54,6 @@ public class SwerveSystem extends SubsystemBase {
 
         swerveSetpointGenerator = new SwerveSetpointGenerator(swerveConstants.getRobotConfig(),
                 Units.rotationsToRadians(10.0));
-
-        collisionDetector = new CollisionDetector(gyro::getGyroData);
-
-        skidDetector = new SkidDetector(swerveConstants, this::getCurrentStates);
 
         if (!Robot.isReal()) {
             SimulationManager.registerSimulatable(new SwerveSimulation(SwerveConstants.SWERVE_CONSTANTS));
@@ -122,9 +114,7 @@ public class SwerveSystem extends SubsystemBase {
         currentSpeeds = swerveConstants.kinematics.toChassisSpeeds(currentStates);
 
         proccedsOdometery();
-
-        collisionDetector.getForceVectorSize();
-        skidDetector.getSkiddingRatio();
+        swerveDriveEstimator.update();
 
         logSwerve();
 
