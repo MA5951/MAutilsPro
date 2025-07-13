@@ -23,7 +23,7 @@ public class CollisionDetector {
         collisionVectorSize = Math.sqrt(Math.pow(getCollisionVector().getX(), 2) +
         Math.pow(getCollisionVector().getY(), 2));
 
-        MALog.log("/Subsystems/Swerve/Collision Skid/Collision Vector", collisionVectorSize);
+        MALog.log("/Pose Estimator/Collision/Collision Vector", collisionVectorSize);
         return collisionVectorSize;
     }
 
@@ -33,6 +33,7 @@ public class CollisionDetector {
 
     public void calculateCollision() {
         isColliding = getForceVectorSize() > G_THRESHLOD;
+        MALog.log("/Pose Estimator/Collision/Is Colliding", isColliding);
     }
 
     public boolean getIsColliding() {

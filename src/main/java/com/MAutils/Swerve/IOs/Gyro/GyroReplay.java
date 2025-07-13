@@ -1,0 +1,42 @@
+
+package com.MAutils.Swerve.IOs.Gyro;
+
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+
+import com.MAutils.Logger.MALog;
+import com.MAutils.Swerve.SwerveSystemConstants;
+import com.MAutils.Utils.PhoenixUtil;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
+
+
+
+public class GyroReplay implements GyroIO {
+
+
+    public GyroReplay() {
+    }
+
+    public void resetYaw(double yaw) {
+    }
+
+    public void updateGyroData(GyroData gyroData) {
+        gyroData.isConnected = true;
+        gyroData.yaw = MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Yaw").getDouble(0);
+        gyroData.yawVelocity = 0;
+        gyroData.pitch = MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Pitch").getDouble(0);
+        gyroData.roll = MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Roll").getDouble(0);
+        gyroData.accelX = MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Accel X").getDouble(0);
+        gyroData.accelY = MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Accel Y").getDouble(0);
+
+        gyroData.odometryYawTimestamps = new double[] {
+            Timer.getFPGATimestamp()
+        };
+        gyroData.odometryYawPositions = new Rotation2d[] {
+            Rotation2d.fromDegrees(MALog.get("/Subsystems/Swerve/" + "Piegon 2" + "/Yaw").getDouble(0))
+        };
+    }
+
+}

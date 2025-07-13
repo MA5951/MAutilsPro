@@ -16,11 +16,11 @@ public class SwerveDriveEstimator {
     private final double MIN_SKIP_ANGLE = 4;
 
     private SwerveModulePosition[] lastPositions = new SwerveModulePosition[] {
-        new SwerveModulePosition(0, new Rotation2d()),
-        new SwerveModulePosition(0, new Rotation2d()),
-        new SwerveModulePosition(0, new Rotation2d()),
-        new SwerveModulePosition(0, new Rotation2d())
-};;
+            new SwerveModulePosition(0, new Rotation2d()),
+            new SwerveModulePosition(0, new Rotation2d()),
+            new SwerveModulePosition(0, new Rotation2d()),
+            new SwerveModulePosition(0, new Rotation2d())
+    };;
     private Rotation2d lastGyroRotation;
 
     private final SwerveDriveKinematics kinematics;
@@ -35,12 +35,6 @@ public class SwerveDriveEstimator {
     private boolean colliding = false;
     private double translationFOM;
     private boolean[] skipModule = new boolean[4];
-    private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[] {
-            new SwerveModulePosition(0, new Rotation2d()),
-            new SwerveModulePosition(0, new Rotation2d()),
-            new SwerveModulePosition(0, new Rotation2d()),
-            new SwerveModulePosition(0, new Rotation2d())
-    };
 
     public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem,
             FOMPoseEstimator fomPoseEstimator) {
@@ -69,7 +63,7 @@ public class SwerveDriveEstimator {
 
     // FOMs
     public double getTranslationFOM() {
-        //Collision
+        // Collision
         if (collisionDetector.getIsColliding()) {
             colliding = true;
         } else if (colliding && skidDetector.getNumOfSkiddingModules() == 0) {
@@ -81,6 +75,7 @@ public class SwerveDriveEstimator {
                 || swerveSystem.getGyroData().roll > MAX_UPDATE_ANGLE) {
             return 0.0;
         }
+
 
         return 1.0 - (skidDetector.getNumOfSkiddingModules() * 0.25);
     }
@@ -94,53 +89,50 @@ public class SwerveDriveEstimator {
         skidDetector.calculateSkid();
         collisionDetector.calculateCollision();
 
-        translationFOM = getTranslationFOM();
+        translationFOM = 1;
         MALog.log("/Pose Estimator/Translation FOM", translationFOM);
 
         if (translationFOM != 0) {
             skipModule = skidDetector.getIsSkidding();
 
-            // if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack directions
-            //     skipModule[0] = true;
-            //     skipModule[1] = true;
-            // } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
-            //     skipModule[2] = true;
-            //     skipModule[3] = true;
-            // }
+            if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
+            skipModule[0] = true;
+            skipModule[1] = true;
+            } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
+            skipModule[2] = true;
+            skipModule[3] = true;
+            }
 
-            // if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
-            //     skipModule[0] = true;
-            //     skipModule[2] = true;
-            // } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
-            //     skipModule[1] = true;
-            //     skipModule[3] = true;
-            // }
+            if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
+            skipModule[0] = true;
+            skipModule[2] = true;
+            } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
+            skipModule[1] = true;
+            skipModule[3] = true;
+            }
 
             double[] sampleTimestamps = swerveSystem.getGyroData().odometryYawTimestamps;
-            int sampleCount = sampleTimestamps.length;
-            for (int i = 0; i < sampleCount; i++) {
+            for (int i = 0; i < sampleTimestamps.length; i++) {
+                SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
                 for (int j = 0; j < 4; j++) {
-                    // if (skipModule[j]) {
-                    //     wheelPositions[j].distanceMeters = 0;
-                    // } else {
-                        
-                    // }
-
                     wheelPositions[j] = swerveSystem.getSwerveModules()[j].getOdometryPositions()[i];
-                }
 
-                
+                    if (skipModule[j]) {
+                        lastPositions[j] = wheelPositions[j];
+                        
+                    }
+                }
 
                 fomPoseEstimator.addTranslationDelta(
                         getTranslationDelta(wheelPositions),
-                        translationFOM);
+                        1);
 
                 fomPoseEstimator.addRotationDelta(
                         getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]),
-                        getRotationFOM());
-
+                        1);
+                
             }
-        }
 
+        }
     }
 }

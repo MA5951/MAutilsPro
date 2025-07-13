@@ -62,7 +62,7 @@ public class FOMPoseEstimator extends SubsystemBase {
 
     public static FOMPoseEstimator getInstance() {
         if (instance == null) {
-            instance = new FOMPoseEstimator(new Pose2d(2, 2, new Rotation2d()));
+            instance = new FOMPoseEstimator(new Pose2d(10.43, 5.66, new Rotation2d()));
         }
         return instance;
     }

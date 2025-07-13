@@ -27,7 +27,6 @@ public class SkidDetector {
     private Translation2d swerveStatesRotationalPartAsVector;
     private Translation2d swerveStatesTranslationalPartAsVector;
     private double minimumTranslationalSpeed = 0;
-    private int lowestSpeedIndex = 0;
     private int numOfSkiddingModules = 0;
 
     public SkidDetector(SwerveSystemConstants constants, Supplier<SwerveModuleState[]> statesSupplier) {
@@ -52,7 +51,6 @@ public class SkidDetector {
         for (int i = 0; i < 4; i++) {
             if (swerveStatesTranslationalPartMagnitudes[i] < minimumTranslationalSpeed) {
                 minimumTranslationalSpeed = swerveStatesTranslationalPartMagnitudes[i];
-                lowestSpeedIndex = i;
             }
         }
 

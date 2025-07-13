@@ -14,8 +14,10 @@ import com.MAutils.CanBus.CANBusID;
 import com.MAutils.CanBus.SwerveModuleID;
 import com.MAutils.Swerve.IOs.Gyro.Gyro;
 import com.MAutils.Swerve.IOs.Gyro.GyroPiegon;
+import com.MAutils.Swerve.IOs.Gyro.GyroReplay;
 import com.MAutils.Swerve.IOs.Gyro.GyroSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModule;
+import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleReplay;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
@@ -173,7 +175,7 @@ public class SwerveSystemConstants {
                         DRIVE_TRAIN_SIMULATION_CONFIG, new Pose2d(2, 2, new Rotation2d()));
 
         // Module Limits
-        public double ODOMETRY_UPDATE_RATE = 50;
+        public double ODOMETRY_UPDATE_RATE = 250;
 
         public SwerveSystemConstants() {
 
@@ -264,32 +266,41 @@ public class SwerveSystemConstants {
         }
 
         public SwerveModule[] getModules() {
-                return RobotBase.isReal() ? new SwerveModule[] {
-                                new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),
-                                new SwerveModule("Front Right", this, new SwerveModuleTalonFX(this, 1)),
-                                new SwerveModule("Rear Left", this, new SwerveModuleTalonFX(this, 2)),
-                                new SwerveModule("Rear Right", this, new SwerveModuleTalonFX(this, 3)) }
-                                : new SwerveModule[] {
-                                                new SwerveModule("Front Left", this,
-                                                                new SwerveModuleSim(this, 0,
-                                                                                SWERVE_DRIVE_SIMULATION
-                                                                                                .getModules()[0])),
-                                                new SwerveModule("Front Right", this,
-                                                                new SwerveModuleSim(this, 1,
-                                                                                SWERVE_DRIVE_SIMULATION
-                                                                                                .getModules()[1])),
-                                                new SwerveModule("Rear Left", this,
-                                                                new SwerveModuleSim(this, 2,
-                                                                                SWERVE_DRIVE_SIMULATION
-                                                                                                .getModules()[2])),
-                                                new SwerveModule("Rear Right", this,
-                                                                new SwerveModuleSim(this, 3, SWERVE_DRIVE_SIMULATION
-                                                                                .getModules()[3])) };
+                // return RobotBase.isReal() ? new SwerveModule[] {
+                //                 new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),
+                //                 new SwerveModule("Front Right", this, new SwerveModuleTalonFX(this, 1)),
+                //                 new SwerveModule("Rear Left", this, new SwerveModuleTalonFX(this, 2)),
+                //                 new SwerveModule("Rear Right", this, new SwerveModuleTalonFX(this, 3)) }
+                //                 : new SwerveModule[] {
+                //                                 new SwerveModule("Front Left", this,
+                //                                                 new SwerveModuleSim(this, 0,
+                //                                                                 SWERVE_DRIVE_SIMULATION
+                //                                                                                 .getModules()[0])),
+                //                                 new SwerveModule("Front Right", this,
+                //                                                 new SwerveModuleSim(this, 1,
+                //                                                                 SWERVE_DRIVE_SIMULATION
+                //                                                                                 .getModules()[1])),
+                //                                 new SwerveModule("Rear Left", this,
+                //                                                 new SwerveModuleSim(this, 2,
+                //                                                                 SWERVE_DRIVE_SIMULATION
+                //                                                                                 .getModules()[2])),
+                //                                 new SwerveModule("Rear Right", this,
+                //                                                 new SwerveModuleSim(this, 3, SWERVE_DRIVE_SIMULATION
+                //                                                                 .getModules()[3])) };
+
+
+                return new SwerveModule[] {
+                                        new SwerveModule("Front Left", this, new SwerveModuleReplay("Front Left")),
+                                        new SwerveModule("Front Right", this, new SwerveModuleReplay("Front Right")),
+                                        new SwerveModule("Rear Left", this, new SwerveModuleReplay("Rear Left")),
+                                        new SwerveModule("Rear Right", this, new SwerveModuleReplay("Rear Right")) };
         }
 
         public Gyro getGyro() {
-                return RobotBase.isReal() ? new Gyro("Piegon", new GyroPiegon(this))
-                                : new Gyro("Sim Gyro", new GyroSim(this));
+                // return RobotBase.isReal() ? new Gyro("Piegon", new GyroPiegon(this))
+                //                 : new Gyro("Sim Gyro", new GyroSim(this));
+
+                return new Gyro("Piegon Sim", new GyroReplay());
         }
 
         public RobotConfig getRobotConfig() {
