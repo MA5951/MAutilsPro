@@ -57,6 +57,6 @@ public class SwerveDriveEstimator {
     }
 
     public void update() {
-        skidDetector.getSkiddingRatio();
+        skidDetector.calculateSkid();
     }
 }

@@ -13,27 +13,28 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SkidDetector {
+    private final double skidThreshold = 1.1;
 
     private final SwerveDriveKinematics kinematics;
     private final Supplier<SwerveModuleState[]> statesSupplier;
     private ChassisSpeeds measurSpeeds;
     private SwerveModuleState[] swerveStatesRotationalPart;
     private double[] swerveStatesTranslationalPartMagnitudes = new double[4];
+    private boolean[] isSkidding = new boolean[4];
+
     private Translation2d swerveStateMeasuredAsVector;
     private Translation2d swerveStatesRotationalPartAsVector;
     private Translation2d swerveStatesTranslationalPartAsVector;
-    private double maximumTranslationalSpeed = 0;
     private double minimumTranslationalSpeed = 0;
-    private double skiddingRatio = 0;
+    private int lowestSpeedIndex = 0;
 
     public SkidDetector(SwerveSystemConstants constants, Supplier<SwerveModuleState[]> statesSupplier) {
         this.kinematics = constants.kinematics;
         this.statesSupplier = statesSupplier;
     }
 
-    public void getSkiddingRatio() {
+    public void calculateSkid() {
         minimumTranslationalSpeed = Double.MAX_VALUE;
-        maximumTranslationalSpeed = Double.MIN_VALUE;
         measurSpeeds = kinematics.toChassisSpeeds(statesSupplier.get());
         swerveStatesRotationalPart = kinematics
                 .toSwerveModuleStates(new ChassisSpeeds(0, 0, measurSpeeds.omegaRadiansPerSecond));
@@ -46,22 +47,35 @@ public class SkidDetector {
             swerveStatesTranslationalPartMagnitudes[i] = swerveStatesTranslationalPartAsVector.getNorm();
         }
 
-        for (double translationalSpeed : swerveStatesTranslationalPartMagnitudes) {
-            
-            maximumTranslationalSpeed = Math.max(maximumTranslationalSpeed, translationalSpeed);
-            minimumTranslationalSpeed = Math.min(minimumTranslationalSpeed, translationalSpeed);
+        for (int i = 0; i < statesSupplier.get().length; i++) {
+            if (swerveStatesTranslationalPartMagnitudes[i] < minimumTranslationalSpeed) {
+                minimumTranslationalSpeed = swerveStatesTranslationalPartMagnitudes[i];
+                lowestSpeedIndex = i;
+            }
         }
 
-        MALog.log("/Subsystems/Swerve/Skid/Max Speed", maximumTranslationalSpeed);
-        MALog.log("/Subsystems/Swerve/Skid/Min Speed", minimumTranslationalSpeed);
+        for (int i = 0; i < statesSupplier.get().length; i++) {
+            if (i == lowestSpeedIndex) {
+                swerveStatesTranslationalPartMagnitudes[i] = 0;
+                continue;
+            } 
 
-    
+            swerveStatesTranslationalPartMagnitudes[i] = swerveStatesTranslationalPartMagnitudes[i]
+                    / swerveStatesTranslationalPartMagnitudes[lowestSpeedIndex];
 
+        }
 
+        for (int i = 0; i < statesSupplier.get().length; i++) {
+            isSkidding[i] = swerveStatesTranslationalPartMagnitudes[i] > skidThreshold;
+            MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
+            MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i,
+                    swerveStatesTranslationalPartMagnitudes[i]);
+        }
 
+    }
 
-        skiddingRatio = maximumTranslationalSpeed / minimumTranslationalSpeed;
-        MALog.log("/Subsystems/Swerve/Skid/Skidding Ratio", skiddingRatio);
+    public boolean[] getIsSkidding() {
+        return isSkidding;
     }
 
 }
