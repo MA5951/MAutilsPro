@@ -36,6 +36,11 @@ public class SwerveDriveEstimator {
     }
 
     public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
+        for (int i = 0; i < currentPositions.length; i++) {
+            if (skidDetector.getIsSkidding()[i]) {
+                currentPositions[i].distanceMeters = 0;
+            }
+        }
         modulesTwist = kinematics.toTwist2d(lastPositions, currentPositions);
         lastPositions = currentPositions;
         modulesTwist.dtheta = 0;

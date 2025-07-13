@@ -27,6 +27,7 @@ public class SkidDetector {
     private Translation2d swerveStatesTranslationalPartAsVector;
     private double minimumTranslationalSpeed = 0;
     private int lowestSpeedIndex = 0;
+    private int numOfSkiddingModules = 0;
 
     public SkidDetector(SwerveSystemConstants constants, Supplier<SwerveModuleState[]> statesSupplier) {
         this.kinematics = constants.kinematics;
@@ -39,7 +40,7 @@ public class SkidDetector {
         swerveStatesRotationalPart = kinematics
                 .toSwerveModuleStates(new ChassisSpeeds(0, 0, measurSpeeds.omegaRadiansPerSecond));
 
-        for (int i = 0; i < statesSupplier.get().length; i++) {
+        for (int i = 0; i < 4; i++) {
             swerveStateMeasuredAsVector = VectorUtil.getVectorFromSwerveState(statesSupplier.get()[i]);
             swerveStatesRotationalPartAsVector = VectorUtil.getVectorFromSwerveState(swerveStatesRotationalPart[i]);
             swerveStatesTranslationalPartAsVector = swerveStateMeasuredAsVector
@@ -47,14 +48,14 @@ public class SkidDetector {
             swerveStatesTranslationalPartMagnitudes[i] = swerveStatesTranslationalPartAsVector.getNorm();
         }
 
-        for (int i = 0; i < statesSupplier.get().length; i++) {
+        for (int i = 0; i < 4; i++) {
             if (swerveStatesTranslationalPartMagnitudes[i] < minimumTranslationalSpeed) {
                 minimumTranslationalSpeed = swerveStatesTranslationalPartMagnitudes[i];
                 lowestSpeedIndex = i;
             }
         }
 
-        for (int i = 0; i < statesSupplier.get().length; i++) {
+        for (int i = 0; i < 4; i++) {
             if (i == lowestSpeedIndex) {
                 swerveStatesTranslationalPartMagnitudes[i] = 0;
                 continue;
@@ -65,7 +66,7 @@ public class SkidDetector {
 
         }
 
-        for (int i = 0; i < statesSupplier.get().length; i++) {
+        for (int i = 0; i < 4; i++) {
             isSkidding[i] = swerveStatesTranslationalPartMagnitudes[i] > skidThreshold;
             MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
             MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i,
@@ -76,6 +77,17 @@ public class SkidDetector {
 
     public boolean[] getIsSkidding() {
         return isSkidding;
+    }
+
+    public int getNumOfSkiddingModules() {
+        numOfSkiddingModules = 0;
+        
+        for (int i = 0; i < 4; i++) {
+            if (isSkidding[i]) {
+                numOfSkiddingModules++;
+            }
+        }
+        return numOfSkiddingModules;
     }
 
 }
