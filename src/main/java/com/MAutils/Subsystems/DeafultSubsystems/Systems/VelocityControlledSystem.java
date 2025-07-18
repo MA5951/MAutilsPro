@@ -13,6 +13,7 @@ import com.ctre.phoenix6.StatusSignal;
 import frc.robot.Robot;
 
 public abstract class VelocityControlledSystem extends StateSubsystem {
+        //TODO same comments as positioncontrollerd
 
     protected VelocitySystemIO systemIO;
 

@@ -5,6 +5,8 @@ import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 
 public interface PowerSystemIO {
 
+    //TODO add offset
+
 
     double getVelocity(); 
 
@@ -19,11 +21,12 @@ public interface PowerSystemIO {
     void setBrakeMode(boolean isBrake); 
 
     void updatePeriodic();
+    
 
-    boolean isMoving();
+    boolean isMoving(); //TODO can be a default func
 
     void restPosition(double position);
 
-    PowerSystemConstants getSystemConstants();
+    PowerSystemConstants getSystemConstants(); //TODO whey you need this? you pass the constants all the way from the top class 
 
 }

@@ -48,7 +48,7 @@ public class MALog {
         TEST
     }
 
-    public enum LogLevel {
+    public enum LogLevel { //TODO change to private
         INFO, WARN, ERROR, DEBUG
     }
 
@@ -99,12 +99,13 @@ public class MALog {
     }
 
     public static NetworkTableEntry get(String key) {
-        return getEntry(key);
+        return getEntry(key); //TODO its should retune a value /change the name to getEntry
     }
 
     public static void logSwerveModuleStates(String key, SwerveModuleState[] states) {
         if (states == null) {
             states = new SwerveModuleState[] { new SwerveModuleState(100000, Rotation2d.kZero) };
+            //TODO need to add her publisher.set()
             return;
         }
 
@@ -119,6 +120,8 @@ public class MALog {
     public static void logSwerveModulePositions(String key, SwerveModulePosition[] states) {
         if (states == null) {
             states = new SwerveModulePosition[] { new SwerveModulePosition(100000, Rotation2d.kZero) };
+                        //TODO need to add her publisher.set()
+
             return;
         }
 
@@ -133,6 +136,8 @@ public class MALog {
     public static void log(String key, Pose3d[] poses) {
         if (poses == null) {
             poses = new Pose3d[] { new Pose3d(0, 0, 1000, new Rotation3d()) };
+                       //TODO need to add her publisher.set()
+
             return;
         }
 
@@ -146,6 +151,8 @@ public class MALog {
     public static void log(String key, Pose2d pose) {
         if (pose == null) {
             pose = new Pose2d(100, 100, Rotation2d.kZero);
+                      //TODO need to add her publisher.set()
+
             return;
         }
 
@@ -159,6 +166,8 @@ public class MALog {
     public static void log(String key, Pose3d pose) {
         if (pose == null) {
             pose = new Pose3d(0, 0, 1000, new Rotation3d());
+                       //TODO need to add her publisher.set()
+
             return;
         }
 
@@ -172,6 +181,8 @@ public class MALog {
     public static void log(String key, ChassisSpeeds chassisSpeeds) {
         if (chassisSpeeds == null) {
             chassisSpeeds = new ChassisSpeeds(0, 0, 1000);
+                        //TODO need to add her publisher.set()
+
             return;
         }
 
@@ -191,7 +202,7 @@ public class MALog {
     }
 
     public static void addStatus(String status) {
-        statusEntry.setString(status);
+        statusEntry.setString(status); //TODO need to expande. what the point? if we have flag what the dif?
     }
 
     public static void resetID() {
@@ -245,24 +256,26 @@ public class MALog {
 
     }
 
-    public static class Flag {
+    public static class Flag { //TODO need to expentd we should give it to kaplan 
         public static final Flag DRIVER_FLAG = new Flag(LogLevel.DEBUG, "Driver Flag");
         public static final Flag SOFTWARE_FLAG = new Flag(LogLevel.DEBUG, "Software Flag");
 
-        public final LogLevel level;
-        public final String label;
+        public final LogLevel level; //TODO change to private
+        public final String label; //TODO change to private
 
-        public Flag(LogLevel level, String label) {
+        
+
+        public Flag(LogLevel level, String label) { //TODO change to private? we need to think were we write this
             this.level = level;
             this.label = label;
         }
 
         public static void getMaxPose(Motor motor) {
-            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Max Pose"));
+            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Max Pose")); //change to poweIOreal
         }
 
         public static void getMinPose(Motor motor) {
-            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Min Pose"));
+            MALog.flag(new Flag(LogLevel.WARN, "Motor: " + motor.name + " Reachde Min Pose")); //change to poweIOreal
         }
 
     }

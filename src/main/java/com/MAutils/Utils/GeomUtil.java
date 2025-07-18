@@ -163,7 +163,7 @@ public class GeomUtil {
 
   }
 
-  public static double getAngleBetween(Pose2d point1, Pose2d point2) {
+  public static double getAngleBetween(Pose2d point1, Pose2d point2) { //TODO need to also consider the Alliance coler
     return Math.atan2(Math.abs(point2.getTranslation().getY() - point1.getTranslation().getY()),
         Math.abs(point2.getTranslation().getX() - point1.getTranslation().getX()));
   }

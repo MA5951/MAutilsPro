@@ -12,7 +12,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveDriveEstimator {
-    private final double MAX_UPDATE_ANGLE = 10.0;
+    //TODO this should be singalton or static class
+    private final double MAX_UPDATE_ANGLE = 10.0; 
     private final double MIN_SKIP_ANGLE = 4;
 
     private SwerveModulePosition[] lastPositions = new SwerveModulePosition[] {
@@ -20,7 +21,7 @@ public class SwerveDriveEstimator {
             new SwerveModulePosition(0, new Rotation2d()),
             new SwerveModulePosition(0, new Rotation2d()),
             new SwerveModulePosition(0, new Rotation2d())
-    };;
+    };
     private Rotation2d lastGyroRotation;
 
     private final SwerveDriveKinematics kinematics;
@@ -36,19 +37,23 @@ public class SwerveDriveEstimator {
     private double translationFOM;
     private boolean[] skipModule = new boolean[4];
 
+    
+
     public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem,
             FOMPoseEstimator fomPoseEstimator) {
-        this.fomPoseEstimator = fomPoseEstimator;
+        this.fomPoseEstimator = fomPoseEstimator; //TODO if its a singalton class you dont need to pass it as a parmeter
         this.kinematics = swerveConstants.kinematics;
-        this.swerveSystem = swerveSystem;
-        this.lastGyroRotation = Rotation2d.fromDegrees(swerveSystem.getGyroData().yaw);
+        this.swerveSystem = swerveSystem; //TODO also this is in the lib dont need to pass as aparmeter
+        this.lastGyroRotation = Rotation2d.fromDegrees(swerveSystem.getGyroData().yaw); //TODO be sure you dont update anything when not enable and rest the value 
 
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
     }
+    //TODO add a gyro filter func
+
 
     // Deltas
-    public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
+    public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) { 
         modulesTwist = kinematics.toTwist2d(lastPositions, currentPositions);
         lastPositions = currentPositions;
         modulesTwist.dtheta = 0;
@@ -62,9 +67,9 @@ public class SwerveDriveEstimator {
     }
 
     // FOMs
-    public double getTranslationFOM() {
+    public double getTranslationFOM() { 
         // Collision
-        if (collisionDetector.getIsColliding()) {
+        if (collisionDetector.getIsColliding()) { //TODO all of this code can be write in one if 
             colliding = true;
         } else if (colliding && skidDetector.getNumOfSkiddingModules() == 0) {
             colliding = false;
@@ -89,10 +94,10 @@ public class SwerveDriveEstimator {
         skidDetector.calculateSkid();
         collisionDetector.calculateCollision();
 
-        translationFOM = 1;
+        translationFOM = 1; //TODO delete
         MALog.log("/Pose Estimator/Translation FOM", translationFOM);
 
-        if (translationFOM != 0) {
+        if (translationFOM != 0) { //TODO change to getTranslationFOM()
             skipModule = skidDetector.getIsSkidding();
 
             if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
@@ -103,7 +108,7 @@ public class SwerveDriveEstimator {
             skipModule[3] = true;
             }
 
-            if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
+            if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) { 
             skipModule[0] = true;
             skipModule[2] = true;
             } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
@@ -115,6 +120,7 @@ public class SwerveDriveEstimator {
             for (int i = 0; i < sampleTimestamps.length; i++) {
                 SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
                 for (int j = 0; j < 4; j++) {
+                    //TODO you need to put the collisionDetector and skidDetector updet func here where you get the thred data 
                     wheelPositions[j] = swerveSystem.getSwerveModules()[j].getOdometryPositions()[i];
 
                     if (skipModule[j]) {
@@ -125,11 +131,11 @@ public class SwerveDriveEstimator {
 
                 fomPoseEstimator.addTranslationDelta(
                         getTranslationDelta(wheelPositions),
-                        1);
+                        1); //TODO why 1? why not use the func getTranslationFOM
 
                 fomPoseEstimator.addRotationDelta(
                         getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]),
-                        1);
+                        1); //TODO why 1? why not use the func getRotationFOM
                 
             }
 

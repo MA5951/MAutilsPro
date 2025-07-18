@@ -13,9 +13,11 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
+    //TODO where the replayIO?
+
     public final PositionSystemConstants systemConstants;
 
-    private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+    private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0); 
     private PositionVoltage positionRequest = new PositionVoltage(0);
 
     private StatusSignal<Double> motorError;
@@ -47,10 +49,10 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
         motorConfig.MotionMagic.MotionMagicJerk = systemConstants.JERK;
 
-        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert; // TODO dont need this code
         systemConstants.master.motorController.getConfigurator().apply(motorConfig);
 
-        for (Motor motor : systemConstants.MOTORS) {
+        for (Motor motor : systemConstants.MOTORS) { // TODO dont need this code
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
             motor.motorController.setControl(follower);
@@ -117,6 +119,8 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         MALog.log(logPath + "/Set Point", getSetPoint());
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
+                //TODO print withLimitForwardMotion and withLimitReverseMotion
+
     }
 
     @Override

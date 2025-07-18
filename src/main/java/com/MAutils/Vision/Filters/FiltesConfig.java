@@ -4,6 +4,9 @@ import com.MAutils.Vision.IOs.VisionCameraIO.PoseEstimateType;
 
 public class FiltesConfig {
 
+    //TODO where all the filters we write?
+    //TODO dont undersend all the vision class
+
     public double maxAmbiguity = 0.25;                // Reject if ambiguity > this
     public double maxDistanceMeters = 6.0;            // Reject if pose is too far
     public double maxPoseJumpMeters = 1.5;            // Reject if new pose is too far from current

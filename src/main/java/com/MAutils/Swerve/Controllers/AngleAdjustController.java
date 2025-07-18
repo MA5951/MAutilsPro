@@ -13,6 +13,8 @@ public class AngleAdjustController extends SwerveController {
 
     private PIDController pidController;
     private Supplier<Double> angleSupplier;
+    //TODO add offset
+    //TODO init the setpoint to offset
 
     public AngleAdjustController(PIDController pidController, Supplier<Double> angleSupplier) {
         super("Angle Adjust Controller");
@@ -30,7 +32,7 @@ public class AngleAdjustController extends SwerveController {
         return this;
     }
 
-    public AngleAdjustController withSetPoint(double setPoint) {
+    public AngleAdjustController withSetPoint(double setPoint) { //TODO add a setSetPoint with Supplier
         pidController.setSetpoint(setPoint);
         return this;
     }
@@ -45,9 +47,12 @@ public class AngleAdjustController extends SwerveController {
         return pidController.atSetpoint();
     }
 
+    //TODO return setPoint
+
     private void logController() {
+        //TODO you can writer the path as a conctent and log the speeds in SwerveController 
         MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/Speeds", speeds);
-        MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/Set Point", pidController.getSetpoint());
-        MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/At Point", pidController.atSetpoint());
+        MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/Set Point", pidController.getSetpoint()); //TODO use iner func
+        MALog.log("/Subsystems/Swerve/Controllers/AngleAdjustController/At Point", pidController.atSetpoint()); //TODO use iner func
     }
 }

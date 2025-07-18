@@ -16,9 +16,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class FieldCentricDrive extends SwerveController {
 
-    private MAController controller;
+    private MAController controller; //TODO you can pass the drive controller 
     private final SwerveSystemConstants constants;
-    private Supplier<Boolean> reductionBoolean;
+    private Supplier<Boolean> reductionBoolean; //TODO init to false
     private double reductionFactor = 1.0;
 
     private double xyScaler = 1;
@@ -31,7 +31,7 @@ public class FieldCentricDrive extends SwerveController {
         super("Field Centric Drive");
         this.constants = constants;
         this.controller = controller;
-        this.gyroDataSupplier = () -> system.getGyroData();
+        this.gyroDataSupplier = () -> system.getGyroData(); //TODO just write SwerveSystem.getinstanc.getgyrodata()
     }
 
     public FieldCentricDrive withReduction(Supplier<Boolean> reductionBoolean, double reductionFactor) {
@@ -46,9 +46,11 @@ public class FieldCentricDrive extends SwerveController {
         return this;
     }
 
-    public void updateHeading() {
+    public void updateHeading() { //TODO rename to updateOffset and add func the get angleoffset premeter
         angleOffset = gyroDataSupplier.get().yaw;
     }
+
+    //TODO add get offset
 
     public ChassisSpeeds getSpeeds() {
         speeds.vxMetersPerSecond = -controller.getLeftY(true, xyScaler) * constants.MAX_VELOCITY;

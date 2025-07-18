@@ -181,6 +181,8 @@ public class SwerveSystemConstants {
 
         }
 
+
+        //TODO what the point of use the this? you must change all the values every robot or most of tham are the smase
         public SwerveSystemConstants withMotors(DCMotor driveMotor, DCMotor turningMotor, 
                         SwerveModuleID[] modulesID, CANBusID piegonCANID) {
                 this.PIEGEON_CAN_ID = piegonCANID;
@@ -265,6 +267,7 @@ public class SwerveSystemConstants {
                 return DriverStation.isAutonomous() ? AUTO_SLOT_CONFIG : TELEOP_SLOT_CONFIG;
         }
 
+        //TODO need to fix
         public SwerveModule[] getModules() {
                 // return RobotBase.isReal() ? new SwerveModule[] {
                 //                 new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Signal {
 
+    //TODO delete
     public static StatusSignal registerSignal(StatusSignal signal, TalonFX parentDevice) {
         return signal;
     }

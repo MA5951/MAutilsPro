@@ -26,7 +26,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class SwerveSystem extends SubsystemBase {
     private static SwerveSystem instance;
@@ -53,7 +52,7 @@ public class SwerveSystem extends SubsystemBase {
         gyro = swerveConstants.getGyro();
 
         swerveSetpointGenerator = new SwerveSetpointGenerator(swerveConstants.getRobotConfig(),
-                Units.rotationsToRadians(10.0));
+                Units.rotationsToRadians(10.0)); //TODO constants
 
         if (!Robot.isReal()) {
             SimulationManager.registerSimulatable(new SwerveSimulation(swerveConstants));
@@ -65,7 +64,7 @@ public class SwerveSystem extends SubsystemBase {
 
         odometryLock.lock();
         gyro.update();
-        System.out.println(gyro.getGyroData().yaw);
+        System.out.println(gyro.getGyroData().yaw); //TODO delete
         for (var module : swerveModules) {
             module.update();
         }

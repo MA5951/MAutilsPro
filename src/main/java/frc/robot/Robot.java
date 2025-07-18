@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
   private DataLogIterator dataLogIterator;
   private DataLogRecord dataLogRecord;
 
+
+  //TODO what the point?
   public String findReplayLogAdvantageScope() {
     Path advantageScopeTempPath =
         Paths.get(System.getProperty("java.io.tmpdir"), "akit-log-path.txt");

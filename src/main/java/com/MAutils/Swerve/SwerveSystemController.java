@@ -47,7 +47,6 @@ public abstract class SwerveSystemController extends Command {
     currentSpeeds = swerveSystem.getState().getSpeeds();
     logCurrentState();
 
-
     swerveSystem.drive(currentSpeeds);
   }
 

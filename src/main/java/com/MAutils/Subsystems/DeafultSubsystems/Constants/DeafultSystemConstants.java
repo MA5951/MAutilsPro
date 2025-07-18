@@ -12,16 +12,16 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 @SuppressWarnings("unchecked")
-public class DeafultSystemConstants<T> {
+public abstract class DeafultSystemConstants<T> { //TOOD change to abstract class
     public Motor[] MOTORS = new Motor[]{};
-    public final Motor master;
-    public final TalonFXSimState masterSimState;
+    public final Motor master; 
+    public final TalonFXSimState masterSimState; 
     public DCMotorSim motorSim;
     public double GEAR = 1;
     public double STATOR_CURRENT_LIMIT = 40;
     public boolean CURRENT_LIMIT_ENABLED = true;
-    public double MOTOR_LIMIT_CURRENT = 400;
-    public String LOG_PATH = null;
+    public double MOTOR_LIMIT_CURRENT = 400; //TODO never pass the 120 amp
+    public String LOG_PATH = null; //TODO should be a impty string ""
     public boolean IS_BRAKE = true;
     public double PEAK_FORWARD_VOLTAGE = 12;
     public double PEAK_REVERSE_VOLTAGE = -12;
@@ -32,6 +32,8 @@ public class DeafultSystemConstants<T> {
     public final String systemName;
     public LinearSystem<N2, N1, N2> systemID;
 
+    //TODO add other constructor with gear and INERTIA
+
     public DeafultSystemConstants(String systemName,Motor master, Motor... motors) {
         this.MOTORS = motors;
         this.master = master;
@@ -40,7 +42,7 @@ public class DeafultSystemConstants<T> {
         masterSimState = master.motorController.getSimState();
 
         this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
-                INERTIA, GEAR);
+                INERTIA, GEAR); //TODO 
 
         motorSim = new DCMotorSim(
                 systemID,
@@ -112,7 +114,7 @@ public class DeafultSystemConstants<T> {
         return (T) this;
     }
 
-    public PowerSystemConstants toPowerSystemConstants() {
+    public PowerSystemConstants toPowerSystemConstants() { //TODO this should be a abstacrt func ther every constants creat for itself
         return new PowerSystemConstants(systemName, master, MOTORS)
                 .withFOC(FOC)
                 .withGear(GEAR)

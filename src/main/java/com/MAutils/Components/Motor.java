@@ -8,18 +8,19 @@ import edu.wpi.first.math.system.plant.DCMotor;
 
 public class Motor {
 
-    public final TalonFX motorController;
-    public final MotorType motorType;
-    public final String name;
-    public final InvertedValue invert;
-    public final CANBusID canBusID;
+    public final TalonFX motorController; //TODO chage to private and add get()
+    public final MotorType motorType; //TODO chage to private and add get()
+    public final String name; //TODO chage to private and add get()
+    public final InvertedValue invert; //TODO chage to private and add get()
+    public final CANBusID canBusID; //TODO chage to private and add get()
 
     public Motor(CANBusID motorID, MotorType motorType, String name, InvertedValue invert) {
             this.canBusID = motorID;
             this.invert = invert;
-            this.motorController = new TalonFX(motorID.id, motorID.bus);
+            this.motorController = new TalonFX(motorID.id, motorID.bus); //TODO add a doc that say we only use talonFX
             this.motorType = motorType;
-            this.name = name;
+            this.name = name; //TODO why we need the name?
+
 
         }
 
@@ -35,12 +36,12 @@ public class Motor {
         MINI_CIM,
         RS775;
 
-        public static DCMotor getDcMotor(MotorType type, int numMotors) {
+        public static DCMotor getDcMotor(MotorType type, int numMotors) { //TODO chage to be the motor class func
             switch (type) {
                 case KRAKEN:
                     return DCMotor.getKrakenX60(numMotors);
                 case KRAKEN_FOC:
-                    return DCMotor.getKrakenX60(numMotors);
+                    return DCMotor.getKrakenX60(numMotors); //TODO change to foc
                 case FALCON:
                     return DCMotor.getFalcon500(numMotors);
                 case FALCON_FOC:

@@ -13,5 +13,5 @@ public interface VelocitySystemIO extends PowerSystemIO {
 
     void setPID(double kP, double kI, double kD);
 
-    boolean isMoving();
+    boolean isMoving();   //TODO delete
 }

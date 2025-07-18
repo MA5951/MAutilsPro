@@ -31,18 +31,23 @@ public class XYAdjustController extends SwerveController{
     }
 
     public XYAdjustController withXSuppliers(Supplier<Double> xSupplier, Supplier<Double> ySupplier) {
+        //TODO name dont match the parmeters
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         return this;
     }
 
     public XYAdjustController withXSetPoint(double xSetPoint, double ySetPoint) {
+        //TODO name dont match the parmeters
         xController.setSetpoint(xSetPoint);
         yController.setSetpoint(ySetPoint);
         return this;
     }
 
     public ChassisSpeeds getSpeeds() {
+        //TODO add setconstraints
+
+        //TODO add gyro offset for alliance  and fild relativ or robot relativ
         speeds.vxMetersPerSecond = xController.calculate(xSupplier.get());
         speeds.vyMetersPerSecond = yController.calculate(ySupplier.get());
         logController();
@@ -52,6 +57,8 @@ public class XYAdjustController extends SwerveController{
     public boolean atSetpoint() {
         return xController.atSetpoint() && yController.atSetpoint();
     }
+
+    //TODO add get setPoint as pose2d
 
     private void logController() {
         System.out.println("Speeds: " + speeds);

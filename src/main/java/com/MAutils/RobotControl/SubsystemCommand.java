@@ -3,18 +3,17 @@ package com.MAutils.RobotControl;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public abstract class SubsystemCommand extends Command {
+public abstract class SubsystemCommand extends Command { //TODO rename to state machine command
 
     protected StateSubsystem subsystem;
 
     public SubsystemCommand(StateSubsystem subsystem) {
         super();
         this.subsystem = subsystem;
-
         addRequirements(subsystem);
     }
 
-    public StateSubsystem getCommandSubsystem() {
+    public StateSubsystem getCommandSubsystem() { //TODO the subsystem should return the command not the command the subsystem 
         return subsystem;
     }
 
@@ -24,7 +23,7 @@ public abstract class SubsystemCommand extends Command {
 
     public abstract void CantMove();
 
-    public void CanMove() {
+    public void CanMove() { //TODO delete
         Automatic();
     }
 
@@ -32,7 +31,7 @@ public abstract class SubsystemCommand extends Command {
         Automatic();
     }
 
-    public void Test() {
+    public void Test() { //TODO change to abstract or delete
 
     }
 
@@ -50,7 +49,7 @@ public abstract class SubsystemCommand extends Command {
                             Automatic();
                             break;
 
-                        default:
+                        default: 
                             Manual();
                             break;
                     }

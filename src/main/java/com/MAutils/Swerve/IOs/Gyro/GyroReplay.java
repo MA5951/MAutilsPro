@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class GyroReplay implements GyroIO {
 
-
     public GyroReplay() {
     }
 

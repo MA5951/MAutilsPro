@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.MAutils.Simulation.Utils.Simulatable;
 
-public class SimulationManager {
+public class SimulationManager  { 
+    //TODO here you can add the swerve
+    //TODO where all the other sim code we talk about? the sensor the game piece in robot etc...
 
     private static List<Simulatable> simulatableList = new java.util.ArrayList<>();
 

@@ -31,11 +31,12 @@ public abstract class PositionControlledSystem extends StateSubsystem {
 
     public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO) {
         super(systemConstants.systemName);
-        systemIO = new PositionIOReal(systemConstants);
+        systemIO = new PositionIOReal(systemConstants); //TODO why you pass sim IO?
 
-        if (!Robot.isReal()) {
+        if (!Robot.isReal()) { 
             SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
+        //TODO why you dont pass statusSignals
     }
 
     

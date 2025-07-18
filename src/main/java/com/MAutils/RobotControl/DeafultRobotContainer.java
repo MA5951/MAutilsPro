@@ -27,11 +27,11 @@ public class DeafultRobotContainer {
 
 
     public DeafultRobotContainer() {
-        SimulatedArena.getInstance();
+        SimulatedArena.getInstance(); //TODO why here? why not in the sim classes
         autoSelector = new AutoSelector();
     }
 
-    public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
+    public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) { //TODO why its a func here? use the poseestimator / put it in the superstructure 
         autoSelector.setRobotPoseSupplier(robotPoseSupplier);
     }
 
@@ -52,7 +52,7 @@ public class DeafultRobotContainer {
 
     }
 
-    public void addSystemCommand(SubsystemCommand command) {
+    public void addSystemCommand(SubsystemCommand command) { //TODO rename to addDefaultStateCommand
         CommandScheduler.getInstance().setDefaultCommand(command.getCommandSubsystem(), command);
     }
 
@@ -68,7 +68,7 @@ public class DeafultRobotContainer {
         return operatorController;
     }
 
-    public static void setRobotState(RobotState robotState) {
+    public static void setRobotState(RobotState robotState) { //TODO change to protected
         lastRobotState = currentRobotState;
         currentRobotState = robotState;
     }
@@ -82,7 +82,12 @@ public class DeafultRobotContainer {
     }
 
     public static Trigger T(StateTrigger trigger) {
-        return trigger.build();
+        /* //TODO this should not work.
+         * //TODO need to rewrite, put the code the in the bulid func here 
+         * add a StateTrigger object to this class
+         * think again if the StateTrigger class is necessary you can insted write 4 func and it will be 10 time more esey to use 
+         */
+        return trigger.build(); 
     }
 
     public static void runSelfTestCommands(StateSubsystem... subsystems) {

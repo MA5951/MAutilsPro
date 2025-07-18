@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public interface SwerveModuleIO {
 
     public static class SwerveModuleData {
+        //TODO dont like that all the varubal are public we use get and set
         public boolean isDriveConnected;
         public double drivePosition;//Meters
         public double driveVelocity;//Meters Per Secound
@@ -55,6 +56,14 @@ public interface SwerveModuleIO {
     void setDrivePID(double kP, double kI, double kD);
 
     void setSteerPID(double kP, double kI, double kD);
+
+    //TODO add setNeutralModeDrive
+    //TODO add setNeutralModeTurn
+    //TODO add resetSteer
+    //TODO what about get state?
+    //TODO add getPosition
+    //TODO add getOdometryPositions
+
 
 
 }

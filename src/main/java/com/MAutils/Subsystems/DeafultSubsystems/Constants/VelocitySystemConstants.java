@@ -6,6 +6,11 @@ import com.MAutils.Utils.GainConfig;
 
 
 public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
+
+    /*
+     *     //TODO you should write all the system constants as a bulder(can ask chat gpt to doit). 
+     * its more like ctr config were you have class that is the config and a class where you burn it(the system constants)
+     *      */
     
     public GainConfig realGainConfig = new GainConfig();
     public GainConfig simGainConfig = new GainConfig()
@@ -13,6 +18,9 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
     public double MAX_VELOCITY = 0;
     public double TOLERANCE = 0;
     public double WHEEL_RADIUS = 0;
+
+    //TODO brake should be false
+
 
 
     public VelocitySystemConstants(String name, double maxVelocity, double tolerance ,Motor master,Motor... motors) {

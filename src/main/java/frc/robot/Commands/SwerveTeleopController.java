@@ -8,6 +8,8 @@ import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class SwerveTeleopController extends SwerveSystemController{
 
+    //TODO where the auto controller?
+
     public SwerveTeleopController() {
         super(RobotContainer.swerve, SwerveConstants.SWERVE_CONSTANTS, RobotContainer.getDriverController());
     }

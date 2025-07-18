@@ -14,12 +14,15 @@ public class DashBoardTab extends DashBoard{
     private ShuffleboardTab board;
     private HashMap<String, GenericEntry> values;
 
+    //TODO add choser 
+
     public DashBoardTab(String tab) {
         board = Shuffleboard.getTab(tab);
         values = new HashMap<>();
     }
 
     public void sendNotification(String title, String message, NotificationLevel level) {
+        //TODO why we use a NotificationLevel dif from the log flag?
         DashBoard.sendNotification(level, title, message);
     }
 

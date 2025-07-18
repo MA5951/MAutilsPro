@@ -25,6 +25,8 @@ import java.util.function.DoubleSupplier;
  * This also allows Phoenix Pro users to benefit from lower latency between devices using CANivore
  * time synchronization.
  */
+
+ //TODO dont sure this code run
 public class PhoenixOdometryThread extends Thread {
   private final Lock signalsLock =
       new ReentrantLock(); // Prevents conflicts when registering signals
@@ -34,7 +36,7 @@ public class PhoenixOdometryThread extends Thread {
   private final List<Queue<Double>> genericQueues = new ArrayList<>();
   private final List<Queue<Double>> timestampQueues = new ArrayList<>();
 
-  private static boolean isCANFD = new CANBus("*").isNetworkFD();
+  private static boolean isCANFD = new CANBus("*").isNetworkFD();//TODO use the constants
   private static PhoenixOdometryThread instance = null;
   private SwerveSystemConstants constants;
 
@@ -107,7 +109,7 @@ public class PhoenixOdometryThread extends Thread {
   public void run() {
     // DO NOT COPY UNLESS YOU UNDERSTAND THE CONSEQUENCES
     // https://docs.advantagekit.org/getting-started/template-projects/spark-swerve-template#real-time-thread-priority
-    Threads.setCurrentThreadPriority(true, 1);
+    Threads.setCurrentThreadPriority(true, 1); //TODO why? this is a very drastic line.
 
     while (true) {
       // Wait for updates from all signals

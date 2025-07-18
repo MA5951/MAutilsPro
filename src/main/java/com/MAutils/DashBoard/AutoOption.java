@@ -6,8 +6,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class AutoOption {
 
+//TODO this supporter what we take about the auto? a adaptiv auto? that easy to use? 
+/* TODO we should look at the auto code from the offseason, 25 seson and see if we can write a lib for it like a pre made command and so on 
+    we can give it to the new ones 
+*/
+public class AutoOption {
     private Command autoCommand;
     private String name;
     private boolean isPathPlanner = false;

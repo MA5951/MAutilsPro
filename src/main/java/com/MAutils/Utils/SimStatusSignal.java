@@ -10,7 +10,7 @@ import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.hardware.ParentDevice.MapGenerator;
 
 public class SimStatusSignal<T> extends StatusSignal<T> {
-
+//TODO delete
     private Supplier<T> valueSupplier;
 
     public SimStatusSignal(Supplier<T> valueSupplier) {

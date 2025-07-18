@@ -51,10 +51,11 @@ public class SkidDetector {
         for (int i = 0; i < 4; i++) {
             if (swerveStatesTranslationalPartMagnitudes[i] < minimumTranslationalSpeed) {
                 minimumTranslationalSpeed = swerveStatesTranslationalPartMagnitudes[i];
+                //TODO you can use Math.min and clamp the value
             }
         }
 
-        if (minimumTranslationalSpeed > 0.000000000000000000000000001) {
+        if (minimumTranslationalSpeed > 0.000000000000000000000000001) { //TODO just why?
             MALog.log("/Pose Estimator/Skid/Minimum Translational Speed",
                     minimumTranslationalSpeed);
             for (int i = 0; i < 4; i++) {
@@ -72,7 +73,7 @@ public class SkidDetector {
 
             numOfSkiddingModules = 0;
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) { //TODO you can write all this code in the for loop
                 if (isSkidding[i]) {
                     numOfSkiddingModules++;
                 }

@@ -14,6 +14,8 @@ import frc.robot.RobotContainer;
 
 public class SwerveConstants {
 
+
+        //TODO why?
     public static final SwerveSystemConstants SWERVE_CONSTANTS = new SwerveSystemConstants()
             .withPyshicalParameters(0.6, 0.6, 52, WheelType.BLACK_TREAD, 6.25)
             .withMotors(DCMotor.getKrakenX60(1), DCMotor.getFalcon500(1), PortMap.Swerve.SWERVE_MODULE_IDS,

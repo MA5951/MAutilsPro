@@ -12,6 +12,8 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 
 public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
+    //TODO where the replayIO?
+    //TODO need to see how we support a shooter like 24 offsesion
 
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
 
@@ -52,12 +54,12 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
 
     @Override
     public double getError() {
-        return motorError.getValueAsDouble() * systemConstants.POSITION_FACTOR;
+        return motorError.getValueAsDouble() * systemConstants.POSITION_FACTOR;//TODO change to velocety
     }
 
     @Override
     public double getSetPoint() {
-        return motorSetPoint.getValueAsDouble() * systemConstants.POSITION_FACTOR;
+        return motorSetPoint.getValueAsDouble() * systemConstants.POSITION_FACTOR; //TODO change to velocety
     }
 
     @Override
@@ -92,6 +94,7 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
         motorConfig.Slot0.kP = systemConstants.getGainConfig().Kp;
         motorConfig.Slot0.kI = systemConstants.getGainConfig().Ki;
         motorConfig.Slot0.kD = systemConstants.getGainConfig().Kd;
+        //TODO what about FF
 
         motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
         systemConstants.master.motorController.getConfigurator().apply(motorConfig);

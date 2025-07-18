@@ -25,12 +25,12 @@ public class CameraTypes {
             this.simFps = simFps;
         }
 
-        public SimCameraProperties getSimulationProp() {
-            return new SimCameraProperties().setCalibration(width, height, Rotation2d.fromDegrees(fov))
-                    .setCalibError(0.25, 0.08)
-                    .setFPS(40)
-                    .setAvgLatencyMs(35)
-                    .setLatencyStdDevMs(5);
+        public SimCameraProperties getSimulationProp() { //TODO add this to the enum as a iner parmeter and make the func privet
+            return new SimCameraProperties().setCalibration(width, height, Rotation2d.fromDegrees(fov)) //TODO you sure that work?
+                    .setCalibError(0.25, 0.08) //TODO constants 
+                    .setFPS(40) //TODO constants 
+                    .setAvgLatencyMs(35) //TODO constants 
+                    .setLatencyStdDevMs(5); //TODO constants 
         }
     }
 

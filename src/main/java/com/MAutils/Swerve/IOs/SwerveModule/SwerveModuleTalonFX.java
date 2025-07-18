@@ -31,7 +31,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class SwerveModuleTalonFX implements SwerveModuleIO {
 
-    protected final TalonFX driveTalon;
+    protected final TalonFX driveTalon; 
     protected final TalonFX turnTalon;
     protected final CANcoder cancoder;
 
@@ -56,7 +56,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
 
     private final SwerveSystemConstants constants;
 
-    public SwerveModuleTalonFX(SwerveSystemConstants constants, int index) {
+    public SwerveModuleTalonFX(SwerveSystemConstants constants, int index) { 
         this.constants = constants;
         driveTalon = new TalonFX(constants.MODULES_ID_ARRY[index].getDriveMotor().id,
                 constants.MODULES_ID_ARRY[index].getDriveMotor().bus);
@@ -182,7 +182,7 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     }
 
     public void setDriveVelocity(double metersPerSecond) {
-        System.out.println("metersPerSecond: " + metersPerSecond);
+        System.out.println("metersPerSecond: " + metersPerSecond); //TODO delete
         driveTalon.setControl(velocityVoltageRequest.withVelocity(metersPerSecond / constants.WHEEL_CIRCUMFERENCE)// Meters Per Second to Rotations Per Second
                 .withSlot(SwerveSystemConstants.getControlSlot()));
     }

@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 
 public class PowerIOReal implements PowerSystemIO {
-
+//TODO where the replayIO?
     protected final VoltageOut voltageRequest = new VoltageOut(0);
     protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
     private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
@@ -66,7 +66,7 @@ public class PowerIOReal implements PowerSystemIO {
     }
 
     protected void configMotors() {
-        motorConfig.Feedback.SensorToMechanismRatio = systemConstants.GEAR;
+        motorConfig.Feedback.SensorToMechanismRatio = systemConstants.GEAR; //TODO this is a problem if you have difrent value from the convert unit to the gear
 
         motorConfig.MotorOutput.NeutralMode = systemConstants.IS_BRAKE
                 ? NeutralModeValue.Brake
@@ -77,6 +77,8 @@ public class PowerIOReal implements PowerSystemIO {
 
         motorConfig.CurrentLimits.StatorCurrentLimit = systemConstants.STATOR_CURRENT_LIMIT;
         motorConfig.CurrentLimits.StatorCurrentLimitEnable = systemConstants.CURRENT_LIMIT_ENABLED;
+        //TODO what about SupplyCurrentLimit 
+    
     }
 
     @Override
@@ -124,6 +126,8 @@ public class PowerIOReal implements PowerSystemIO {
         MALog.log(logPath + "/Voltage", getAppliedVolts());
         MALog.log(logPath + "/Current", getCurrent());
         MALog.log(logPath + "/Position", getPosition());
+
+        //TODO print withLimitForwardMotion and withLimitReverseMotion
 
     }
 

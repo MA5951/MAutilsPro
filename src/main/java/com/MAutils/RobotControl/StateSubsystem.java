@@ -22,7 +22,6 @@ public abstract class StateSubsystem extends SubsystemBase {
 
         currentState = new State("IDLE", this);
         systemMode = SystemMode.AUTOMATIC;
-
         this.subsystemName = name;
     }
 
@@ -54,6 +53,7 @@ public abstract class StateSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //TODO log getSystemMode
         MALog.log("/RobotControl/" + subsystemName + "/Current State", currentState.stateName);
         MALog.log("/RobotControl/" + subsystemName + "/System Function State", getSystemMode().name());
         MALog.log("/RobotControl/" + subsystemName + "/Can Move", CAN_MOVE());

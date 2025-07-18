@@ -25,7 +25,7 @@ public final class PhoenixUtil {
             if (error.isOK()) break;
         }
     }
-
+  //TODO why we dont use this?
     public static class TalonFXMotorControllerSim implements SimulatedMotorController {
         private static int instances = 0;
         public final int id;
@@ -50,6 +50,8 @@ public final class PhoenixUtil {
             return talonFXSimState.getMotorVoltageMeasure();
         }
     }
+
+  
 
     public static class TalonFXMotorControllerWithRemoteCancoderSim extends TalonFXMotorControllerSim {
         private final CANcoderSimState remoteCancoderSimState;

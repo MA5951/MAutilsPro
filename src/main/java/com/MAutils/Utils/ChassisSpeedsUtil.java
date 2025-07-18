@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
+//TODO what about the boolean util folder?
+//TODO divide the utils folder to subfolders
 public class ChassisSpeedsUtil {
 
     public static ChassisSpeeds FromFieldToRobot(ChassisSpeeds speeds, Rotation2d robotAngle) {
