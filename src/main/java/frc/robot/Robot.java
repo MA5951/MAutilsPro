@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   private DataLogRecord dataLogRecord;
 
 
-  //TODO what the point?
+  //TODO what the point? the dataLogReader conect to the network table?
   public String findReplayLogAdvantageScope() {
     Path advantageScopeTempPath =
         Paths.get(System.getProperty("java.io.tmpdir"), "akit-log-path.txt");
