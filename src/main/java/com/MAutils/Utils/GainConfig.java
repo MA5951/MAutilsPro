@@ -1,6 +1,7 @@
 
 package com.MAutils.Utils;
 
+
 public class GainConfig {
 
     public double Kp = 0;
@@ -8,6 +9,8 @@ public class GainConfig {
     public double Kd = 0;
     public double Kf = 0;
     public double Ks = 0;
+    public double Kv = 0;
+    public double Ka = 0; 
 
     public GainConfig() {
 
@@ -35,6 +38,16 @@ public class GainConfig {
 
     public GainConfig withKS(double Ks) {
         this.Ks = Ks;
+        return this;
+    }
+
+    public GainConfig withKV(double Kv) {
+        this.Kv = Kv;
+        return this;
+    }
+
+    public GainConfig withKA(double Ka) {
+        this.Ka = Ka;
         return this;
     }
 }

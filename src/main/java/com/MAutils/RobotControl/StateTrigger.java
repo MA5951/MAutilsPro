@@ -14,8 +14,8 @@ public class StateTrigger {
     private BooleanSupplier condition;
     private RobotState stateToSet;
     private RobotState stateIn;
-    
-    private StateTrigger(BooleanSupplier condition , RobotState stateToSet) {
+
+    private StateTrigger(BooleanSupplier condition, RobotState stateToSet) {
         this.condition = condition;
         this.stateToSet = stateToSet;
         robotMode = null;
@@ -34,21 +34,22 @@ public class StateTrigger {
 
     public Trigger build() {
         if (robotMode != null && stateIn != null) {
-            return new Trigger(() -> condition.getAsBoolean() && DeafultRobotContainer.getRobotState() == stateIn && RobotControlConstants.getRobotMode() == robotMode)
-                .onTrue(new InstantCommand(() -> stateToSet.setState()));
+            return new Trigger(() -> condition.getAsBoolean() && DeafultRobotContainer.getRobotState() == stateIn
+                    && RobotControlConstants.getRobotMode() == robotMode)
+                    .onTrue(new InstantCommand(() -> stateToSet.setState()));
         } else if (robotMode != null) {
             return new Trigger(() -> condition.getAsBoolean() && RobotControlConstants.getRobotMode() == robotMode)
-                .onTrue(new InstantCommand(() -> stateToSet.setState()));
+                    .onTrue(new InstantCommand(() -> stateToSet.setState()));
         } else if (stateIn != null) {
             return new Trigger(() -> condition.getAsBoolean() && DeafultRobotContainer.getRobotState() == stateIn)
-                .onTrue(new InstantCommand(() -> stateToSet.setState()));
-        } 
+                    .onTrue(new InstantCommand(() -> stateToSet.setState()));
+        }
 
         return new Trigger(condition)
                 .onTrue(new InstantCommand(() -> stateToSet.setState()));
-    } 
+    }
 
-    public static StateTrigger T(BooleanSupplier condition , RobotState stateToSet) {
+    public static StateTrigger T(BooleanSupplier condition, RobotState stateToSet) {
         return new StateTrigger(condition, stateToSet);
     }
 

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 
-public class DeafultSuperStructure {
+public abstract class DeafultSuperStructure {
 
     protected Supplier<Pose2d> robotPoseSupplier;
     protected Supplier<Double> robotVelocitySupplier;
@@ -28,9 +28,10 @@ public class DeafultSuperStructure {
         return robotVelocitySupplier.get() > 0.02; 
     }
 
-    public boolean hasGamePiece() {
-        System.out.println("hasGamePiece() is not implemented");
-        return false;
-    }
+    public abstract boolean hasGamePiece();
+    
+    public abstract void updateSwerveControllers();
+
+    public abstract void update();
 
 }

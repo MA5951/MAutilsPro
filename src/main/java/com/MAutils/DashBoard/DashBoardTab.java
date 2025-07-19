@@ -1,22 +1,28 @@
 package com.MAutils.DashBoard;
 
 import java.util.HashMap;
+
+import com.MAutils.DashBoard.DashBoard.Notification.NotificationLevel;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class DashBoardTab {
+public class DashBoardTab extends DashBoard{
     private ShuffleboardTab board;
     private HashMap<String, GenericEntry> values;
 
     public DashBoardTab(String tab) {
         board = Shuffleboard.getTab(tab);
         values = new HashMap<>();
-        
-        
     }
+
+    public void sendNotification(String title, String message, NotificationLevel level) {
+        DashBoard.sendNotification(level, title, message);
+    }
+
 
     public void addNum(String title, double num) {
         if (!values.containsKey(title)) {

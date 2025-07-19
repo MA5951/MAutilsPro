@@ -1,34 +1,46 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOSim;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
+import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
-public abstract class VelocityControlledSystem extends StateSubsystem{
+public abstract class VelocityControlledSystem extends StateSubsystem {
 
-    protected final VelocitySystemIO systemIO;
+    protected VelocitySystemIO systemIO;
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(name, systemConstants);
-        } else {
-            systemIO = new VelocityIOSim(name, systemConstants);
+    public VelocityControlledSystem(VelocitySystemConstants systemConstants,
+            @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.systemName);
+        systemIO = new VelocityIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            if (Constants.SIMULATION_TYPE == SimulationType.SIM) {
+                SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            } else {
+                systemIO = new VelocityIOReal(systemConstants);
+            }
         }
+
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public VelocityControlledSystem(String name,VelocitySystemConstants systemConstants, VelocitySystemIO simIO ,SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new VelocityIOReal(name, systemConstants);
-        } else {
-            systemIO = simIO;
+    public VelocityControlledSystem(VelocitySystemConstants systemConstants, VelocitySystemIO simIO) {
+        super(systemConstants.systemName);
+        systemIO = new VelocityIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
     }
 
@@ -77,6 +89,5 @@ public abstract class VelocityControlledSystem extends StateSubsystem{
         super.periodic();
         systemIO.updatePeriodic();
     }
-    
 
 }

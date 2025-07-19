@@ -1,35 +1,47 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOSim;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReplay;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
+import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
-public abstract class PositionControlledSystem extends StateSubsystem{
+public abstract class PositionControlledSystem extends StateSubsystem {
 
-    protected final PositionSystemIO systemIO;
+    protected PositionSystemIO systemIO;
 
-    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new PositionIOReal(name, systemConstants);
-        } else {
-            systemIO = new PositionIOSim(name, systemConstants);
+    public PositionControlledSystem(PositionSystemConstants systemConstants,
+            @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.systemName);
+
+        systemIO = new PositionIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            if (Constants.SIMULATION_TYPE == SimulationType.SIM) {
+                SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            } else {
+                systemIO = new PositionIOReplay(systemConstants);
+            }
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);//TODO add to others
     }
 
-    
-    public PositionControlledSystem(String name,PositionSystemConstants systemConstants, PositionSystemIO simIO ,SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new PositionIOReal(name, systemConstants);
-        } else {
-            systemIO = simIO;
+    public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO) {
+        super(systemConstants.systemName);
+        systemIO = new PositionIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
     }
 
@@ -82,6 +94,5 @@ public abstract class PositionControlledSystem extends StateSubsystem{
         super.periodic();
         systemIO.updatePeriodic();
     }
-    
 
 }

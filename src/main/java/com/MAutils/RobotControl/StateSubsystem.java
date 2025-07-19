@@ -10,32 +10,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class StateSubsystem extends SubsystemBase {
 
-    private SubsystemState currentState;
+    private State currentState;
+    private State lastState;
     private SystemMode systemMode;
     public final String subsystemName;
     public final SelfSystemTest selfSystemTest;
 
-    public StateSubsystem(String name, SubsystemState... subsystemStates) {
-        for (SubsystemState state : subsystemStates) {
-            if (state != null) {
-                state.setSubsystem(this);
-            }
-        }
+    public StateSubsystem(String name) {
 
         selfSystemTest = new SelfSystemTest(this);
 
-        currentState = new SubsystemState("IDLE", this);
+        currentState = new State("IDLE", this);
         systemMode = SystemMode.AUTOMATIC;
-        
 
         this.subsystemName = name;
     }
 
-    public void setState(SubsystemState state) {
+    public void setState(State state) {
+        lastState = currentState;
+        state.runRunnable();
         currentState = state;
     }
 
-    public SubsystemState getCurrentState() {
+    public State getLastState() {
+        return lastState;
+    }
+
+    public State getCurrentState() {
         return currentState;
     }
 
@@ -50,7 +51,6 @@ public abstract class StateSubsystem extends SubsystemBase {
     public abstract Command getSelfTest();
 
     public abstract boolean CAN_MOVE();
-
 
     @Override
     public void periodic() {

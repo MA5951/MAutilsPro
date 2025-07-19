@@ -13,7 +13,6 @@ public abstract class SwerveSystemController extends Command {
   protected SwerveSystemConstants constants;
   protected MAController drivController;
   private ChassisSpeeds currentSpeeds;
-  private SwerveState lastState;
 
   public SwerveSystemController(SwerveSystem swerveSystem, SwerveSystemConstants constants ,MAController drivController) {
     super();
@@ -29,6 +28,7 @@ public abstract class SwerveSystemController extends Command {
 
   protected void setState(SwerveState state) {
     swerveSystem.setState(state);
+    swerveSystem.getState().getOnStateEnter().run();
   }
 
   public abstract void ConfigControllers();
@@ -42,15 +42,7 @@ public abstract class SwerveSystemController extends Command {
   public void execute() {
     SetSwerveState();
 
-    if(lastState != swerveSystem.getState()) 
-    {
-      swerveSystem.getState().getOnStateEnter().run();
-      lastState = swerveSystem.getState();
-    }
-
-
-    swerveSystem.getState().getOnStateEnter().run();
-
+    swerveSystem.getState().getOnStateRuning().run();
 
     currentSpeeds = swerveSystem.getState().getSpeeds();
     logCurrentState();

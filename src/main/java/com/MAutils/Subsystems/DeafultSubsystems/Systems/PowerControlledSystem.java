@@ -2,33 +2,40 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.RobotControl.SubsystemState;
+import com.MAutils.Simulation.SimulationManager;
+import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
-import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOSim;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReplay;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
 
 import frc.robot.Robot;
 
 public abstract class PowerControlledSystem extends StateSubsystem{
 
-    protected final PowerSystemIO systemIO;
+    protected PowerSystemIO systemIO;
 
-    public PowerControlledSystem(String name,PowerSystemConstants systemConstants, SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new PowerIOReal(name, systemConstants);
-        } else {
-            systemIO = new PowerIOSim(name, systemConstants);
+    public PowerControlledSystem(PowerSystemConstants systemConstants) {
+        super(systemConstants.systemName);
+        systemIO = new PowerIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            if (Constants.SIMULATION_TYPE == SimulationType.SIM) {
+                SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            } else {
+                systemIO = new PowerIOReplay(systemConstants);
+            }
         }
     }
 
-    public PowerControlledSystem(String name,PowerSystemConstants systemConstants, PowerSystemIO simIO ,SubsystemState... subsystemStates) {
-        super(name, subsystemStates);
-        if (Robot.isReal()) {
-            systemIO = new PowerIOReal(name, systemConstants);
-        } else {
-            systemIO = simIO;
+    public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO) {
+        super(systemConstants.systemName);
+        systemIO = new PowerIOReal(systemConstants);
+
+        if (!Robot.isReal()) {
+            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
         }
     }
 

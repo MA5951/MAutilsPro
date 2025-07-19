@@ -44,7 +44,7 @@ public class GyroPiegon implements GyroIO {
         accelY = piegon.getAccelerationY(false);
         
 
-        StatusSignalsRunner.registerSignals(yawAngle, pitchAngle, rollAngle, yawRate, accelX , accelY);
+        StatusSignalsRunner.registerSignals(constants.PIEGEON_CAN_ID ,yawAngle, pitchAngle, rollAngle, yawRate, accelX , accelY);
 
         yawTimestampQueue = PhoenixOdometryThread.getInstance(constants).makeTimestampQueue();
         yawPositionQueue = PhoenixOdometryThread.getInstance(constants).registerSignal(piegon.getYaw());

@@ -5,12 +5,12 @@ import com.MAutils.Components.Motor;
 import com.MAutils.Logger.MALog;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Utils.ConvUtil;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -20,52 +20,51 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class PowerIOReal implements PowerSystemIO {
 
-    private final int numOfMotors;
-    private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    protected final VoltageOut voltageRequest = new VoltageOut(0);
+    protected final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
     private final MotorOutputConfigs brakeConfig = new MotorOutputConfigs();
-    private final StrictFollower[] followers;
+    protected StrictFollower follower;
 
     private StatusSignal<AngularVelocity> motorVelocity;
     private StatusSignal<Angle> motorPosition;
     private StatusSignal<Current> motorCurrent;
     private StatusSignal<Voltage> motorVoltage;
 
-    private final String logPath;
+    protected final String logPath;
+
 
     private final PowerSystemConstants systemConstants;
 
-    private int i = 0;
-
-    public PowerIOReal(String subsystemName ,PowerSystemConstants systemConstants) {
+    public PowerIOReal(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        numOfMotors = systemConstants.MOTORS.length;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + subsystemName + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.systemName + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
-        followers = new StrictFollower[numOfMotors - 1];
+        motorVelocity = systemConstants.master.motorController.getVelocity(false);
+        motorCurrent = systemConstants.master.motorController.getStatorCurrent(false);
+        motorVoltage = systemConstants.master.motorController.getMotorVoltage(false);
+        motorPosition = systemConstants.master.motorController.getPosition(false);
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, motorVelocity, motorCurrent,
+                motorVoltage, motorPosition);
+
+        motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
+        systemConstants.master.motorController.getConfigurator().apply(motorConfig);
+
+        follower = new StrictFollower(systemConstants.master.canBusID.id);
 
         for (Motor motor : systemConstants.MOTORS) {
-            if (i > 0) {
-                followers[i - 1] = new StrictFollower(systemConstants.MOTORS[0].motorController.getDeviceID());
-            } else {
-                motorVelocity = motor.motorController.getVelocity(false);
-                motorCurrent = motor.motorController.getStatorCurrent(false);
-                motorVoltage = motor.motorController.getMotorVoltage(false);
-                motorPosition = motor.motorController.getPosition(false);
-                StatusSignalsRunner.registerSignals(motorVelocity, motorCurrent,
-                        motorVoltage, motorPosition);
-            }
-            TalonFX.resetSignalFrequenciesForAll(motor.motorController);
             motorConfig.MotorOutput.Inverted = motor.invert;
             motor.motorController.getConfigurator().apply(motorConfig);
-            i++;
+            motor.motorController.setControl(follower);
         }
 
     }
 
-    
+    public PowerSystemConstants getSystemConstants() {
+        return systemConstants;
+    }
+
     protected void configMotors() {
         motorConfig.Feedback.SensorToMechanismRatio = systemConstants.GEAR;
 
@@ -97,7 +96,7 @@ public class PowerIOReal implements PowerSystemIO {
 
     @Override
     public double getPosition() {
-        return motorPosition.getValueAsDouble() * systemConstants.POSITION_FACTOR; 
+        return motorPosition.getValueAsDouble() * systemConstants.POSITION_FACTOR;
     }
 
     @Override
@@ -114,13 +113,9 @@ public class PowerIOReal implements PowerSystemIO {
 
     @Override
     public void setVoltage(double volt) {
-        systemConstants.MOTORS[0].motorController.setControl(voltageRequest.withOutput(volt)
-                .withLimitForwardMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT)
-                .withLimitReverseMotion(getCurrent() > systemConstants.MOTOR_LIMIT_CURRENT));
-        i = 1;
-        while (i < numOfMotors) {
-            systemConstants.MOTORS[i].motorController.setControl(followers[i - 1]);
-        }
+        systemConstants.master.motorController.setControl(voltageRequest.withOutput(volt)
+                .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
+                .withLimitReverseMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT));
     }
 
     @Override
@@ -130,10 +125,16 @@ public class PowerIOReal implements PowerSystemIO {
         MALog.log(logPath + "/Current", getCurrent());
         MALog.log(logPath + "/Position", getPosition());
 
-        
-
     }
 
+    @Override
+    public boolean isMoving() {
+        return ConvUtil.RPStoRPM(motorVelocity.getValueAsDouble()) > 1;
+    }
 
+    @Override
+    public void restPosition(double position) {
+        systemConstants.master.motorController.setPosition(position / systemConstants.POSITION_FACTOR);
+    }
 
 }

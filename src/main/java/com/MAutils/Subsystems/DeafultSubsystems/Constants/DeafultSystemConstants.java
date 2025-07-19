@@ -2,10 +2,21 @@
 package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 
 import com.MAutils.Components.Motor;
+import com.MAutils.Components.Motor.MotorType;
+import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 @SuppressWarnings("unchecked")
 public class DeafultSystemConstants<T> {
-    public final Motor[] MOTORS;
+    public Motor[] MOTORS = new Motor[]{};
+    public final Motor master;
+    public final TalonFXSimState masterSimState;
+    public DCMotorSim motorSim;
     public double GEAR = 1;
     public double STATOR_CURRENT_LIMIT = 40;
     public boolean CURRENT_LIMIT_ENABLED = true;
@@ -15,17 +26,36 @@ public class DeafultSystemConstants<T> {
     public double PEAK_FORWARD_VOLTAGE = 12;
     public double PEAK_REVERSE_VOLTAGE = -12;
     public boolean FOC = false;
-    public double INERTIA = 0.01;
+    public double INERTIA = 0.00001;
     public double POSITION_FACTOR = 360;
     public double VELOCITY_FACTOR = 60;
+    public final String systemName;
+    public LinearSystem<N2, N1, N2> systemID;
 
-    public DeafultSystemConstants(Motor... motors) {
+    public DeafultSystemConstants(String systemName,Motor master, Motor... motors) {
         this.MOTORS = motors;
+        this.master = master;
+        this.systemName = systemName;
+
+        masterSimState = master.motorController.getSimState();
+
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
+                INERTIA, GEAR);
+
+        motorSim = new DCMotorSim(
+                systemID,
+                MotorType.getDcMotor(master.motorType,
+                        1 + MOTORS.length));
     }
 
-    
     public T withGear(double gear) {
         this.GEAR = gear;
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
+                INERTIA, GEAR);
+        motorSim = new DCMotorSim(
+                systemID,
+                MotorType.getDcMotor(master.motorType,
+                        1 + MOTORS.length));
         return (T) this;
     }
 
@@ -63,6 +93,12 @@ public class DeafultSystemConstants<T> {
 
     public T withInertia(double inertia) {
         this.INERTIA = inertia;
+        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
+                INERTIA, GEAR);
+        motorSim = new DCMotorSim(
+                systemID,
+                MotorType.getDcMotor(master.motorType,
+                        1 + MOTORS.length));
         return (T) this;
     }
 
@@ -74,6 +110,21 @@ public class DeafultSystemConstants<T> {
     public T withVelocityFactor(double velocityFactor) {
         this.VELOCITY_FACTOR = velocityFactor;
         return (T) this;
+    }
+
+    public PowerSystemConstants toPowerSystemConstants() {
+        return new PowerSystemConstants(systemName, master, MOTORS)
+                .withFOC(FOC)
+                .withGear(GEAR)
+                .withInertia(INERTIA)
+                .withIsBrake(IS_BRAKE)
+                .withLogPath(LOG_PATH)
+                .withMotorCurrentLimit(MOTOR_LIMIT_CURRENT)
+                .withPeakVoltage(PEAK_FORWARD_VOLTAGE, PEAK_REVERSE_VOLTAGE)
+                .withStatorCurrentLimit(CURRENT_LIMIT_ENABLED, STATOR_CURRENT_LIMIT)
+                .withPositionFactor(POSITION_FACTOR)
+                .withVelocityFactor(VELOCITY_FACTOR)
+                ;
     }
 
 }

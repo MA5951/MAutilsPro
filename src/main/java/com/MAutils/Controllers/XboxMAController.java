@@ -3,13 +3,13 @@ package com.MAutils.Controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-public class XboxMAController extends MAController {
+public class XboxMAController implements MAController {
     private final XboxController controller;
     private static final double TRIGGER_THRESHOLD = 0.03;
 
     public XboxMAController(int port) {
         this.controller = new XboxController(port);
-        deadbound = 0.3;
+        
     }
 
     @Override
@@ -103,33 +103,56 @@ public class XboxMAController extends MAController {
     }
 
     @Override
-    public double getRightTrigger() {
-        return controller.getRightTriggerAxis(); 
+    public double getRightTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightTriggerAxis()) * scalar;
+        }
+        return controller.getRightTriggerAxis() * scalar;
     }
 
     @Override
-    public double getLeftTrigger() {
-        return controller.getLeftTriggerAxis();  
+    public double getLeftTrigger(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftTriggerAxis()) * scalar;
+        }
+        return controller.getLeftTriggerAxis() * scalar;
     }
 
     @Override
-    public double getRightX() {
-        return controller.getRightX(); 
+    public double getRightX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightX()) * scalar;
+        }
+        return controller.getRightX() * scalar;
     }
 
     @Override
-    public double getRightY() {
-        return controller.getRightY();  
+    public double getRightY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getRightY()) * scalar;
+        }
+        return controller.getRightY() * scalar;
     }
 
     @Override
-    public double getLeftX() {
-        return controller.getLeftX();  
+    public double getLeftX(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftX()) * scalar;
+        }
+        return controller.getLeftX() * scalar;
     }
 
     @Override
-    public double getLeftY() {
-        return controller.getLeftY();  
+    public double getLeftY(boolean withDeadbound, double scalar) {
+        if (withDeadbound) {
+            return withDeadbound(controller.getLeftY()) * scalar;
+        }
+        return controller.getLeftY() * scalar;
+    }
+
+    @Override
+    public double withDeadbound(double value) {
+        return withDeadbound(value, 0.3);
     }
 
     @Override

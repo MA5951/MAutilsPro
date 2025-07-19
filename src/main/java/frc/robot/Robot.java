@@ -1,29 +1,62 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+import com.MAutils.CanBus.StatusSignalsRunner;
+import com.MAutils.Simulation.SimulationManager;
+
+import edu.wpi.first.util.datalog.DataLogIterator;
+import edu.wpi.first.util.datalog.DataLogReader;
+import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.PortMap.Arm;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
 
+  private DataLogReader dataLogReader;
+  private DataLogIterator dataLogIterator;
+  private DataLogRecord dataLogRecord;
 
+  public String findReplayLogAdvantageScope() {
+    Path advantageScopeTempPath =
+        Paths.get(System.getProperty("java.io.tmpdir"), "akit-log-path.txt");
+    String advantageScopeLogPath = null;
+    try (Scanner fileScanner = new Scanner(advantageScopeTempPath)) {
+      advantageScopeLogPath = fileScanner.nextLine();
+    } catch (IOException e) {
+    }
+    return advantageScopeLogPath;
+  }
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    
+
+    try {
+      dataLogReader = new DataLogReader(findReplayLogAdvantageScope());
+    } catch (Exception e) {
+      System.out.println(e);
+    }
 
 
     
 
+
+    
   }
 
   @Override
   public void robotPeriodic() {
-    RobotContainer.robotPeriodic();
+    StatusSignalsRunner.refreshAll();
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -37,6 +70,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    SimulationManager.autoInit();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -55,7 +89,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-frc.robot.Subsystems.Arm.Arm.getInstance().getLimitSwitchSim().setValue(false);
   }
 
   @Override
@@ -68,7 +101,6 @@ frc.robot.Subsystems.Arm.Arm.getInstance().getLimitSwitchSim().setValue(false);
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    //RobotContainer.runSelfTestCommands(null);
   }
 
   @Override
@@ -79,11 +111,12 @@ frc.robot.Subsystems.Arm.Arm.getInstance().getLimitSwitchSim().setValue(false);
 
   @Override
   public void simulationInit() {
-    RobotContainer.simulationInit(true);
+    SimulationManager.simulationInit();
   }
 
   @Override
   public void simulationPeriodic() {
-    RobotContainer.simulationPeriodic();
+    SimulationManager.updateSimulation();
   }
+
 }

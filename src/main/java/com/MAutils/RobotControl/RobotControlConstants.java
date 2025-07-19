@@ -29,6 +29,5 @@ public class RobotControlConstants {
         AUTOMATIC
     }
 
-    public static final SubsystemState IDLE = new SubsystemState("IDLE");
 
 }

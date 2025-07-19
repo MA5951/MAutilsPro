@@ -4,19 +4,21 @@ package com.MAutils.Subsystems.DeafultSubsystems.Constants;
 import com.MAutils.Components.Motor;
 import com.MAutils.Utils.GainConfig;
 
-import frc.robot.Robot;
 
 public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
     
     public GainConfig realGainConfig = new GainConfig();
     public GainConfig simGainConfig = new GainConfig()
-    .withKP(1);;
+    .withKP(1);
     public double MAX_VELOCITY = 0;
     public double TOLERANCE = 0;
+    public double WHEEL_RADIUS = 0;
 
-    public VelocitySystemConstants(double maxVelocity ,Motor... motors) {
-        super(motors);
+
+    public VelocitySystemConstants(String name, double maxVelocity, double tolerance ,Motor master,Motor... motors) {
+        super(name , master, motors);
         this.MAX_VELOCITY = maxVelocity;
+        this.TOLERANCE = tolerance;
     }
 
 
@@ -31,7 +33,16 @@ public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySyst
     }
 
     public GainConfig getGainConfig() {
-        return Robot.isReal() ? realGainConfig : simGainConfig;
+        return simGainConfig;
+    }
+
+    // public GainConfig getGainConfig() {
+    //     return Robot.isReal() ? realGainConfig : simGainConfig;
+    // }
+
+    public VelocitySystemConstants withWheelRadius(double wheelRadius) {
+        this.WHEEL_RADIUS = wheelRadius;
+        return this;
     }
 
     public VelocitySystemConstants withTolerance(double tolerance) {
