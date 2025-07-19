@@ -8,25 +8,32 @@ import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReplay;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
 import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
 public abstract class PositionControlledSystem extends StateSubsystem {
 
-    protected final PositionSystemIO systemIO;
+    protected PositionSystemIO systemIO;
 
     public PositionControlledSystem(PositionSystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
         super(systemConstants.systemName);
-        
+
         systemIO = new PositionIOReal(systemConstants);
 
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            if (Constants.SIMULATION_TYPE == SimulationType.SIM) {
+                SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            } else {
+                systemIO = new PositionIOReplay(systemConstants);
+            }
         }
 
-        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);//TODO add to others
     }
 
     public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO) {
@@ -38,7 +45,6 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         }
     }
 
-    
     public double getAppliedVolts() {
         return systemIO.getAppliedVolts();
     }

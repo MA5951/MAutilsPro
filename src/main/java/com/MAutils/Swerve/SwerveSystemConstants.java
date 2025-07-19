@@ -21,7 +21,9 @@ import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleReplay;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleSim;
 import com.MAutils.Swerve.IOs.SwerveModule.SwerveModuleTalonFX;
 import com.MAutils.Swerve.Utils.PPHolonomicDriveController;
+import com.MAutils.Utils.Constants;
 import com.MAutils.Utils.GainConfig;
+import com.MAutils.Utils.Constants.SimulationType;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -35,6 +37,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.Robot;
 
 public class SwerveSystemConstants {
 
@@ -88,10 +91,10 @@ public class SwerveSystemConstants {
         public SwerveModuleID[] MODULES_ID_ARRY;
 
         public InvertedValue[] DRIVES_INVERT = new InvertedValue[] {
-                InvertedValue.Clockwise_Positive,
-                InvertedValue.CounterClockwise_Positive,
-                InvertedValue.Clockwise_Positive,
-                InvertedValue.CounterClockwise_Positive
+                        InvertedValue.Clockwise_Positive,
+                        InvertedValue.CounterClockwise_Positive,
+                        InvertedValue.Clockwise_Positive,
+                        InvertedValue.CounterClockwise_Positive
         };
 
         // Piegon
@@ -155,17 +158,17 @@ public class SwerveSystemConstants {
 
                         .withGyro(COTS.ofPigeon2())
                         .withRobotMass(edu.wpi.first.units.Units.Kilogram.of(ROBOT_MASS))
-                        
+
                         .withSwerveModule(new SwerveModuleSimulationConfig(
-                                DRIVE_MOTOR, 
-                                TURNING_MOTOR, 
-                                DRIVE_GEAR_RATIO.gearRatio,
-                                TURNING_GEAR_RATIO, 
-                                Volts.of(0.3), 
-                                Volts.of(0.5), 
-                                Meters.of(WHEEL_RADIUS), 
-                                KilogramSquareMeters.of(0.05), 
-                                WHEEL_TYPE.coFriction))
+                                        DRIVE_MOTOR,
+                                        TURNING_MOTOR,
+                                        DRIVE_GEAR_RATIO.gearRatio,
+                                        TURNING_GEAR_RATIO,
+                                        Volts.of(0.3),
+                                        Volts.of(0.5),
+                                        Meters.of(WHEEL_RADIUS),
+                                        KilogramSquareMeters.of(0.05),
+                                        WHEEL_TYPE.coFriction))
                         .withTrackLengthTrackWidth(edu.wpi.first.units.Units.Meter.of(LENGTH),
                                         edu.wpi.first.units.Units.Meter.of(WIDTH))
                         .withBumperSize(edu.wpi.first.units.Units.Meter.of(BUMPER_WIDTH),
@@ -181,7 +184,7 @@ public class SwerveSystemConstants {
 
         }
 
-        public SwerveSystemConstants withMotors(DCMotor driveMotor, DCMotor turningMotor, 
+        public SwerveSystemConstants withMotors(DCMotor driveMotor, DCMotor turningMotor,
                         SwerveModuleID[] modulesID, CANBusID piegonCANID) {
                 this.PIEGEON_CAN_ID = piegonCANID;
                 this.MODULES_ID_ARRY = modulesID;
@@ -266,50 +269,59 @@ public class SwerveSystemConstants {
         }
 
         public SwerveModule[] getModules() {
-                // return RobotBase.isReal() ? new SwerveModule[] {
-                //                 new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),
-                //                 new SwerveModule("Front Right", this, new SwerveModuleTalonFX(this, 1)),
-                //                 new SwerveModule("Rear Left", this, new SwerveModuleTalonFX(this, 2)),
-                //                 new SwerveModule("Rear Right", this, new SwerveModuleTalonFX(this, 3)) }
-                //                 : new SwerveModule[] {
-                //                                 new SwerveModule("Front Left", this,
-                //                                                 new SwerveModuleSim(this, 0,
-                //                                                                 SWERVE_DRIVE_SIMULATION
-                //                                                                                 .getModules()[0])),
-                //                                 new SwerveModule("Front Right", this,
-                //                                                 new SwerveModuleSim(this, 1,
-                //                                                                 SWERVE_DRIVE_SIMULATION
-                //                                                                                 .getModules()[1])),
-                //                                 new SwerveModule("Rear Left", this,
-                //                                                 new SwerveModuleSim(this, 2,
-                //                                                                 SWERVE_DRIVE_SIMULATION
-                //                                                                                 .getModules()[2])),
-                //                                 new SwerveModule("Rear Right", this,
-                //                                                 new SwerveModuleSim(this, 3, SWERVE_DRIVE_SIMULATION
-                //                                                                 .getModules()[3])) };
 
+                if (!Robot.isReal()) {
+                        return Constants.SIMULATION_TYPE == SimulationType.SIM ? new SwerveModule[] {
+                                        new SwerveModule("Front Left", this,
+                                                        new SwerveModuleSim(this, 0,
+                                                                        SWERVE_DRIVE_SIMULATION
+                                                                                        .getModules()[0])),
+                                        new SwerveModule("Front Right", this,
+                                                        new SwerveModuleSim(this, 1,
+                                                                        SWERVE_DRIVE_SIMULATION
+                                                                                        .getModules()[1])),
+                                        new SwerveModule("Rear Left", this,
+                                                        new SwerveModuleSim(this, 2,
+                                                                        SWERVE_DRIVE_SIMULATION
+                                                                                        .getModules()[2])),
+                                        new SwerveModule("Rear Right", this,
+                                                        new SwerveModuleSim(this, 3, SWERVE_DRIVE_SIMULATION
+                                                                        .getModules()[3])) }
+                                        : new SwerveModule[] {
+                                                        new SwerveModule("Front Left", this,
+                                                                        new SwerveModuleReplay("Front Left")),
+                                                        new SwerveModule("Front Right", this,
+                                                                        new SwerveModuleReplay("Front Right")),
+                                                        new SwerveModule("Rear Left", this,
+                                                                        new SwerveModuleReplay("Rear Left")),
+                                                        new SwerveModule("Rear Right", this,
+                                                                        new SwerveModuleReplay("Rear Right")) };
+                }
 
                 return new SwerveModule[] {
-                                        new SwerveModule("Front Left", this, new SwerveModuleReplay("Front Left")),
-                                        new SwerveModule("Front Right", this, new SwerveModuleReplay("Front Right")),
-                                        new SwerveModule("Rear Left", this, new SwerveModuleReplay("Rear Left")),
-                                        new SwerveModule("Rear Right", this, new SwerveModuleReplay("Rear Right")) };
+                                new SwerveModule("Front Left", this, new SwerveModuleTalonFX(this, 0)),
+                                new SwerveModule("Front Right", this, new SwerveModuleTalonFX(this, 1)),
+                                new SwerveModule("Rear Left", this, new SwerveModuleTalonFX(this, 2)),
+                                new SwerveModule("Rear Right", this, new SwerveModuleTalonFX(this, 3)) };
         }
 
         public Gyro getGyro() {
-                // return RobotBase.isReal() ? new Gyro("Piegon", new GyroPiegon(this))
-                //                 : new Gyro("Sim Gyro", new GyroSim(this));
 
-                return new Gyro("Piegon Sim", new GyroReplay());
+                if (!Robot.isReal()) {
+                        return Constants.SIMULATION_TYPE == SimulationType.SIM ? new Gyro("Sim Gyro", new GyroSim(this))
+                                        : new Gyro("Piegon Sim", new GyroReplay());
+                }
+
+                return new Gyro("Piegon", new GyroPiegon(this));
         }
 
         public RobotConfig getRobotConfig() {
-                return new RobotConfig(ROBOT_MASS, MOI, 
-                new ModuleConfig(
-                        WHEEL_RADIUS, MAX_VELOCITY, WHEEL_TYPE.coFriction, DRIVE_MOTOR.withReduction(DRIVE_GEAR_RATIO.gearRatio), DRIVE__SLIP_LIMIT, 1), modulesLocationArry);
+                return new RobotConfig(ROBOT_MASS, MOI,
+                                new ModuleConfig(
+                                                WHEEL_RADIUS, MAX_VELOCITY, WHEEL_TYPE.coFriction,
+                                                DRIVE_MOTOR.withReduction(DRIVE_GEAR_RATIO.gearRatio),
+                                                DRIVE__SLIP_LIMIT, 1),
+                                modulesLocationArry);
         }
 
 }
-
-
-

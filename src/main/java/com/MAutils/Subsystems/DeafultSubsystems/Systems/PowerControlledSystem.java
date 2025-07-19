@@ -7,20 +7,26 @@ import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
+import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReplay;
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
 
 import frc.robot.Robot;
 
 public abstract class PowerControlledSystem extends StateSubsystem{
 
-    protected final PowerSystemIO systemIO;
+    protected PowerSystemIO systemIO;
 
     public PowerControlledSystem(PowerSystemConstants systemConstants) {
         super(systemConstants.systemName);
         systemIO = new PowerIOReal(systemConstants);
 
-
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            if (Constants.SIMULATION_TYPE == SimulationType.SIM) {
+                SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            } else {
+                systemIO = new PowerIOReplay(systemConstants);
+            }
         }
     }
 
