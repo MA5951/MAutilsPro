@@ -15,6 +15,8 @@ public interface VisionCameraIO {
 
     String getName();
 
+    boolean isTag();
+
     void setCameraPosition(Transform3d positionRelaticToRobot);
 
     void setPipline(int pipeline);

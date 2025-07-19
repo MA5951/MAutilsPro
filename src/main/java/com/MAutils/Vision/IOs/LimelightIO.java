@@ -6,13 +6,14 @@ import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class LimelightIO implements VisionCameraIO {
 
     private final String name;
     private RawFiducial[] blankFiducial = new RawFiducial[] { new RawFiducial(0, 0, 0, 0, 0, 0, 0) };
-    private PoseEstimate blankPoseEstimate = new PoseEstimate(new Pose2d(), 0, 0, 0, 0, 0, 0, blankFiducial, false);
+    private PoseEstimate blankPoseEstimate = new PoseEstimate(new Pose2d(-1 , -1, new Rotation2d()), 0, 0, 0, 0, 0, 0, blankFiducial, false);
     private RawFiducial[] fiducials;
     private PoseEstimate poseEstimate;
 

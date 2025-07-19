@@ -2,6 +2,8 @@ package com.MAutils.Vision.Filters;
 
 import com.MAutils.Vision.IOs.VisionCameraIO.PoseEstimateType;
 
+import edu.wpi.first.math.geometry.Rectangle2d;
+
 public class FiltesConfig {
 
     public double maxAmbiguity = 0.25;                // Reject if ambiguity > this
@@ -16,6 +18,8 @@ public class FiltesConfig {
 
     public boolean requireTagWhitelist = false;       // Enable tag whitelist
     public int[] tagWhitelist = new int[0];           // Whitelisted tag IDs (if enabled)
+
+    public Rectangle2d fieldRactangle;
 
     public PoseEstimateType poseEstimateType = PoseEstimateType.MT2; // Use MegaTag2 for pose estimates
 }
