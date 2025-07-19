@@ -23,7 +23,7 @@ public interface VisionCameraIO {
 
     void setCrop(double cropXMin, double cropXMax, double cropYMin, double cropYMax);
 
-    void filterTags(int[] tags);
+    void allowTags(int[] tags);
 
     void takeSnapshot();
 

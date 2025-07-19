@@ -8,6 +8,7 @@ import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Timer;
 
 public class LimelightIO implements VisionCameraIO {
 
@@ -33,16 +34,23 @@ public class LimelightIO implements VisionCameraIO {
     }
 
     public void setCrop(double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
+        LimelightHelpers.setCropWindow(name, cropXMin, cropXMax, cropYMin, cropYMax);
     }
 
-    public void filterTags(int[] tags) {
+    public void allowTags(int[] tags) {
+        LimelightHelpers.SetFiducialIDFiltersOverride(name, tags);
     }
 
     public void takeSnapshot() {
+        LimelightHelpers.takeSnapshot(name, "Snapshot_" + Timer.getFPGATimestamp());
     }
 
     public int getPipline() {
         return (int) LimelightHelpers.getCurrentPipelineIndex(name);
+    }
+
+    public boolean isTag() {
+        return LimelightHelpers.getTV(name);
     }
 
     public RawFiducial getTag() {
