@@ -1,5 +1,6 @@
 package com.MAutils.PoseEstimation;
 
+
 import com.MAutils.Logger.MALog;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
@@ -31,20 +32,23 @@ public class SwerveDriveEstimator {
 
     private final SkidDetector skidDetector;
     private final CollisionDetector collisionDetector;
-    private final FOMPoseEstimator fomPoseEstimator;
     private boolean colliding = false;
     private double translationFOM;
     private boolean[] skipModule = new boolean[4];
 
-    public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem,
-            FOMPoseEstimator fomPoseEstimator) {
-        this.fomPoseEstimator = fomPoseEstimator;
+    private PoseEstimatorSource poseEstimatorSourceGyro;
+    private PoseEstimatorSource poseEstimatorSourceTranslation;
+
+    public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem) {
         this.kinematics = swerveConstants.kinematics;
         this.swerveSystem = swerveSystem;
         this.lastGyroRotation = Rotation2d.fromDegrees(swerveSystem.getGyroData().yaw);
 
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
+
+        this.poseEstimatorSourceGyro = new PoseEstimatorSource(() -> getRotationFOM());
+        this.poseEstimatorSourceTranslation = new PoseEstimatorSource(() -> getTranslationFOM());
     }
 
     // Deltas
@@ -55,10 +59,10 @@ public class SwerveDriveEstimator {
         return modulesTwist;
     }
 
-    public double getGyroDelta(Rotation2d currentGyro) {
+    public Twist2d getGyroDelta(Rotation2d currentGyro) {
         gyroDelta = currentGyro.minus(lastGyroRotation).getRadians();
         lastGyroRotation = currentGyro;
-        return gyroDelta;
+        return new Twist2d(0, 0, gyroDelta);
     }
 
     // FOMs
@@ -75,7 +79,6 @@ public class SwerveDriveEstimator {
                 || swerveSystem.getGyroData().roll > MAX_UPDATE_ANGLE) {
             return 0.0;
         }
-
 
         return 1.0 - (skidDetector.getNumOfSkiddingModules() * 0.25);
     }
@@ -96,19 +99,19 @@ public class SwerveDriveEstimator {
             skipModule = skidDetector.getIsSkidding();
 
             if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
-            skipModule[0] = true;
-            skipModule[1] = true;
+                skipModule[0] = true;
+                skipModule[1] = true;
             } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
-            skipModule[2] = true;
-            skipModule[3] = true;
+                skipModule[2] = true;
+                skipModule[3] = true;
             }
 
             if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
-            skipModule[0] = true;
-            skipModule[2] = true;
+                skipModule[0] = true;
+                skipModule[2] = true;
             } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
-            skipModule[1] = true;
-            skipModule[3] = true;
+                skipModule[1] = true;
+                skipModule[3] = true;
             }
 
             double[] sampleTimestamps = swerveSystem.getGyroData().odometryYawTimestamps;
@@ -119,18 +122,19 @@ public class SwerveDriveEstimator {
 
                     if (skipModule[j]) {
                         lastPositions[j] = wheelPositions[j];
-                        
+
                     }
                 }
 
-                fomPoseEstimator.addTranslationDelta(
+                poseEstimatorSourceTranslation.sendDataWiteTimestemp(
                         getTranslationDelta(wheelPositions),
-                        1);
+                        sampleTimestamps[i]);
 
-                fomPoseEstimator.addRotationDelta(
+                poseEstimatorSourceGyro.sendDataWiteTimestemp(
                         getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]),
-                        1);
-                
+                        sampleTimestamps[i]);
+
+
             }
 
         }
