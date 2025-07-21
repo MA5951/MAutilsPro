@@ -18,7 +18,7 @@ public class FOMPoseEstimator extends SubsystemBase {
     private static final TimeInterpolatableBuffer<Pose2d> poseHistory =
         TimeInterpolatableBuffer.createBuffer(2.0);
 
-        public void addTwistMeasurement(Twist2d delta, double odomFOM, double timestamp) {
+        public static void addTwistMeasurement(Twist2d delta, double odomFOM, double timestamp) {
             Optional<Pose2d> optPast = poseHistory.getSample(timestamp);
             if (optPast.isEmpty()) {
                 return;
