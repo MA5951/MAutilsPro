@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
 
-public class FOMPoseEstimator extends SubsystemBase {
+public class FOMPoseEstimator extends SubsystemBase {//FOM
+    
     private static Pose2d currentPose = new Pose2d();
     private static double currentFOM = 1;
     private static final TimeInterpolatableBuffer<Pose2d> poseHistory =
