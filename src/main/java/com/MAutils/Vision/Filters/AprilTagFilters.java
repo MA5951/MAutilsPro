@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AprilTagFilters {
+    public static final double fomCoefficient = 0.1;
 
     private FiltesConfig filtersConfig;
     private VisionCameraIO visionCameraIO;
@@ -23,6 +24,9 @@ public class AprilTagFilters {
     private double ambiguityFOM;
     private double distanceFOM;
     private double poseJumpFOM;
+    private double tagsFOM;
+
+    private double currentFOM;
 
     public AprilTagFilters(FiltesConfig filtersConfig, VisionCameraIO visionCameraIO, Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         this.filtersConfig = filtersConfig;
@@ -39,12 +43,12 @@ public class AprilTagFilters {
         visionPose = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
         chassisSpeeds = chassiSpeedsSupplier.get();
         
-        velocityFOM = 
-        
         if (!visionCameraIO.isTag() || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation()) 
-        ) return 0;
+        ) return Double.MAX_VALUE;
 
 
+        currentFOM = fomCoefficient * Math.pow(visionPose.avgTagDist, 1.2) / Math.pow(visionPose.tagCount, 2);
+        
 
 
     }
