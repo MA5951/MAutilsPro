@@ -48,17 +48,9 @@ public class AprilTagFilters {
 
 
         currentFOM = fomCoefficient * Math.pow(visionPose.avgTagDist, 1.2) / Math.pow(visionPose.tagCount, 2);
-        
 
 
-    }
 
-    private boolean isTagWhitelisted(int tagID) {
-        for (int id : filtersConfig.tagWhitelist) {
-            if (id == tagID)
-                return true;
-        }
-        return false;
     }
 
     private double clamp(double value, double min, double max) {

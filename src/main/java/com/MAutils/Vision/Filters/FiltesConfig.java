@@ -17,7 +17,6 @@ public class FiltesConfig {
     public double fieldOfViewLimitYDeg = 20.0;        // Reject if ty near vertical edge
 
     public boolean requireTagWhitelist = false;       // Enable tag whitelist
-    public int[] tagWhitelist = new int[0];           // Whitelisted tag IDs (if enabled)
 
     public Rectangle2d fieldRactangle;
 
