@@ -6,35 +6,30 @@ import com.MAutils.Vision.IOs.VisionCameraIO;
 import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AprilTagFilters {
     public static final double fomCoefficient = 0.1;
+    public static final double ambiguityCoefficient = 0.2;
 
-    private FiltesConfig filtersConfig;
+    private FiltersConfig filtersConfig;
     private VisionCameraIO visionCameraIO;
     private RawFiducial tag;
     private PoseEstimate visionPose;
     private Supplier<ChassisSpeeds> chassiSpeedsSupplier;
+    @SuppressWarnings("unused")
     private ChassisSpeeds chassisSpeeds;
 
-    private double velocityFOM;
-    private double ambiguityFOM;
-    private double distanceFOM;
-    private double poseJumpFOM;
-    private double tagsFOM;
 
     private double currentFOM;
 
-    public AprilTagFilters(FiltesConfig filtersConfig, VisionCameraIO visionCameraIO, Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
+    public AprilTagFilters(FiltersConfig filtersConfig, VisionCameraIO visionCameraIO, Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         this.filtersConfig = filtersConfig;
         this.visionCameraIO = visionCameraIO;
         this.chassiSpeedsSupplier = chassisSpeedsSupplier;
     }
 
-    public void updateFiltersConfig(FiltesConfig newConfig) {
+    public void updateFiltersConfig(FiltersConfig newConfig) {
         this.filtersConfig = newConfig;
     }
 
@@ -43,17 +38,14 @@ public class AprilTagFilters {
         visionPose = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
         chassisSpeeds = chassiSpeedsSupplier.get();
         
-        if (!visionCameraIO.isTag() || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation()) 
+        if (!visionCameraIO.isTag() || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation()) || tag.ambiguity > 0.7
         ) return Double.MAX_VALUE;
 
 
-        currentFOM = fomCoefficient * Math.pow(visionPose.avgTagDist, 1.2) / Math.pow(visionPose.tagCount, 2);
+        currentFOM = (fomCoefficient * Math.pow(visionPose.avgTagDist, 1.2) / Math.pow(visionPose.tagCount, 2)) * (1 + ambiguityCoefficient * tag.ambiguity);
 
-
+        return currentFOM;
 
     }
 
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(value, max));
-    }
 }

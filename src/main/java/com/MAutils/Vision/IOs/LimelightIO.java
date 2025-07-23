@@ -1,6 +1,8 @@
 
 package com.MAutils.Vision.IOs;
 
+import com.MAutils.Utils.Constants;
+import com.MAutils.Utils.Constants.SimulationType;
 import com.MAutils.Vision.Util.LimelightHelpers;
 import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
@@ -9,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 
 public class LimelightIO implements VisionCameraIO {
 
@@ -19,6 +22,12 @@ public class LimelightIO implements VisionCameraIO {
     private PoseEstimate poseEstimate;
 
     public LimelightIO(String name) {
+        
+
+        if (!Robot.isReal() && Constants.SIMULATION_TYPE == SimulationType.REPLAY) {
+            this.name = "Replay/" + name;
+        }
+
         this.name = name;
     }
 
