@@ -5,7 +5,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.FOMPoseEstimator;
 import com.MAutils.PoseEstimation.SwerveDriveEstimator;
 import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SwerveSimulation;
@@ -26,7 +25,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Swerve.SwerveConstants;
 
 public class SwerveSystem extends SubsystemBase {
     private static SwerveSystem instance;
@@ -59,7 +57,7 @@ public class SwerveSystem extends SubsystemBase {
             SimulationManager.registerSimulatable(new SwerveSimulation(swerveConstants));
         }
 
-        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this, FOMPoseEstimator.getInstance());
+        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this);
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 

@@ -2,6 +2,7 @@ package frc.robot;
 
 
 
+import com.MAutils.PoseEstimation.FOMPoseEstimator;
 import com.MAutils.RobotControl.DeafultRobotContainer;
 import com.MAutils.Swerve.SwerveSystem;
 
@@ -16,6 +17,7 @@ public class RobotContainer extends DeafultRobotContainer{
   public RobotContainer() {
     super();
 
+    new FOMPoseEstimator();
     CommandScheduler.getInstance().setDefaultCommand(swerve, new SwerveTeleopController());
   }
 

@@ -1,8 +1,18 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.Subsystems.Vision;
 
-/** Add your docs here. */
-public class VisionConstants {}
+import com.MAutils.Vision.Filters.FiltersConfig;
+import com.MAutils.Vision.IOs.AprilTagCamera;
+import com.MAutils.Vision.IOs.LimelightIO;
+
+public class VisionConstants {
+
+
+    public static final AprilTagCamera frontLeftLimelight = new AprilTagCamera(
+        new LimelightIO("limelight-frontl"), new FiltersConfig());
+
+
+
+
+
+}

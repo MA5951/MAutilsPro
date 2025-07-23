@@ -26,9 +26,10 @@ public class LimelightIO implements VisionCameraIO {
 
         if (!Robot.isReal() && Constants.SIMULATION_TYPE == SimulationType.REPLAY) {
             this.name = "Replay/" + name;
+        } else {
+            this.name = name;
         }
 
-        this.name = name;
     }
 
     public void setCameraPosition(Transform3d positionRelaticToRobot) {

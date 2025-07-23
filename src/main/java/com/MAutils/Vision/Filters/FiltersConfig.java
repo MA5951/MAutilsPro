@@ -25,4 +25,7 @@ public class FiltersConfig {
     public final Rectangle2d fieldRactangle = new Rectangle2d(FieldZeroCorner, FieldFarCorner);
 
     public PoseEstimateType poseEstimateType = PoseEstimateType.MT2; // Use MegaTag2 for pose estimates
+
+    public FiltersConfig() {
+    }
 }

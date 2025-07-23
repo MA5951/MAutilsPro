@@ -6,11 +6,13 @@ import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Utils.CollisionDetector;
 import com.MAutils.Swerve.Utils.SkidDetector;
+import com.MAutils.Utils.Constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SwerveDriveEstimator {
     private final double MAX_UPDATE_ANGLE = 10.0;
@@ -47,8 +49,8 @@ public class SwerveDriveEstimator {
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
 
-        this.poseEstimatorSourceGyro = new PoseEstimatorSource(() -> getRotationFOM());
-        this.poseEstimatorSourceTranslation = new PoseEstimatorSource(() -> getTranslationFOM());
+        this.poseEstimatorSourceGyro = new PoseEstimatorSource(() -> 1d);//() -> getRotationFOM()
+        this.poseEstimatorSourceTranslation = new PoseEstimatorSource(() -> Constants.EPSILON);//() -> getTranslationFOM()
     }
 
     // Deltas
@@ -95,24 +97,24 @@ public class SwerveDriveEstimator {
         translationFOM = 1;
         MALog.log("/Pose Estimator/Translation FOM", translationFOM);
 
-        if (translationFOM != 0) {
-            skipModule = skidDetector.getIsSkidding();
+        if (true) {//
+            // skipModule = skidDetector.getIsSkidding();
 
-            if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
-                skipModule[0] = true;
-                skipModule[1] = true;
-            } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
-                skipModule[2] = true;
-                skipModule[3] = true;
-            }
+            // if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
+            //     skipModule[0] = true;
+            //     skipModule[1] = true;
+            // } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
+            //     skipModule[2] = true;
+            //     skipModule[3] = true;
+            // }
 
-            if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
-                skipModule[0] = true;
-                skipModule[2] = true;
-            } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
-                skipModule[1] = true;
-                skipModule[3] = true;
-            }
+            // if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
+            //     skipModule[0] = true;
+            //     skipModule[2] = true;
+            // } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
+            //     skipModule[1] = true;
+            //     skipModule[3] = true;
+            //}
 
             double[] sampleTimestamps = swerveSystem.getGyroData().odometryYawTimestamps;
             for (int i = 0; i < sampleTimestamps.length; i++) {
@@ -120,19 +122,22 @@ public class SwerveDriveEstimator {
                 for (int j = 0; j < 4; j++) {
                     wheelPositions[j] = swerveSystem.getSwerveModules()[j].getOdometryPositions()[i];
 
-                    if (skipModule[j]) {
-                        lastPositions[j] = wheelPositions[j];
+                    // if (skipModule[j]) {
+                    //     lastPositions[j] = wheelPositions[j];
 
-                    }
+                    // }
                 }
 
                 poseEstimatorSourceTranslation.sendDataWiteTimestemp(
                         getTranslationDelta(wheelPositions),
-                        sampleTimestamps[i]);
+                        //new Twist2d(0.111, 0, 0),
+                        sampleTimestamps[i]
+                        //Timer.getFPGATimestamp()
+                        );
 
-                poseEstimatorSourceGyro.sendDataWiteTimestemp(
-                        getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]),
-                        sampleTimestamps[i]);
+                // poseEstimatorSourceGyro.sendDataWiteTimestemp(
+                //         getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]),
+                //         sampleTimestamps[i]);
 
 
             }
