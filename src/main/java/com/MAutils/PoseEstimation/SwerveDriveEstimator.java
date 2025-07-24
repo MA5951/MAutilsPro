@@ -49,8 +49,10 @@ public class SwerveDriveEstimator {
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
 
-        this.poseEstimatorSourceGyro = new PoseEstimatorSource(() -> 1d);//() -> getRotationFOM()
-        this.poseEstimatorSourceTranslation = new PoseEstimatorSource(() -> Constants.EPSILON);//() -> getTranslationFOM()
+        this.poseEstimatorSourceGyro = new PoseEstimatorSource();//() -> getRotationFOM()
+        this.poseEstimatorSourceTranslation = new PoseEstimatorSource();//() -> getTranslationFOM()
+
+        PoseEstimator.addSource(poseEstimatorSourceTranslation);
     }
 
     // Deltas
@@ -128,11 +130,9 @@ public class SwerveDriveEstimator {
                     // }
                 }
 
-                poseEstimatorSourceTranslation.sendDataWiteTimestemp(
-                        getTranslationDelta(wheelPositions),
-                        //new Twist2d(0.111, 0, 0),
+                poseEstimatorSourceTranslation.addMeasurement(
+                        getTranslationDelta(wheelPositions), Constants.EPSILON,
                         sampleTimestamps[i]
-                        //Timer.getFPGATimestamp()
                         );
 
                 // poseEstimatorSourceGyro.sendDataWiteTimestemp(

@@ -3,8 +3,12 @@ package frc.robot;
 
 
 import com.MAutils.CanBus.StatusSignalsRunner;
+import com.MAutils.Logger.MALog;
+import com.MAutils.PoseEstimation.PoseEstimator;
 import com.MAutils.Simulation.SimulationManager;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,7 +20,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-
+    PoseEstimator.resetPose(new Pose2d(2,2,new Rotation2d()));
     
   }
 
@@ -24,6 +28,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     StatusSignalsRunner.refreshAll();
     CommandScheduler.getInstance().run();
+
+    MALog.log("/Pose Estimator/FOM Pose", PoseEstimator.update());
+    MALog.log("/Pose Estimator/Robot FOM", PoseEstimator.getRobotFOM());
   }
 
   @Override
