@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AprilTagFilters {
     public static final double fomCoefficient = 0.1;
-    public static final double ambiguityCoefficient = 0.2;
+    public static final double ambiguityCoefficient = 2;
 
     private FiltersConfig filtersConfig;
     private VisionCameraIO visionCameraIO;
@@ -20,10 +20,10 @@ public class AprilTagFilters {
     @SuppressWarnings("unused")
     private ChassisSpeeds chassisSpeeds;
 
-
     private double currentFOM;
 
-    public AprilTagFilters(FiltersConfig filtersConfig, VisionCameraIO visionCameraIO, Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
+    public AprilTagFilters(FiltersConfig filtersConfig, VisionCameraIO visionCameraIO,
+            Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         this.filtersConfig = filtersConfig;
         this.visionCameraIO = visionCameraIO;
         this.chassiSpeedsSupplier = chassisSpeedsSupplier;
@@ -34,18 +34,39 @@ public class AprilTagFilters {
     }
 
     public double getFOM() {
-        tag = visionCameraIO.getTag();
-        visionPose = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
-        chassisSpeeds = chassiSpeedsSupplier.get();
-        
-        if (!visionCameraIO.isTag() || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation()) || tag.ambiguity > 0.7
-        ) return Double.MAX_VALUE;
-
-
-        currentFOM = (fomCoefficient * Math.pow(visionPose.avgTagDist, 1.2) / Math.pow(visionPose.tagCount, 2)) * (1 + ambiguityCoefficient * tag.ambiguity);
-
-        return currentFOM;
-
+        tag         = visionCameraIO.getTag();
+        visionPose  = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
+    
+        // if no valid tag, out‐of‐bounds, or too ambiguous, zero confidence
+        if (!visionCameraIO.isTag() || visionPose.pose.getX() == 0
+            || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation())
+            || tag.ambiguity > 0.7) {
+          return 0.0;
+        }
+    
+        // avoid divide‐by‐zero:
+        int count = Math.max(1, visionPose.tagCount);
+    
+        // compute your “sigma” in a local variable
+        double sigma = fomCoefficient
+                     * Math.pow(visionPose.avgTagDist, 1.2)
+                     / (count * count)
+                     * (1 + ambiguityCoefficient * (tag.ambiguity - 0.3));
+    
+        // if sigma is NaN or negative, treat as “no confidence”
+        if (Double.isNaN(sigma) || sigma < 0) {
+          return 0.0;
+        }
+    
+        // map σ → [0…1] via 1/(1+σ)
+        double raw = 1.0 / (1.0 + sigma);
+    
+        // clamp and handle infinities
+        if (!Double.isFinite(raw)) {
+          return 0.0;
+        }
+        return Math.max(0.0, Math.min(1.0, raw));
     }
+    
 
 }

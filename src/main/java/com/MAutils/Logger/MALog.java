@@ -30,7 +30,7 @@ public class MALog {
 
     private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
     private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("/MALog");
-    private static final NetworkTable replayTable = NetworkTableInstance.getDefault().getTable("/Replay");
+    private static final NetworkTable replayTable = NetworkTableInstance.getDefault().getTable("/Replay/MALog");
     private static final Map<String, NetworkTableEntry> entries = new HashMap<>();
     private static final Map<String, StructPublisher<Pose2d>> pose2dPublishers = new HashMap<>();
     private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();

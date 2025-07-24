@@ -1,6 +1,9 @@
 package com.MAutils.PoseEstimation;
 
 import java.util.*;
+
+import com.MAutils.Utils.Constants;
+
 import edu.wpi.first.math.geometry.Twist2d;
 
 public class PoseEstimatorSource {
@@ -18,6 +21,7 @@ public class PoseEstimatorSource {
     }
 
     public synchronized void addMeasurement(Twist2d delta, double fom, double timestamp) {
+        if (fom <= 0) fom = Constants.EPSILON;
         Measurment p = new Measurment(delta, fom, timestamp);
         int idx = Collections.binarySearch(buffer, p, Comparator.comparingDouble(x -> x.timestamp));
         if (idx < 0) idx = -idx - 1;

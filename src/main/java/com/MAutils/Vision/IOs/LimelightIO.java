@@ -15,7 +15,8 @@ import frc.robot.Robot;
 
 public class LimelightIO implements VisionCameraIO {
 
-    private final String name;
+    private final String logName;
+    private final String cameraName;
     private RawFiducial[] blankFiducial = new RawFiducial[] { new RawFiducial(0, 0, 0, 0, 0, 0, 0) };
     private PoseEstimate blankPoseEstimate = new PoseEstimate(new Pose2d(-1 , -1, new Rotation2d()), 0, 0, 0, 0, 0, 0, blankFiducial, false);
     private RawFiducial[] fiducials;
@@ -25,42 +26,44 @@ public class LimelightIO implements VisionCameraIO {
         
 
         if (!Robot.isReal() && Constants.SIMULATION_TYPE == SimulationType.REPLAY) {
-            this.name = "Replay/" + name;
+            this.cameraName = "Replay/" + name;
         } else {
-            this.name = name;
+            this.cameraName = name;
         }
+
+        logName = name;
 
     }
 
     public void setCameraPosition(Transform3d positionRelaticToRobot) {
-        LimelightHelpers.setCameraPose_RobotSpace(name, positionRelaticToRobot.getY(), positionRelaticToRobot.getX(),
+        LimelightHelpers.setCameraPose_RobotSpace(cameraName, positionRelaticToRobot.getY(), positionRelaticToRobot.getX(),
                 positionRelaticToRobot.getZ(),
                 positionRelaticToRobot.getRotation().getX(), positionRelaticToRobot.getRotation().getY(),
                 positionRelaticToRobot.getRotation().getZ());
     }
 
     public void setPipline(int pipeline) {
-        LimelightHelpers.setPipelineIndex(name, pipeline);
+        LimelightHelpers.setPipelineIndex(cameraName, pipeline);
     }
 
     public void setCrop(double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
-        LimelightHelpers.setCropWindow(name, cropXMin, cropXMax, cropYMin, cropYMax);
+        LimelightHelpers.setCropWindow(cameraName, cropXMin, cropXMax, cropYMin, cropYMax);
     }
 
     public void allowTags(int[] tags) {
-        LimelightHelpers.SetFiducialIDFiltersOverride(name, tags);
+        LimelightHelpers.SetFiducialIDFiltersOverride(cameraName, tags);
     }
 
     public void takeSnapshot() {
-        LimelightHelpers.takeSnapshot(name, "Snapshot_" + Timer.getFPGATimestamp());
+        LimelightHelpers.takeSnapshot(cameraName, "Snapshot_" + Timer.getFPGATimestamp());
     }
 
     public int getPipline() {
-        return (int) LimelightHelpers.getCurrentPipelineIndex(name);
+        return (int) LimelightHelpers.getCurrentPipelineIndex(cameraName);
     }
 
     public boolean isTag() {
-        return LimelightHelpers.getTV(name);
+        return LimelightHelpers.getTV(cameraName);
     }
 
     public RawFiducial getTag() {
@@ -68,14 +71,14 @@ public class LimelightIO implements VisionCameraIO {
     }
 
     public RawFiducial[] getFiducials() {
-        fiducials = LimelightHelpers.getRawFiducials(name);
+        fiducials = LimelightHelpers.getRawFiducials(cameraName);
         return fiducials.length > 0 ? fiducials : blankFiducial;
     }
 
     public PoseEstimate getPoseEstimate(PoseEstimateType type) {
         poseEstimate = type == PoseEstimateType.MT2
-                ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name)
-                : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+                ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName)
+                : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
         blankPoseEstimate.isMegaTag2 = type == PoseEstimateType.MT2;
 
@@ -85,7 +88,7 @@ public class LimelightIO implements VisionCameraIO {
 
     @Override
     public String getName() {
-        return name;
+        return logName;
     }
 
 }

@@ -30,6 +30,7 @@ public class Camera {
         MALog.log("/Subsystems/Vision/Cameras/" + name +"/Target/Tx", tag.txnc);
         MALog.log("/Subsystems/Vision/Cameras/" + name +"/Target/Ty", tag.tync);
         MALog.log("/Subsystems/Vision/Cameras/" + name +"/Target/Ta", tag.ta);
+
     }
 
 }
