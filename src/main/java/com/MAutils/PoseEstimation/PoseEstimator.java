@@ -28,7 +28,7 @@ public class PoseEstimator {
 
     /** Initialize with your starting pose & t=now. */
 
-    public void resetPose(Pose2d newPose) {
+    public static void resetPose(Pose2d newPose) {
         double now = Timer.getFPGATimestamp();
         // 1) Clear any pending applied‐twists
         history.clear();

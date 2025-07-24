@@ -1,56 +1,48 @@
-
 package com.MAutils.PoseEstimation;
 
-import java.util.function.Supplier;
-
+import java.util.*;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.wpilibj.Timer;
 
 public class PoseEstimatorSource {
-
-    private Supplier<Double> fomSupplier;
-    private Twist2d delta;
-    private double fom;
-    private double fpgaTimeStemp;
-
-    public PoseEstimatorSource(Supplier<Double> fomSupplier) {
-        this.fomSupplier = fomSupplier;
+    private static class Measurment {
+        final Twist2d twist;
+        final double fom, timestamp;
+        Measurment(Twist2d t, double f, double ts) {
+            twist = t; fom = f; timestamp = ts;
+        }
     }
 
-    public void sendDataWiteTimestemp(Twist2d delta, double fpgaTimeStemp) {
-        this.delta = delta;
-        fom = fomSupplier.get();
-        this.fpgaTimeStemp = fpgaTimeStemp;
+    private final List<Measurment> buffer = new ArrayList<>();
+
+    public PoseEstimatorSource() {
     }
 
-    public void sendDataWiteTimestemp(Twist2d delta, double fom ,double fpgaTimeStemp) {
-        this.delta = delta;
-        this.fom = fom;
-        this.fpgaTimeStemp = fpgaTimeStemp;
+    public synchronized void addMeasurement(Twist2d delta, double fom, double timestamp) {
+        Measurment p = new Measurment(delta, fom, timestamp);
+        int idx = Collections.binarySearch(buffer, p, Comparator.comparingDouble(x -> x.timestamp));
+        if (idx < 0) idx = -idx - 1;
+        buffer.add(idx, p);
     }
 
-    public void sendDataLatency(Twist2d delta, double latencyFromFpga) {
-        this.delta = delta;
-        this.fom = fomSupplier.get(); 
-        this.fpgaTimeStemp = Timer.getFPGATimestamp() - latencyFromFpga;
+    public synchronized boolean hasBefore(double t) {
+        return !buffer.isEmpty() && buffer.get(0).timestamp < t;
     }
 
-    public void sendDataLatency(Twist2d delta, double fom ,double latencyFromFpga) {
-        this.delta = delta;
-        this.fom = fom;
-        this.fpgaTimeStemp = Timer.getFPGATimestamp() - latencyFromFpga;
+    public synchronized Twist2d getTwistAt(double t) {
+        for (int i = buffer.size() - 1; i >= 0; i--) {
+            if (buffer.get(i).timestamp <= t) {
+                return buffer.get(i).twist;
+            }
+        }
+        return new Twist2d();
     }
 
-    public Twist2d getDelta() {
-        return delta;
+    public synchronized double getFomAt(double t) {
+        for (int i = buffer.size() - 1; i >= 0; i--) {
+            if (buffer.get(i).timestamp <= t) {
+                return buffer.get(i).fom;
+            }
+        }
+        return 0.0;
     }
-
-    public double getFom() {
-        return fom;
-    }
-
-    public double getFpgaTimeStemp() {
-        return fpgaTimeStemp;
-    }
-
 }

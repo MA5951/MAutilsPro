@@ -2,7 +2,6 @@
 package com.MAutils.Vision.IOs;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.FOMPoseEstimator;
 import com.MAutils.PoseEstimation.PoseEstimatorSource;
 import com.MAutils.Vision.Filters.AprilTagFilters;
 import com.MAutils.Vision.Filters.FiltersConfig;
@@ -22,7 +21,7 @@ public class AprilTagCamera extends Camera {
     private PoseEstimate poseEstimate;
     private double fom;
 
-    private final PoseEstimatorSource poseEstimatorSource;
+    //private final PoseEstimatorSource poseEstimatorSource;
 
 
     public AprilTagCamera(VisionCameraIO cameraIO, FiltersConfig filterConfig) {
@@ -32,7 +31,7 @@ public class AprilTagCamera extends Camera {
         this.autoConfig = filterConfig;
 
         this.aprilTagFilters = new AprilTagFilters(filterConfig, cameraIO, () -> new ChassisSpeeds());
-        poseEstimatorSource = new PoseEstimatorSource(aprilTagFilters::getFOM);
+        //poseEstimatorSource = new PoseEstimatorSource(aprilTagFilters::getFOM);
     }
 
     public AprilTagCamera(VisionCameraIO cameraIO, FiltersConfig teleopConfig, FiltersConfig autoConfig) {
@@ -42,7 +41,7 @@ public class AprilTagCamera extends Camera {
         this.autoConfig = autoConfig;
 
         this.aprilTagFilters = new AprilTagFilters(teleopConfig, cameraIO, () -> new ChassisSpeeds());
-        poseEstimatorSource = new PoseEstimatorSource(aprilTagFilters::getFOM);
+        //poseEstimatorSource = new PoseEstimatorSource(aprilTagFilters::getFOM);
     }
 
     public void setUpdatePoseEstimate(boolean updatePoseEstiamte) {
@@ -62,9 +61,9 @@ public class AprilTagCamera extends Camera {
         if (updatePoseEstiamte) {
             fom = aprilTagFilters.getFOM();
             MALog.log("/Subsystems/Vision/Cameras/" + name + "/FOM", fom);
-            poseEstimatorSource.sendDataLatency(
-                    FOMPoseEstimator.getPoseAtTime(poseEstimate.timestampSeconds).log(poseEstimate.pose),
-                    poseEstimate.timestampSeconds);
+            // poseEstimatorSource.sendDataLatency(
+            //         // FOMPoseEstimator.getPoseAtTime(poseEstimate.timestampSeconds).log(poseEstimate.pose),
+            //         // poseEstimate.timestampSeconds);
         }
 
         // Add update heading
