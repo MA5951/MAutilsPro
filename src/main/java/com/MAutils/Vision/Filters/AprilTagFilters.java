@@ -44,28 +44,8 @@ public class AprilTagFilters {
           return 0.0;
         }
     
-        // avoid divide‐by‐zero:
-        int count = Math.max(1, visionPose.tagCount);
-    
-        // compute your “sigma” in a local variable
-        double sigma = fomCoefficient
-                     * Math.pow(visionPose.avgTagDist, 1.2)
-                     / (count * count)
-                     * (1 + ambiguityCoefficient * (tag.ambiguity - 0.3));
-    
-        // if sigma is NaN or negative, treat as “no confidence”
-        if (Double.isNaN(sigma) || sigma < 0) {
-          return 0.0;
-        }
-    
-        // map σ → [0…1] via 1/(1+σ)
-        double raw = 1.0 / (1.0 + sigma);
-    
-        // clamp and handle infinities
-        if (!Double.isFinite(raw)) {
-          return 0.0;
-        }
-        return Math.max(0.0, Math.min(1.0, raw));
+        
+        return 0.5;
     }
     
 

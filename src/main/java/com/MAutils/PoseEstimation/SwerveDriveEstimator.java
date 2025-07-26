@@ -8,6 +8,7 @@ import com.MAutils.Swerve.Utils.SkidDetector;
 import com.MAutils.Utils.Constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -62,11 +63,42 @@ public class SwerveDriveEstimator {
 
     // Deltas
     public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
-        modulesTwist = kinematics.toTwist2d(lastPositions, currentPositions);
-        lastPositions = currentPositions;
-        modulesTwist.dtheta = 0;
-        return modulesTwist;
+    Translation2d totalDelta = new Translation2d();
+    double totalDeltaTheta = 0;
+
+    for (int i = 0; i < currentPositions.length; i++) {
+        double deltaDistance = currentPositions[i].distanceMeters - lastPositions[i].distanceMeters;
+        Rotation2d prevAngle = lastPositions[i].angle;
+        Rotation2d currAngle = currentPositions[i].angle;
+        double deltaTheta = currAngle.minus(prevAngle).getRadians();
+
+        Translation2d arcDelta;
+
+        // Handle small or zero rotation to avoid division by zero
+        if (Math.abs(deltaTheta) < 1e-5) {
+            arcDelta = new Translation2d(deltaDistance, currAngle);
+        } else {
+            double radius = deltaDistance / deltaTheta;
+
+            // Vectors from center of arc to previous and current module positions
+            Translation2d v1 = new Translation2d(radius, prevAngle.minus(Rotation2d.fromRadians(Math.PI / 2)));
+            Translation2d v2 = v1.rotateBy(Rotation2d.fromRadians(deltaTheta));
+
+            arcDelta = v2.minus(v1);
+        }
+
+        totalDelta = totalDelta.plus(arcDelta);
+        totalDeltaTheta += deltaTheta;
     }
+
+    lastPositions = currentPositions;
+
+    return new Twist2d(
+        totalDelta.getX() / 4,
+        totalDelta.getY() / 4,
+        totalDeltaTheta / 4
+    );
+}
 
     public double getGyroDelta(Rotation2d currentGyro) {
         gyroDelta = currentGyro.minus(lastGyroRotation).getRadians();
