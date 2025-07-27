@@ -8,26 +8,31 @@ import com.MAutils.RobotControl.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 
 
-public class logAnalises {
+public class LogAnalises {
 
-    private Timer timer;
+    private Timer timeInCurrentStatetimer;
 
     private RobotState lastRobotState;
 
 
-    public logAnalises() {
+    public LogAnalises() {
         lastRobotState = null;
 
-        timer = new Timer();
-        timer.start();
+        timeInCurrentStatetimer = new Timer();
+        timeInCurrentStatetimer.start();
     }
 
     public double getTimeInCurrentState(Supplier<RobotState> currentRobotState) {
-        if(lastRobotState == null || currentRobotState.get().equals(lastRobotState)) {
-            return timer.get();
+        
+        if (lastRobotState == null) {
+            lastRobotState = currentRobotState.get();
+        }
+
+        if(currentRobotState.get().equals(lastRobotState)) {
+            return timeInCurrentStatetimer.get();
         } else {
             lastRobotState = currentRobotState.get();
-            timer.restart();
+            timeInCurrentStatetimer.restart();
             return 0;
         }
     }
