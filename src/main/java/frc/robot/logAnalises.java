@@ -13,25 +13,29 @@ public class LogAnalises {
     private Timer timeInCurrentStatetimer;
 
     private RobotState lastRobotState;
+    private RobotState currentRobotState;
 
 
-    public LogAnalises() {
+
+    public LogAnalises(Supplier<RobotState> currentRobotState) {
         lastRobotState = null;
+
+        this.currentRobotState = currentRobotState.get();
 
         timeInCurrentStatetimer = new Timer();
         timeInCurrentStatetimer.start();
     }
 
-    public double getTimeInCurrentState(Supplier<RobotState> currentRobotState) {
+    public double getTimeInCurrentState() {
         
         if (lastRobotState == null) {
-            lastRobotState = currentRobotState.get();
+            lastRobotState = currentRobotState;
         }
 
-        if(currentRobotState.get().equals(lastRobotState)) {
+        if(currentRobotState.equals(lastRobotState)) {
             return timeInCurrentStatetimer.get();
         } else {
-            lastRobotState = currentRobotState.get();
+            lastRobotState = currentRobotState;
             timeInCurrentStatetimer.restart();
             return 0;
         }
