@@ -3,7 +3,7 @@ package com.MAutils.Utils;
 
 public class Constants {
 
-    public static final String MAUTILS_VERSION = "2.1.1";
+    public static final String MAUTILS_VERSION = "2.1.0";
 
     public enum SimulationType {
         SIM,
