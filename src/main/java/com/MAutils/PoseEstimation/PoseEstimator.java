@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
  * by replaying a short history when late measurements arrive.
  */
 public class PoseEstimator {
-    private static final double HISTORY_WINDOW_SEC = 0.5; // must exceed max latency
+    private static final double HISTORY_WINDOW_SEC = 0.3; // must exceed max latency
 
     private static final List<PoseEstimatorSource> sources = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class PoseEstimator {
     /** Your “team confidence” = average of all sources’ FOM at last update. */
     public static double getRobotFOM() {
         return sources.stream()
-                .mapToDouble(s -> s.getFomAt(lastUpdateTime))
+                .mapToDouble(s -> s.getFomXYAt(lastUpdateTime))
                 .average()
                 .orElse(0.0);
     }
@@ -111,14 +111,12 @@ public class PoseEstimator {
                 .collect(Collectors.toList());
 
         Pose2d pose = poseBeforeHistory;
-        double replayStart = historyStartTime;
         Deque<HistoryEntry> newHist = new ArrayDeque<>();
 
         for (double t : times) {
             Twist2d f = computeFusedTwist(t);
             pose = pose.exp(f);
             newHist.addLast(new HistoryEntry(t, f));
-            replayStart = t;
         }
 
         history.clear();
@@ -130,19 +128,29 @@ public class PoseEstimator {
 
     /** Weighted‐average of each source’s twist at exactly timestamp T. */
     private static Twist2d computeFusedTwist(double timestamp) {
-        double sumFom = 0, dx = 0, dy = 0, dO = 0;
-        for (var src : sources) {
-            Twist2d tt = src.getTwistAt(timestamp);
-            double f = src.getFomAt(timestamp);
-            dx += tt.dx * f;
-            dy += tt.dy * f;
-            dO += tt.dtheta * f;
-            sumFom += f;
+        double sumXY   = 0, sumTh = 0;
+        double dxSum   = 0, dySum = 0, dthetaSum = 0;
+    
+        for (PoseEstimatorSource src : sources) {
+            Twist2d tt    = src.getTwistAt(timestamp);
+    
+            // translation fusion
+            double wXY    = src.getFomXYAt(timestamp);
+            dxSum       += tt.dx     * wXY;
+            dySum       += tt.dy     * wXY;
+            sumXY       += wXY;
+    
+            // rotation fusion
+            double wTh    = src.getFomThetaAt(timestamp);
+            dthetaSum   += tt.dtheta * wTh;
+            sumTh       += wTh;
         }
-        if (sumFom <= 0) {
-            return new Twist2d(); // no valid data
-        }
-        return new Twist2d(dx / sumFom, dy / sumFom, dO / sumFom);
+    
+        double fusedDx     = (sumXY  > 0) ? dxSum     / sumXY  : 0;
+        double fusedDy     = (sumXY  > 0) ? dySum     / sumXY  : 0;
+        double fusedDtheta = (sumTh  > 0) ? dthetaSum / sumTh  : 0;
+    
+        return new Twist2d(fusedDx, fusedDy, fusedDtheta);
     }
 
     /** Drop anything older than our window and roll poseBeforeHistory forward. */

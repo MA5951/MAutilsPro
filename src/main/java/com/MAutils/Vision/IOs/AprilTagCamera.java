@@ -87,7 +87,7 @@ public class AprilTagCamera extends Camera {
 
             poseEstimatorSource.addMeasurement(
                     getRobotRelaticTwist(poseEstimate, visionTs),
-                    fom,
+                    fom,1,
                     visionTs);
         }
 

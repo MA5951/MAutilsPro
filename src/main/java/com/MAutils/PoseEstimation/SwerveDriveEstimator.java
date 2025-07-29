@@ -23,27 +23,23 @@ public class SwerveDriveEstimator {
             new SwerveModulePosition(0, new Rotation2d()),
             new SwerveModulePosition(0, new Rotation2d()),
             new SwerveModulePosition(0, new Rotation2d())
-    };;
+    };
+
     private Rotation2d lastGyroRotation;
-
-    private final SwerveDriveKinematics kinematics;
     private final SwerveSystem swerveSystem;
-
-    private Twist2d modulesTwist;
     private double gyroDelta;
-
     private final SkidDetector skidDetector;
     private final CollisionDetector collisionDetector;
     private boolean colliding = false;
-    private double translationFOM;
     private boolean[] skipModule = new boolean[4];
-
-    private PoseEstimatorSource poseEstimatorSourceGyro;
-    private PoseEstimatorSource poseEstimatorSourceTranslation;
-
-    private double cumDx = 0; // cumulative dx for translation FOM
-    private double cumDy = 0; // cumulative dy for translation FOM
-    private double cumDtheta = 0; // cumulative dtheta for rotation FOM
+    private PoseEstimatorSource odometrySource;
+    private Twist2d loopTwistSum;
+    private double deltaDistance;
+    private Rotation2d prevAngle;
+    private Rotation2d currAngle;
+    private double deltaTheta;
+    private Translation2d arcDelta;
+    private Translation2d totalDelta = new Translation2d();
 
     public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem) {
         this.kinematics = swerveConstants.kinematics;
@@ -53,52 +49,45 @@ public class SwerveDriveEstimator {
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
 
-        this.poseEstimatorSourceGyro = new PoseEstimatorSource();// () ->
-        // getRotationFOM()
-        this.poseEstimatorSourceTranslation = new PoseEstimatorSource();// () -> getTranslationFOM()
+        this.odometrySource = new PoseEstimatorSource();
 
-        PoseEstimator.addSource(poseEstimatorSourceTranslation);
-        PoseEstimator.addSource(poseEstimatorSourceGyro);
     }
 
     // Deltas
     public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
-    Translation2d totalDelta = new Translation2d();
-    double totalDeltaTheta = 0;
+        totalDelta = new Translation2d();
 
-    for (int i = 0; i < currentPositions.length; i++) {
-        double deltaDistance = currentPositions[i].distanceMeters - lastPositions[i].distanceMeters;
-        Rotation2d prevAngle = lastPositions[i].angle;
-        Rotation2d currAngle = currentPositions[i].angle;
-        double deltaTheta = currAngle.minus(prevAngle).getRadians();
+        for (int i = 0; i < currentPositions.length; i++) {
+            deltaDistance = currentPositions[i].distanceMeters - lastPositions[i].distanceMeters;
+            prevAngle = lastPositions[i].angle;
+            currAngle = currentPositions[i].angle;
+            deltaTheta = currAngle.minus(prevAngle).getRadians();
 
-        Translation2d arcDelta;
+            if (Math.abs(deltaTheta) < 1e-5) {
+                arcDelta = new Translation2d(deltaDistance, currAngle);
+            } else {
+                Translation2d v1 = new Translation2d(deltaDistance / deltaTheta,
+                        prevAngle.minus(Rotation2d.fromRadians(Math.PI / 2)));
+                Translation2d v2 = v1.rotateBy(Rotation2d.fromRadians(deltaTheta));
 
-        // Handle small or zero rotation to avoid division by zero
-        if (Math.abs(deltaTheta) < 1e-5) {
-            arcDelta = new Translation2d(deltaDistance, currAngle);
-        } else {
-            double radius = deltaDistance / deltaTheta;
+                arcDelta = v2.minus(v1);
+            }
 
-            // Vectors from center of arc to previous and current module positions
-            Translation2d v1 = new Translation2d(radius, prevAngle.minus(Rotation2d.fromRadians(Math.PI / 2)));
-            Translation2d v2 = v1.rotateBy(Rotation2d.fromRadians(deltaTheta));
-
-            arcDelta = v2.minus(v1);
+            totalDelta = totalDelta.plus(arcDelta);
         }
 
-        totalDelta = totalDelta.plus(arcDelta);
-        totalDeltaTheta += deltaTheta;
+        lastPositions = currentPositions;
+
+        return new Twist2d(
+                totalDelta.getX() / 4,
+                totalDelta.getY() / 4,
+                0);
     }
 
-    lastPositions = currentPositions;
+    public Twist2d getTwistDelta(SwerveModulePosition[] currentPositions, Rotation2d currentGyro) {
 
-    return new Twist2d(
-        totalDelta.getX() / 4,
-        totalDelta.getY() / 4,
-        totalDeltaTheta / 4
-    );
-}
+        return new Twist2d(translationDelta.dx, translationDelta.dy, rotationDelta);
+    }
 
     public double getGyroDelta(Rotation2d currentGyro) {
         gyroDelta = currentGyro.minus(lastGyroRotation).getRadians();
@@ -133,30 +122,28 @@ public class SwerveDriveEstimator {
         skidDetector.calculateSkid();
         collisionDetector.calculateCollision();
 
-        translationFOM = 1;
-
         if (true) {//
-            // skipModule = skidDetector.getIsSkidding();
+            skipModule = skidDetector.getIsSkidding();
 
-            // if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
-            // skipModule[0] = true;
-            // skipModule[1] = true;
-            // } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
-            // skipModule[2] = true;
-            // skipModule[3] = true;
-            // }
+            if (swerveSystem.getGyroData().pitch > MIN_SKIP_ANGLE) {// TODO cheack
+                skipModule[0] = true;
+                skipModule[1] = true;
+            } else if (swerveSystem.getGyroData().pitch < -MIN_SKIP_ANGLE) {
+                skipModule[2] = true;
+                skipModule[3] = true;
+            }
 
-            // if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
-            // skipModule[0] = true;
-            // skipModule[2] = true;
-            // } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
-            // skipModule[1] = true;
-            // skipModule[3] = true;
-            // }
+            if (swerveSystem.getGyroData().roll > MIN_SKIP_ANGLE) {
+                skipModule[0] = true;
+                skipModule[2] = true;
+            } else if (swerveSystem.getGyroData().roll < -MIN_SKIP_ANGLE) {
+                skipModule[1] = true;
+                skipModule[3] = true;
+            }
 
-            cumDx = 0;
-            cumDy = 0;
-            cumDtheta = 0;
+            loopTwistSum.dx = 0;
+            loopTwistSum.dy = 0;
+            loopTwistSum.dtheta = 0;
 
             double[] sampleTimestamps = swerveSystem.getGyroData().odometryYawTimestamps;
             for (int i = 0; i < sampleTimestamps.length; i++) {
@@ -164,28 +151,23 @@ public class SwerveDriveEstimator {
                 for (int j = 0; j < 4; j++) {
                     wheelPositions[j] = swerveSystem.getSwerveModules()[j].getOdometryPositions()[i];
 
-                    // if (skipModule[j]) {
-                    // lastPositions[j] = wheelPositions[j];
+                    if (skipModule[j]) {
+                        lastPositions[j] = wheelPositions[j];
 
-                    // }
+                    }
                 }
-                // MALog.log("/Pose Estimator/Swerve Drive Estimator/1DX",
-                // getTranslationDelta(wheelPositions).dx);
 
                 Twist2d translationDelta = getTranslationDelta(wheelPositions);
-                translationDelta.dtheta = getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]); // Ignore
-                                                                                                            // rotation
-                                                                                                            // for
-                                                                                                            // translation
-                cumDx += translationDelta.dx;
-                cumDy += translationDelta.dy;
-                cumDtheta += translationDelta.dtheta;// FOM
+                translationDelta.dtheta = getGyroDelta(swerveSystem.getGyroData().odometryYawPositions[i]);
 
+                loopTwistSum.dx += translationDelta.dx;
+                loopTwistSum.dy += translationDelta.dy;
+                loopTwistSum.dtheta += translationDelta.dtheta;// FOM
 
             }
 
-            poseEstimatorSourceTranslation.addMeasurement(
-                    new Twist2d(cumDx, cumDy, cumDtheta), 1,
+            odometrySource.addMeasurement(
+                    loopTwistSum, 1, 1,
                     Timer.getFPGATimestamp());
 
         }

@@ -8,24 +8,36 @@ import edu.wpi.first.math.geometry.Twist2d;
 
 public class PoseEstimatorSource {
     private static class Measurment {
+        @SuppressWarnings("unused")
         final Twist2d twist;
-        final double fom, timestamp;
-        Measurment(Twist2d t, double f, double ts) {
-            twist = t; fom = f; timestamp = ts;
+        final double fomXY, fomTheta, timestamp;
+
+        Measurment(Twist2d t, double fXY, double fTh, double ts) {
+            twist = t;
+            fomXY = fXY;
+            fomTheta = fTh;
+            timestamp = ts;
         }
     }
 
+    private final Twist2d blankTwist = new Twist2d();
     private final List<Measurment> buffer = new ArrayList<>();
 
     public PoseEstimatorSource() {
+        PoseEstimator.addSource(this);
     }
 
-    public synchronized void addMeasurement(Twist2d delta, double fom, double timestamp) {
-        if (fom <= 0) fom = Constants.EPSILON;
-        Measurment p = new Measurment(delta, fom, timestamp);
-        int idx = Collections.binarySearch(buffer, p, Comparator.comparingDouble(x -> x.timestamp));
-        if (idx < 0) idx = -idx - 1;
-        buffer.add(idx, p);
+    public synchronized void addMeasurement(
+            Twist2d delta, double fomXY, double fomTheta, double timestamp) {
+        // avoid zero‐FOMs
+        fomXY = fomXY <= 0 ? fomXY : Constants.EPSILON;
+        fomTheta = fomTheta <= 0 ? fomTheta : Constants.EPSILON;
+        Measurment m = new Measurment(delta, fomXY, fomTheta, timestamp);
+        int idx = Collections.binarySearch(buffer, m,
+                Comparator.comparingDouble(xm -> xm.timestamp));
+        if (idx < 0)
+            idx = -idx - 1;
+        buffer.add(idx, m);
     }
 
     public synchronized boolean hasBefore(double t) {
@@ -33,20 +45,29 @@ public class PoseEstimatorSource {
     }
 
     public synchronized Twist2d getTwistAt(double t) {
-        for (int i = buffer.size() - 1; i >= 0; i--) {
+        for (int i = buffer.size() - 1; i >= 0; --i) {
             if (buffer.get(i).timestamp <= t) {
                 return buffer.get(i).twist;
             }
         }
-        return new Twist2d();
+        return blankTwist;
     }
 
-    public synchronized double getFomAt(double t) {
-        for (int i = buffer.size() - 1; i >= 0; i--) {
+    public synchronized double getFomXYAt(double t) {
+        for (int i = buffer.size() - 1; i >= 0; --i) {
             if (buffer.get(i).timestamp <= t) {
-                return buffer.get(i).fom;
+                return buffer.get(i).fomXY;
             }
         }
-        return 0.0;
+        return Constants.EPSILON;
+    }
+
+    public synchronized double getFomThetaAt(double t) {
+        for (int i = buffer.size() - 1; i >= 0; --i) {
+            if (buffer.get(i).timestamp <= t) {
+                return buffer.get(i).fomTheta;
+            }
+        }
+        return Constants.EPSILON;
     }
 }
