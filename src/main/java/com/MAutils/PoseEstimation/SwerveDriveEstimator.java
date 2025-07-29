@@ -54,7 +54,7 @@ public class SwerveDriveEstimator {
     }
 
     // Deltas
-    public Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
+    private Twist2d getTranslationDelta(SwerveModulePosition[] currentPositions) {
         totalDelta = new Translation2d();
 
         for (int i = 0; i < currentPositions.length; i++) {
@@ -84,19 +84,19 @@ public class SwerveDriveEstimator {
                 0);
     }
 
-    public Twist2d getTwistDelta(SwerveModulePosition[] currentPositions, Rotation2d currentGyro) {
+    private Twist2d getTwistDelta(SwerveModulePosition[] currentPositions, Rotation2d currentGyro) {
 
         return new Twist2d(translationDelta.dx, translationDelta.dy, rotationDelta);
     }
 
-    public double getGyroDelta(Rotation2d currentGyro) {
+    private double getGyroDelta(Rotation2d currentGyro) {
         gyroDelta = currentGyro.minus(lastGyroRotation).getRadians();
         lastGyroRotation = currentGyro;
         return gyroDelta;
     }
 
     // FOMs
-    public double getTranslationFOM() {
+    private double getTranslationFOM() {
         // Collision
         if (collisionDetector.getIsColliding()) {
             colliding = true;
@@ -113,7 +113,7 @@ public class SwerveDriveEstimator {
         return 1.0 - (skidDetector.getNumOfSkiddingModules() * 0.25);
     }
 
-    public double getRotationFOM() {
+    private double getRotationFOM() {
         return 1.0;
     }
 
