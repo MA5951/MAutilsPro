@@ -22,7 +22,6 @@ public class AprilTagFilters {
             Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         this.filtersConfig = filtersConfig;
         this.visionCameraIO = visionCameraIO;
-        this.chassiSpeedsSupplier = chassisSpeedsSupplier;
     }
 
     public void updateFiltersConfig(FiltersConfig newConfig) {
