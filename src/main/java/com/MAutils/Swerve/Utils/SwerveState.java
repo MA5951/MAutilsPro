@@ -9,10 +9,8 @@ public class SwerveState {
 
     private ChassisSpeeds stateSpeeds;
     private String stateName;
-    private Supplier<ChassisSpeeds> xySupplier;
-    private Supplier<ChassisSpeeds> omegaSupplier;
-    private Runnable onStateEnter = () -> {};
-    private Runnable onStateRuning = () -> {};
+    private Supplier<ChassisSpeeds> xySupplier, omegaSupplier;
+    private Runnable onStateEnter = () -> {}, onStateRuning = () -> {};
 
     public SwerveState(String name) {
         this.stateName = name;
