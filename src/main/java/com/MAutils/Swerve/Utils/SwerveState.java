@@ -10,7 +10,7 @@ public class SwerveState {
     private ChassisSpeeds stateSpeeds;
     private String stateName;
     private Supplier<ChassisSpeeds> xySupplier;
-    private Supplier<ChassisSpeeds> omegaSupplier;//TODO seperate to 3 double suppliers for 
+    private Supplier<ChassisSpeeds> omegaSupplier;
     private Runnable onStateEnter = () -> {};
     private Runnable onStateRuning = () -> {};
 
@@ -59,7 +59,7 @@ public class SwerveState {
         return this;
     }
 
-    public SwerveState withXY(double x, double y) {//TODO seperate xy
+    public SwerveState withXY(double x, double y) {
         xySupplier = () -> new ChassisSpeeds(x, y, 0);
         return this;
     }
@@ -76,6 +76,16 @@ public class SwerveState {
 
     public SwerveState withOmega(Supplier<Double> omega) {
         omegaSupplier = () -> new ChassisSpeeds(0, 0, omega.get());
+        return this;
+    }
+
+    public SwerveState setX(double x) {
+        xySupplier = () -> new ChassisSpeeds(x, 0, 0);
+        return this;
+    }
+
+    public SwerveState setY(double y) {
+        xySupplier = () -> new ChassisSpeeds(0, y, 0);
         return this;
     }
 
