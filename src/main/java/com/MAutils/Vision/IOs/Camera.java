@@ -21,6 +21,7 @@ public class Camera {
     }
 
     public void update() {
+        cameraIO.update();
         logIO();
     }
 

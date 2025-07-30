@@ -140,4 +140,7 @@ public class CameraSimIO implements VisionCameraIO {
         return camera.getName();
     }
 
+    public void update() {
+    }
+
 }
