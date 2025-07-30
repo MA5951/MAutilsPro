@@ -10,17 +10,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AprilTagFilters {
     public static final double fomCoefficient = 0.1;
-    public static final double ambiguityCoefficient = 2;
 
     private FiltersConfig filtersConfig;
     private VisionCameraIO visionCameraIO;
     private RawFiducial tag;
     private PoseEstimate visionPose;
-    private Supplier<ChassisSpeeds> chassiSpeedsSupplier;
     @SuppressWarnings("unused")
     private ChassisSpeeds chassisSpeeds;
-
-    private double currentFOM;
 
     public AprilTagFilters(FiltersConfig filtersConfig, VisionCameraIO visionCameraIO,
             Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
@@ -33,7 +29,7 @@ public class AprilTagFilters {
         this.filtersConfig = newConfig;
     }
 
-    public double getFOM() {
+    public double getXyFOM() {//Talk with rader
         tag         = visionCameraIO.getTag();
         visionPose  = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
     
@@ -45,6 +41,10 @@ public class AprilTagFilters {
         }
     
         
+        return 0.5;
+    }
+
+    public double getOFOM() {//Talk with rader 
         return 0.5;
     }
     

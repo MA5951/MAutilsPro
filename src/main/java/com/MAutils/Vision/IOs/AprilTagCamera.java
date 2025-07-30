@@ -8,12 +8,10 @@ import java.util.function.Supplier;
 import com.MAutils.Logger.MALog;
 import com.MAutils.PoseEstimation.PoseEstimator;
 import com.MAutils.PoseEstimation.PoseEstimatorSource;
-import com.MAutils.Utils.ConvUtil;
 import com.MAutils.Vision.Filters.AprilTagFilters;
 import com.MAutils.Vision.Filters.FiltersConfig;
 import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -24,17 +22,18 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AprilTagCamera extends Camera {
 
-    private FiltersConfig teleopConfig;
-    private FiltersConfig autoConfig;
-    private AprilTagFilters aprilTagFilters;
-
-    private boolean updatePoseEstiamte = true;
-    private PoseEstimate poseEstimate;
-    private double fom;
-
     private final PoseEstimatorSource poseEstimatorSource;
-
     public final Supplier<Double> robotAngleSupplier;
+
+    private FiltersConfig teleopConfig, autoConfig;
+    private AprilTagFilters aprilTagFilters;
+    private Transform2d delta;
+    private PoseEstimate poseEstimate;
+    private Pose2d visionPose, prior;
+    private Rotation2d heading;
+    private Twist2d visionTwsit = new Twist2d();
+    private boolean updatePoseEstiamte = true;
+    private double xyFom, oFom, visionTs, fieldDx, fieldDy, fieldDtheta, robotDx, robotDy;
 
     public AprilTagCamera(VisionCameraIO cameraIO, FiltersConfig filterConfig, Supplier<Double> robotAngleSupplier) {
         super(cameraIO);
@@ -80,18 +79,19 @@ public class AprilTagCamera extends Camera {
         aprilTagFilters.updateFiltersConfig(getFiltersConfig());
 
         if (updatePoseEstiamte) {
-            fom = aprilTagFilters.getFOM();
-            MALog.log("/Subsystems/Vision/Cameras/" + name + "/FOM", fom);
+            xyFom = aprilTagFilters.getXyFOM();
+            oFom = aprilTagFilters.getOFOM();
+            MALog.log("/Subsystems/Vision/Cameras/" + name + "/XY FOM", xyFom);
+            MALog.log("/Subsystems/Vision/Cameras/" + name + "/Omega FOM", oFom);
 
-            double visionTs = getVisionTimetemp();
+            visionTs = getVisionTimetemp();
 
             poseEstimatorSource.addMeasurement(
                     getRobotRelaticTwist(poseEstimate, visionTs),
-                    fom,1,
+                    xyFom, oFom,
                     visionTs);
         }
 
-        // TODO: Add update heading
     }
 
     @Override
@@ -115,23 +115,26 @@ public class AprilTagCamera extends Camera {
     }
 
     private Twist2d getRobotRelaticTwist(PoseEstimate poseEstimator, double timestemp) {
-        Pose2d visionPose = poseEstimate.pose;
+        visionPose = poseEstimate.pose;
+        prior = PoseEstimator.getPoseAt(timestemp);
 
-        Pose2d prior = PoseEstimator.getPoseAt(timestemp);
+        delta = new Transform2d(prior, visionPose);
 
-        Transform2d delta = new Transform2d(prior, visionPose);
+        fieldDx = delta.getTranslation().getX();
+        fieldDy = delta.getTranslation().getY();
+        fieldDtheta = delta.getRotation().getRadians();
 
-        double fieldDx = delta.getTranslation().getX();
-        double fieldDy = delta.getTranslation().getY();
-        double fieldDtheta = delta.getRotation().getRadians();
-
-        Rotation2d heading = Rotation2d.fromDegrees(robotAngleSupplier.get());
-        double robotDx = heading.getCos() * fieldDx
+        heading = Rotation2d.fromDegrees(robotAngleSupplier.get());
+        robotDx = heading.getCos() * fieldDx
                 + heading.getSin() * fieldDy;
-        double robotDy = -heading.getSin() * fieldDx
+        robotDy = -heading.getSin() * fieldDx
                 + heading.getCos() * fieldDy;
 
-        return new Twist2d(robotDx, robotDy, fieldDtheta);
+        visionTwsit.dx = robotDx;
+        visionTwsit.dy = robotDy;
+        visionTwsit.dtheta = fieldDtheta;
+
+        return visionTwsit;
 
     }
 

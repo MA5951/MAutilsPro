@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Twist2d;
 
 public class PoseEstimatorSource {
     private static class Measurment {
-        @SuppressWarnings("unused")
         final Twist2d twist;
         final double fomXY, fomTheta, timestamp;
 
@@ -22,6 +21,8 @@ public class PoseEstimatorSource {
 
     private final Twist2d blankTwist = new Twist2d();
     private final List<Measurment> buffer = new ArrayList<>();
+    private int idx;
+    private Measurment newMeasurment;
 
     public PoseEstimatorSource() {
         PoseEstimator.addSource(this);
@@ -29,15 +30,15 @@ public class PoseEstimatorSource {
 
     public synchronized void addMeasurement(
             Twist2d delta, double fomXY, double fomTheta, double timestamp) {
-        // avoid zero‐FOMs
+                
         fomXY = fomXY <= 0 ? fomXY : Constants.EPSILON;
         fomTheta = fomTheta <= 0 ? fomTheta : Constants.EPSILON;
-        Measurment m = new Measurment(delta, fomXY, fomTheta, timestamp);
-        int idx = Collections.binarySearch(buffer, m,
+        newMeasurment = new Measurment(delta, fomXY, fomTheta, timestamp);
+        idx = Collections.binarySearch(buffer, newMeasurment,
                 Comparator.comparingDouble(xm -> xm.timestamp));
         if (idx < 0)
             idx = -idx - 1;
-        buffer.add(idx, m);
+        buffer.add(idx, newMeasurment);
     }
 
     public synchronized boolean hasBefore(double t) {
