@@ -82,6 +82,10 @@ public class SwerveSystem extends SubsystemBase {
         swerveSetpoint = new SwerveSetpoint(new ChassisSpeeds(0, 0, 0), currentStates, DriveFeedforwards.zeros(4));
     }
 
+    public SwerveSystemConstants getSwerveConstants() {
+        return swerveConstants;
+    }
+
     public void setState(SwerveState state) {
         this.currentState = state;
 
