@@ -215,4 +215,9 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         turnTalonConfig.MotorOutput.NeutralMode = isBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(turnTalonConfig);
     }
+
+    @Override
+    public void resetSteerPosition(Rotation2d rotation) {
+        turnTalon.setPosition(rotation.getRotations());
+    }
 }

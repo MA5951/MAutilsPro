@@ -68,4 +68,7 @@ public class SwerveModuleReplay implements SwerveModuleIO {
     public void setSteerNutralMode(boolean isBrake) {
     }
 
+    public void resetSteerPosition(Rotation2d rotation) {
+    }
+
 }

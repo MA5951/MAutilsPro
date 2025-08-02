@@ -123,4 +123,13 @@ public class SwerveModuleSim implements SwerveModuleIO {
         
     }
 
+    public void setDriveNutralMode(boolean isBrake) {
+    }
+
+    public void setSteerNutralMode(boolean isBrake) {
+    }
+
+    public void resetSteerPosition(Rotation2d rotation) {
+    }
+
 }
