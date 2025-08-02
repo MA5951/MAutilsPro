@@ -87,6 +87,7 @@ public class SwerveSystemConstants {
         public DCMotor DRIVE_MOTOR = DCMotor.getKrakenX60(1);
         public DCMotor TURNING_MOTOR = DCMotor.getFalcon500(1);
         public WheelType WHEEL_TYPE = WheelType.BLACK_TREAD;
+        public final double MAX_STEER_VELOCITY_RADS = Units.rotationsToRadians(10.0);
 
         public SwerveModuleID[] MODULES_ID_ARRY;
 

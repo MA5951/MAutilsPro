@@ -182,7 +182,6 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
     }
 
     public void setDriveVelocity(double metersPerSecond) {
-        System.out.println("metersPerSecond: " + metersPerSecond);
         driveTalon.setControl(velocityVoltageRequest.withVelocity(metersPerSecond / constants.WHEEL_CIRCUMFERENCE)// Meters Per Second to Rotations Per Second
                 .withSlot(SwerveSystemConstants.getControlSlot()));
     }
@@ -202,6 +201,18 @@ public class SwerveModuleTalonFX implements SwerveModuleIO {
         turnTalonConfig.Slot0.kP = kP;
         turnTalonConfig.Slot0.kI = kI;
         turnTalonConfig.Slot0.kD = kD;
+        turnTalon.getConfigurator().apply(turnTalonConfig);
+    }
+
+    @Override
+    public void setDriveNutralMode(boolean isBrake) {
+        driveTalonConfig.MotorOutput.NeutralMode = isBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        driveTalon.getConfigurator().apply(driveTalonConfig);
+    }
+
+    @Override
+    public void setSteerNutralMode(boolean isBrake) {
+        turnTalonConfig.MotorOutput.NeutralMode = isBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(turnTalonConfig);
     }
 }
