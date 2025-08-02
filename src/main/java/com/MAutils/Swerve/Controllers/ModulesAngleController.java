@@ -5,7 +5,6 @@ import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.Utils.SwerveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class ModulesAngleController extends SwerveController {
@@ -30,10 +29,8 @@ public class ModulesAngleController extends SwerveController {
 
 
     @Override
-    public ChassisSpeeds getSpeeds() {
+    public void updateSpeeds() {
         swerveSystem.runSwerveStates(swerveStates);
-
-        return speeds;
     }
 
     
