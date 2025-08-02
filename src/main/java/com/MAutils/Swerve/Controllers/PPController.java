@@ -51,8 +51,7 @@ public class PPController extends SwerveController {
         this.speeds = speeds;
     }
 
-    public ChassisSpeeds getSpeeds() {
-        return speeds;
+    public void updateSpeeds() {
     }
 
 }
