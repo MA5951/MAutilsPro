@@ -12,13 +12,12 @@ import com.MAutils.Swerve.Utils.SwerveController;
 import com.MAutils.Utils.ChassisSpeedsUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class FieldCentricDrive extends SwerveController {
 
     private MAController controller;
     private final SwerveSystemConstants constants;
-    private Supplier<Boolean> reductionBoolean;
+    private Supplier<Boolean> reductionBoolean = () -> false;
     private double reductionFactor = 1.0;
 
     private double xyScaler = 1;
@@ -46,11 +45,15 @@ public class FieldCentricDrive extends SwerveController {
         return this;
     }
 
-    public void updateHeading() {
+    public void updateOffset() {
         angleOffset = gyroDataSupplier.get().yaw;
     }
 
-    public ChassisSpeeds getSpeeds() {
+    public void setOffset(double angleOffset) {
+        this.angleOffset = angleOffset;
+    }
+
+    public void updateSpeeds() {
         speeds.vxMetersPerSecond = -controller.getLeftY(true, xyScaler) * constants.MAX_VELOCITY;
         speeds.vyMetersPerSecond = -controller.getLeftX(true, xyScaler) * constants.MAX_VELOCITY;
         speeds.omegaRadiansPerSecond = -controller.getRightX(true, omegaScaler) * constants.MAX_ANGULAR_VELOCITY;
@@ -64,13 +67,12 @@ public class FieldCentricDrive extends SwerveController {
         speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds,
                 Rotation2d.fromDegrees(gyroDataSupplier.get().yaw - angleOffset));
 
-        logController();
 
-        return speeds;
     }
 
-    private void logController() {
-        MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/Speeds", speeds);
+    @Override
+    public void logController() {
+        super.logController();
         if (reductionBoolean != null) {
             MALog.log("/Subsystems/Swerve/Controllers/FieldCentricDrive/On Reduction", reductionBoolean.get());
         }
