@@ -13,6 +13,7 @@ public class GamePieceSimulationState {
     private final Supplier<Pose3d> gamePieceLocationSupplier;
     private SensorWrapper<Boolean>[] activeSensors;
 
+    @SuppressWarnings("unchecked")//TODO remove and fix
     public GamePieceSimulationState(String name, Supplier<Pose3d> gamePieceLocationSupplier, SensorWrapper<Boolean>... activeSensors) {
         this.name = name;
         this.gamePieceLocationSupplier = gamePieceLocationSupplier;
