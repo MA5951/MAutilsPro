@@ -1,9 +1,7 @@
 
 package com.MAutils.Simulation.Simulatables.RobotGamePieceSim;
 
-import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import com.MAutils.Logger.MALog;
 import com.MAutils.Simulation.Utils.Simulatable;
@@ -45,6 +43,10 @@ public abstract class RobotGamePieceSimulation implements Simulatable {
                 .get());
         MALog.log("/Simulation/Robot GamePices/Current Location Name", currentLocation.name);
         MALog.log("/Simulation/Robot GamePices/Last Location Name", lastLocation.name);
+    }
+
+    public GamePieceSimulationState getCurrentLocation() {
+        return currentLocation;
     }
 
 }
