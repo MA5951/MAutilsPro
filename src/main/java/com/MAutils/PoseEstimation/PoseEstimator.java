@@ -3,8 +3,6 @@ package com.MAutils.PoseEstimation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.MAutils.Logger.MALog;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -52,14 +50,14 @@ public class PoseEstimator {
         return currentPose;
     }
 
-    public static double getRobotFOM() {
+    public static double getRobotFOM() {    
         return sources.stream()
                 .mapToDouble(s -> s.getFomXYAt(lastUpdateTime))
                 .average()
                 .orElse(0.0);
     }
 
-     public static synchronized Pose2d getPoseAt(double queryTime) {
+     public static Pose2d getPoseAt(double queryTime) {
         tempPose = poseBeforeHistory;
         for (HistoryEntry e : history) {
           if (e.time > queryTime) {

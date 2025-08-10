@@ -1,6 +1,7 @@
 package com.MAutils.PoseEstimation;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import com.MAutils.Utils.Constants;
 
@@ -20,32 +21,44 @@ public class PoseEstimatorSource {
     }
 
     private final Twist2d blankTwist = new Twist2d();
-    private final List<Measurment> buffer = new ArrayList<>();
+    private final List<Measurment> buffer = new ArrayList<>(); 
+    private final Supplier<Twist2d> twistSupplier;
+    private final Supplier<Double> fomXYSupplier;
+    private final Supplier<Double> fomThetaSupplier;
+    private final Supplier<Double> timestampSupplier;
+    private double fomXY;
+    private double fomTheta;
     private int idx;
     private Measurment newMeasurment;
 
-    public PoseEstimatorSource() {
+    public PoseEstimatorSource(Supplier<Twist2d> twistSupplier,
+                               Supplier<Double> fomXYSupplier,
+                               Supplier<Double> fomThetaSupplier,
+                               Supplier<Double> timestampSupplier) {
+        this.twistSupplier = twistSupplier;
+        this.fomXYSupplier = fomXYSupplier;
+        this.fomThetaSupplier = fomThetaSupplier;
+        this.timestampSupplier = timestampSupplier;
         PoseEstimator.addSource(this);
     }
 
-    public synchronized void addMeasurement(
-            Twist2d delta, double fomXY, double fomTheta, double timestamp) {
-                
-        fomXY = fomXY <= 0 ? fomXY : Constants.EPSILON;
-        fomTheta = fomTheta <= 0 ? fomTheta : Constants.EPSILON;
-        newMeasurment = new Measurment(delta, fomXY, fomTheta, timestamp);
+    public void sendMeausrment() {
+        fomXY = fomXYSupplier.get() <= 0 ? Constants.EPSILON : fomXYSupplier.get();
+        fomTheta = fomThetaSupplier.get() <= 0 ? Constants.EPSILON : fomThetaSupplier.get();
+        newMeasurment = new Measurment(twistSupplier.get(), fomXY, fomTheta, timestampSupplier.get());
         idx = Collections.binarySearch(buffer, newMeasurment,
                 Comparator.comparingDouble(xm -> xm.timestamp));
-        if (idx < 0)
+        if (idx < 0) {
             idx = -idx - 1;
+        }
         buffer.add(idx, newMeasurment);
     }
 
-    public synchronized boolean hasBefore(double t) {
+    public boolean hasBefore(double t) {
         return !buffer.isEmpty() && buffer.get(0).timestamp < t;
     }
 
-    public synchronized Twist2d getTwistAt(double t) {
+    public Twist2d getTwistAt(double t) {
         for (int i = buffer.size() - 1; i >= 0; --i) {
             if (buffer.get(i).timestamp <= t) {
                 return buffer.get(i).twist;
@@ -54,7 +67,7 @@ public class PoseEstimatorSource {
         return blankTwist;
     }
 
-    public synchronized double getFomXYAt(double t) {
+    public double getFomXYAt(double t) {
         for (int i = buffer.size() - 1; i >= 0; --i) {
             if (buffer.get(i).timestamp <= t) {
                 return buffer.get(i).fomXY;
@@ -63,7 +76,7 @@ public class PoseEstimatorSource {
         return Constants.EPSILON;
     }
 
-    public synchronized double getFomThetaAt(double t) {
+    public double getFomThetaAt(double t) {
         for (int i = buffer.size() - 1; i >= 0; --i) {
             if (buffer.get(i).timestamp <= t) {
                 return buffer.get(i).fomTheta;

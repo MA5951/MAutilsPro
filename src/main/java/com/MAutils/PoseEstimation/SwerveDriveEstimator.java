@@ -1,11 +1,9 @@
 package com.MAutils.PoseEstimation;
 
-import com.MAutils.Logger.MALog;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
 import com.MAutils.Swerve.Utils.CollisionDetector;
 import com.MAutils.Swerve.Utils.SkidDetector;
-import com.MAutils.Utils.Constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,7 +41,8 @@ public class SwerveDriveEstimator {
         this.skidDetector = new SkidDetector(swerveConstants, swerveSystem::getCurrentStates);
         this.collisionDetector = new CollisionDetector(swerveSystem::getGyroData);
 
-        this.odometrySource = new PoseEstimatorSource();
+        this.odometrySource = new PoseEstimatorSource(
+                () -> loopTwistSum, () -> getTranslationFOM(), () -> getRotationFOM(), () -> Timer.getFPGATimestamp());
 
     }
 
@@ -151,9 +150,7 @@ public class SwerveDriveEstimator {
 
             }
 
-            odometrySource.addMeasurement(
-                    loopTwistSum, getTranslationFOM(), getRotationFOM(),
-                    Timer.getFPGATimestamp());
+            odometrySource.sendMeausrment();
 
         }
     }

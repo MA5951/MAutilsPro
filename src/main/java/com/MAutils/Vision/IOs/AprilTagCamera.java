@@ -1,7 +1,6 @@
 
 package com.MAutils.Vision.IOs;
 
-import static edu.wpi.first.units.Units.derive;
 
 import java.util.function.Supplier;
 
@@ -44,7 +43,8 @@ public class AprilTagCamera extends Camera {
         this.robotAngleSupplier = robotAngleSupplier;
 
         this.aprilTagFilters = new AprilTagFilters(filterConfig, cameraIO, () -> new ChassisSpeeds());
-        poseEstimatorSource = new PoseEstimatorSource();
+        poseEstimatorSource = new PoseEstimatorSource(() -> getRobotRelaticTwist(poseEstimate, visionTs), () -> xyFom,
+                () -> oFom, () -> visionTs);
 
         PoseEstimator.addSource(poseEstimatorSource);
     }
@@ -59,7 +59,8 @@ public class AprilTagCamera extends Camera {
         this.robotAngleSupplier = robotAngleSupplier;
 
         this.aprilTagFilters = new AprilTagFilters(teleopConfig, cameraIO, () -> new ChassisSpeeds());
-        poseEstimatorSource = new PoseEstimatorSource();
+        poseEstimatorSource = new PoseEstimatorSource(() -> getRobotRelaticTwist(poseEstimate, visionTs), () -> xyFom,
+                () -> oFom, () -> visionTs);
 
         PoseEstimator.addSource(poseEstimatorSource);
     }
@@ -86,10 +87,7 @@ public class AprilTagCamera extends Camera {
 
             visionTs = getVisionTimetemp();
 
-            poseEstimatorSource.addMeasurement(
-                    getRobotRelaticTwist(poseEstimate, visionTs),
-                    xyFom, oFom,
-                    visionTs);
+            poseEstimatorSource.sendMeausrment();
         }
 
     }
