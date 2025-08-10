@@ -12,7 +12,7 @@ public class VisionConstants {
 
 
     public static final AprilTagCamera frontLeftLimelight = new AprilTagCamera(
-        new LimelightIO("limelight-frontl"), new FiltersConfig(), () -> ConvUtil.DegreesToRadians(RobotContainer.swerve.getGyro().getGyroData().yaw));
+        new LimelightIO("limelight-frontl", () -> RobotContainer.swerve.getRobotRotation()), new FiltersConfig(), () -> ConvUtil.DegreesToRadians(RobotContainer.swerve.getGyro().getGyroData().yaw));
 
 
 
