@@ -29,7 +29,7 @@ public class LimelightIO implements VisionCameraIO {
         robotRotaionSupplier = robotRotaion;
 
         if (!Robot.isReal() && Constants.SIMULATION_TYPE == SimulationType.REPLAY) {
-            this.cameraName = "Replay/" + name;
+            this.cameraName = "Replay/NT:/" + name;
         } else {
             this.cameraName = name;
         }

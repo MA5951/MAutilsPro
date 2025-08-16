@@ -87,7 +87,7 @@ public class AprilTagCamera extends Camera {
 
             visionTs = getVisionTimetemp();
 
-            poseEstimatorSource.sendMeausrment();
+            poseEstimatorSource.capture();
         }
 
     }

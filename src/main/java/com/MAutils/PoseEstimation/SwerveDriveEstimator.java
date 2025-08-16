@@ -30,8 +30,8 @@ public class SwerveDriveEstimator {
     private final CollisionDetector collisionDetector;
     private boolean[] skipModule = new boolean[4];
     private double[] sampleTimestamps;
-    private PoseEstimatorSource odometrySource;
-    private Twist2d loopTwistSum, odometryTwist;
+    private final PoseEstimatorSource odometrySource;
+    private Twist2d loopTwistSum= new Twist2d(), odometryTwist;
     private Translation2d totalDelta = new Translation2d(), arcDelta;
 
     public SwerveDriveEstimator(SwerveSystemConstants swerveConstants, SwerveSystem swerveSystem) {
@@ -43,6 +43,8 @@ public class SwerveDriveEstimator {
 
         this.odometrySource = new PoseEstimatorSource(
                 () -> loopTwistSum, () -> getTranslationFOM(), () -> getRotationFOM(), () -> Timer.getFPGATimestamp());
+
+        PoseEstimator.addSource(odometrySource);
 
     }
 
@@ -120,8 +122,8 @@ public class SwerveDriveEstimator {
         skidDetector.calculateSkid();
         collisionDetector.calculateCollision();
 
-        if (collisionDetector.getForceVector() > SKIP_ODOMETRY_Gs || swerveSystem.getGyroData().pitch > MAX_UPDATE_ANGLE
-                || swerveSystem.getGyroData().roll > MAX_UPDATE_ANGLE) {
+        if (!(collisionDetector.getForceVector() > SKIP_ODOMETRY_Gs || swerveSystem.getGyroData().pitch > MAX_UPDATE_ANGLE
+                || swerveSystem.getGyroData().roll > MAX_UPDATE_ANGLE)) {
             skipModule = skidDetector.getIsSkidding();
 
             skipModulesWithGyro();
@@ -136,10 +138,10 @@ public class SwerveDriveEstimator {
                 for (int j = 0; j < 4; j++) {
                     wheelPositions[j] = swerveSystem.getSwerveModules()[j].getOdometryPositions()[i];
 
-                    if (skipModule[j]) {
-                        lastPositions[j] = wheelPositions[j];
+                    // if (skipModule[j]) {
+                    //     lastPositions[j] = wheelPositions[j];
 
-                    }
+                    // }
                 }
 
                 updateOdometryTwist(wheelPositions, swerveSystem.getGyroData().odometryYawPositions[i]);
@@ -150,7 +152,7 @@ public class SwerveDriveEstimator {
 
             }
 
-            odometrySource.sendMeausrment();
+            odometrySource.capture();
 
         }
     }

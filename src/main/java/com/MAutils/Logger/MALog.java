@@ -1,8 +1,21 @@
 package com.MAutils.Logger;
 
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
+
+import com.MAutils.Components.Motor;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,23 +28,17 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
-
-import com.MAutils.Components.Motor;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 
 public class MALog {
 
     private static final NetworkTableInstance nt = NetworkTableInstance.getDefault();
     private static final NetworkTable malogTable = NetworkTableInstance.getDefault().getTable("/MALog");
-    private static final NetworkTable replayTable = NetworkTableInstance.getDefault().getTable("/Replay/MALog");
+    private static final NetworkTable replayTable = NetworkTableInstance.getDefault().getTable("/Replay/NT:/MALog");
     private static final Map<String, NetworkTableEntry> entries = new HashMap<>();
+    private static final Map<String, NetworkTableEntry> entriesReplay = new HashMap<>();
     private static final Map<String, StructPublisher<Pose2d>> pose2dPublishers = new HashMap<>();
     private static final Map<String, StructPublisher<Pose3d>> pose3dPublishers = new HashMap<>();
     private static final Map<String, StructArrayPublisher<SwerveModuleState>> swerveModuleStatePublishers = new HashMap<>();
@@ -188,7 +195,7 @@ public class MALog {
     }
 
     public static NetworkTableEntry getReplayEntry(String key) {
-        return entries.computeIfAbsent(key, k -> replayTable.getEntry(k));
+        return entriesReplay.computeIfAbsent(key, k -> replayTable.getEntry(k));
     }
 
     public static void flag(Flag falg) {

@@ -1,27 +1,40 @@
 package com.MAutils.PoseEstimation;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * PoseEstimator holds any number of PoseEstimatorSource,
+ * fuses them each loop by XY/θ FOM-weighted averages, and corrects for latency
+ * by replaying a short history when late measurements arrive.
+ */
 public class PoseEstimator {
-    private static final double HISTORY_WINDOW_SEC = 0.3; 
+    private static final double HISTORY_WINDOW_SEC = 0.5; // must exceed max latency
 
     private static final List<PoseEstimatorSource> sources = new ArrayList<>();
-    private static Pose2d poseBeforeHistory, currentPose, tempPose;
-    private static final Deque<HistoryEntry> history = new ArrayDeque<>();
-    private static Deque<HistoryEntry> tempHist;
-    private static List<Double> tempTimes;
-    private static double sumXY, sumTh, dxSum, dySum, dthetaSum,  fusedDx, fusedDy, fusedDtheta, cutoff, wXY, wTh, now, lastUpdateTime, historyStartTime; 
-    private static HistoryEntry tempEntry; 
-    private static Twist2d fused;
 
+    // Pose and time just before our replay buffer begins
+    private static Pose2d poseBeforeHistory;
+    private static double historyStartTime;
+
+    // Recent applied twists, for replay
+    private static final Deque<HistoryEntry> history = new ArrayDeque<>();
+
+    private static Pose2d currentPose;
+    private static double lastUpdateTime;
+
+    private static double cumDx = 0;
 
     public static void resetPose(Pose2d newPose) {
-        now = Timer.getFPGATimestamp();
+        double now = Timer.getFPGATimestamp();
         history.clear();
         poseBeforeHistory = newPose;
         historyStartTime = now;
@@ -29,19 +42,24 @@ public class PoseEstimator {
         lastUpdateTime = now;
     }
 
+    /** Add odometry / limelight / any other source */
     public static void addSource(PoseEstimatorSource src) {
         sources.add(src);
     }
 
+    /** Call once per robot loop. Returns the updated pose. */
     public static Pose2d update() {
-        now = Timer.getFPGATimestamp();
-        boolean late = sources.stream()
-                .anyMatch(s -> s.hasBefore(lastUpdateTime));
+        double now = Timer.getFPGATimestamp();
+
+        // If any source has a measurement stamped before our last update, we need to
+        // replay
+        boolean late = sources.stream().anyMatch(s -> s.hasBefore(lastUpdateTime));
         if (late) {
             replayHistory();
         }
 
-        fused = computeFusedTwist(now);
+        // Fuse at 'now', integrate once, push into history, trim old
+        Twist2d fused = computeFusedTwist(now);
         currentPose = currentPose.exp(fused);
         history.addLast(new HistoryEntry(now, fused));
         lastUpdateTime = now;
@@ -50,79 +68,105 @@ public class PoseEstimator {
         return currentPose;
     }
 
-    public static double getRobotFOM() {    
+    /** Backward-compatible overall FOM (mean of XY and θ across sources). */
+    public static double getRobotFOM() {
+        return sources.stream()
+                .mapToDouble(s -> s.getFomAt(lastUpdateTime))
+                .average()
+                .orElse(0.0);
+    }
+
+    /** New: average XY FOM across sources at the last update. */
+    public static double getRobotFOMXY() {
         return sources.stream()
                 .mapToDouble(s -> s.getFomXYAt(lastUpdateTime))
                 .average()
                 .orElse(0.0);
     }
 
-     public static Pose2d getPoseAt(double queryTime) {
-        tempPose = poseBeforeHistory;
+    public static Pose2d getPoseIn(double time, ChassisSpeeds speedsRobotRelativ) {
+        return currentPose.exp(
+                new Twist2d(speedsRobotRelativ.vxMetersPerSecond * time, speedsRobotRelativ.vyMetersPerSecond * time,
+                        speedsRobotRelativ.omegaRadiansPerSecond * time));
+    }
+
+    // —— internal —— //
+
+    /** Pose reconstructed by applying history up to a query time. */
+    public static Pose2d getPoseAt(double queryTime) {
+        Pose2d pose = poseBeforeHistory;
         for (HistoryEntry e : history) {
-          if (e.time > queryTime) {
-            break;
-          }
-          tempPose = tempPose.exp(e.twist);
+            if (e.time > queryTime)
+                break;
+            pose = pose.exp(e.twist);
         }
-    
-        return tempPose;
-      }
+        return pose;
+    }
 
+    /**
+     * Replay from poseBeforeHistory through all history entries, slotting in any
+     * late packets.
+     */
     private static void replayHistory() {
-        tempTimes = history.stream()
-                .map(e -> e.time)
-                .collect(Collectors.toList());
+        List<Double> times = history.stream().map(e -> e.time).collect(Collectors.toList());
 
-        tempPose = poseBeforeHistory;
-        tempHist = new ArrayDeque<>();
+        Pose2d pose = poseBeforeHistory;
+        Deque<HistoryEntry> newHist = new ArrayDeque<>();
 
-        for (double t : tempTimes) {
-            fused = computeFusedTwist(t);
-            tempPose = tempPose.exp(fused);
-            tempHist.addLast(new HistoryEntry(t, fused));
+        for (double t : times) {
+            Twist2d f = computeFusedTwist(t);
+            pose = pose.exp(f);
+            newHist.addLast(new HistoryEntry(t, f));
         }
 
         history.clear();
-        history.addAll(tempHist);
-        currentPose = tempPose;
-        lastUpdateTime = tempTimes.isEmpty() ? historyStartTime : tempTimes.get(tempTimes.size() - 1);
+        history.addAll(newHist);
+        currentPose = pose;
+        lastUpdateTime = times.isEmpty() ? historyStartTime : times.get(times.size() - 1);
         trimHistory();
     }
 
+    /**
+     * Weighted average of each source’s twist at exactly timestamp T (XY vs θ
+     * separated).
+     */
     private static Twist2d computeFusedTwist(double timestamp) {
-        sumXY   = 0; sumTh = 0;
-        dxSum   = 0; dySum = 0; dthetaSum = 0;
-    
-        for (PoseEstimatorSource src : sources) {
-            Twist2d tt    = src.getTwistAt(timestamp);
-    
-            wXY    = src.getFomXYAt(timestamp);
-            dxSum       += tt.dx     * wXY;
-            dySum       += tt.dy     * wXY;
-            sumXY       += wXY;
-    
-            wTh    = src.getFomThetaAt(timestamp);
-            dthetaSum   += tt.dtheta * wTh;
-            sumTh       += wTh;
+        double sumFomXY = 0.0, sumFomTheta = 0.0;
+        double dx = 0.0, dy = 0.0, dTheta = 0.0;
+
+        for (var src : sources) {
+            Twist2d tt = src.getTwistAt(timestamp);
+            double fXY = src.getFomXYAt(timestamp);
+            double fTh = src.getFomThetaAt(timestamp);
+
+            dx += tt.dx * fXY;
+            dy += tt.dy * fXY;
+            dTheta += tt.dtheta * fTh;
+
+            sumFomXY += fXY;
+            sumFomTheta += fTh;
         }
-    
-        fusedDx     = (sumXY  > 0) ? dxSum     / sumXY  : 0;
-        fusedDy     = (sumXY  > 0) ? dySum     / sumXY  : 0;
-        fusedDtheta = (sumTh  > 0) ? dthetaSum / sumTh  : 0;
-    
-        return new Twist2d(fusedDx, fusedDy, fusedDtheta);
+
+        double outDx = dx / sumFomXY;
+        double outDy = dy / sumFomXY;
+        double outDTh = dTheta / sumFomTheta;
+
+        if (sumFomXY <= 0.0 && sumFomTheta <= 0.0)
+            return new Twist2d();
+        return new Twist2d(outDx, outDy, outDTh);
     }
 
+    /** Drop anything older than our window and roll poseBeforeHistory forward. */
     private static void trimHistory() {
-        cutoff = lastUpdateTime - HISTORY_WINDOW_SEC;
+        double cutoff = lastUpdateTime - HISTORY_WINDOW_SEC;
         while (!history.isEmpty() && history.peekFirst().time < cutoff) {
-            tempEntry = history.removeFirst();
-            poseBeforeHistory = poseBeforeHistory.exp(tempEntry.twist);
-            historyStartTime = tempEntry.time;
+            var e = history.removeFirst();
+            poseBeforeHistory = poseBeforeHistory.exp(e.twist);
+            historyStartTime = e.time;
         }
     }
 
+    /** One applied‐twist entry. */
     private static class HistoryEntry {
         final double time;
         final Twist2d twist;

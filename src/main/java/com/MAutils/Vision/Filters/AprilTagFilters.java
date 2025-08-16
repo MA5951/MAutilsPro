@@ -44,6 +44,10 @@ public class AprilTagFilters {
     }
 
     public double getOFOM() {//Talk with rader 
+        if (!visionCameraIO.isTag() || visionPose.pose.getX() == 0
+        || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation())) {
+            return 0;
+        }
         return 0.5;
     }
     
