@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 import com.MAutils.Controllers.MAController;
 import com.MAutils.Logger.MALog;
+import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.SwerveSystem;
 import com.MAutils.Swerve.SwerveSystemConstants;
-import com.MAutils.Swerve.IOs.Gyro.GyroIO.GyroData;
 import com.MAutils.Swerve.Utils.SwerveController;
 import com.MAutils.Utils.ChassisSpeedsUtil;
 
@@ -51,6 +51,10 @@ public class FieldCentricDrive extends SwerveController {
 
     public void setOffset(double angleOffset) {
         this.angleOffset = angleOffset;
+    }
+
+    public double  getOffset() {
+        return angleOffset;
     }
 
     public void updateSpeeds() {
