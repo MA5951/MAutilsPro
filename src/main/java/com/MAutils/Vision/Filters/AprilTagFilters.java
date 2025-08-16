@@ -6,58 +6,50 @@ import com.MAutils.Vision.IOs.VisionCameraIO;
 import com.MAutils.Vision.Util.LimelightHelpers.PoseEstimate;
 import com.MAutils.Vision.Util.LimelightHelpers.RawFiducial;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AprilTagFilters {
+    public static final double fomCoefficient = 0.1;
 
-    private FiltesConfig filtersConfig;
+    private FiltersConfig filtersConfig;
     private VisionCameraIO visionCameraIO;
     private RawFiducial tag;
     private PoseEstimate visionPose;
-    private Supplier<ChassisSpeeds> chassiSpeedsSupplier;
+    @SuppressWarnings("unused")
     private ChassisSpeeds chassisSpeeds;
 
-    private double velocityFOM;
-    private double ambiguityFOM;
-    private double distanceFOM;
-    private double poseJumpFOM;
-
-    public AprilTagFilters(FiltesConfig filtersConfig, VisionCameraIO visionCameraIO, Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
+    public AprilTagFilters(FiltersConfig filtersConfig, VisionCameraIO visionCameraIO,
+            Supplier<ChassisSpeeds> chassisSpeedsSupplier) {
         this.filtersConfig = filtersConfig;
         this.visionCameraIO = visionCameraIO;
-        this.chassiSpeedsSupplier = chassisSpeedsSupplier;
     }
 
-    public void updateFiltersConfig(FiltesConfig newConfig) {
+    public void updateFiltersConfig(FiltersConfig newConfig) {
         this.filtersConfig = newConfig;
     }
 
-    public double getFOM() {
-        tag = visionCameraIO.getTag();
-        visionPose = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
-        chassisSpeeds = chassiSpeedsSupplier.get();
-        
-        velocityFOM = 
-        
-        if (!visionCameraIO.isTag() || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation()) 
-        ) return 0;
-
-
-
-
-    }
-
-    private boolean isTagWhitelisted(int tagID) {
-        for (int id : filtersConfig.tagWhitelist) {
-            if (id == tagID)
-                return true;
+    public double getXyFOM() {//Talk with rader
+        tag         = visionCameraIO.getTag();
+        visionPose  = visionCameraIO.getPoseEstimate(filtersConfig.poseEstimateType);
+    
+        // if no valid tag, out‐of‐bounds, or too ambiguous, zero confidence
+        if (!visionCameraIO.isTag() || visionPose.pose.getX() == 0
+            || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation())
+            || tag.ambiguity > 0.7) {
+          return 0.0;
         }
-        return false;
+    
+        
+        return 0.5;
     }
 
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(value, max));
+    public double getOFOM() {//Talk with rader 
+        if (!visionCameraIO.isTag() || visionPose.pose.getX() == 0
+        || !filtersConfig.fieldRactangle.contains(visionPose.pose.getTranslation())) {
+            return 0;
+        }
+        return 0.5;
     }
+    
+
 }

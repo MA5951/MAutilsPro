@@ -1,24 +1,34 @@
 
 package com.MAutils.Vision;
 
-import com.MAutils.Vision.IOs.VisionCameraIO;
+import com.MAutils.Vision.IOs.Camera;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class VisionSystem extends SubsystemBase{
+public class VisionSystem extends SubsystemBase {
+    private static VisionSystem instance;
 
-    private VisionCameraIO[] cameras;
+    private Camera[] cameras;
 
-    public VisionSystem(VisionCameraIO... cameras) {
+    public VisionSystem() {
+    }
+
+    public void setCameras(Camera... cameras) {
         this.cameras = cameras;
     }
 
-
     @Override
     public void periodic() {
-        for (VisionCameraIO visionCameraIO : cameras) {
+        for (Camera camera : cameras) {
+            camera.update();
         }
     }
 
+    public static VisionSystem getInstance() {
+        if (instance == null) {
+            instance = new VisionSystem();
+        }
+        return instance;
+    }
 
 }

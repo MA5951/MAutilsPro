@@ -39,14 +39,14 @@ public class SwerveModuleReplay implements SwerveModuleIO {
 
 
         moduleData.isDriveConnected = true;
-        moduleData.drivePosition = MALog.get("/Subsystems/Swerve/Modules/" + name + "/Drive Position").getDouble(0);
-        moduleData.driveVelocity = MALog.get("/Subsystems/Swerve/Modules/" + name + "/Drive Velocity").getDouble(0);
-        moduleData.driveVolts = MALog.get("/Subsystems/Swerve/Modules/" + name + "/Drive Volts").getDouble(0);
-        moduleData.driveCurrent = Math.abs(MALog.get("/Subsystems/Swerve/Modules/" + name + "/Drive Current").getDouble(0));
+        moduleData.drivePosition = MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Drive Position").getDouble(0);
+        moduleData.driveVelocity = MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Drive Velocity").getDouble(0);
+        moduleData.driveVolts = MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Drive Volts").getDouble(0);
+        moduleData.driveCurrent = Math.abs(MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Drive Current").getDouble(0));
 
         moduleData.isSteerConnected = true;
-        moduleData.steerPosition = Rotation2d.fromDegrees(MALog.get("/Subsystems/Swerve/Modules/" + name + "/Steer Position").getDouble(0));
-        moduleData.steerVelocity = MALog.get("/Subsystems/Swerve/Modules/" + name + "/Steer Velocity").getDouble(0);
+        moduleData.steerPosition = Rotation2d.fromDegrees(MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Steer Position").getDouble(0));
+        moduleData.steerVelocity = MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Steer Velocity").getDouble(0);
         moduleData.steerVolts = 0;
         moduleData.steerCurrent = 0;
 
@@ -54,10 +54,10 @@ public class SwerveModuleReplay implements SwerveModuleIO {
         moduleData.absoluteSteerPosition = Rotation2d.fromDegrees(0);
     
         moduleData.odometryDrivePositionsRad = new double[] {
-            MALog.get("/Subsystems/Swerve/Modules/" + name + "/Drive Position").getDouble(0) / 0.0508
+            MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Drive Position").getDouble(0) / 0.0508
         };
         moduleData.odometryTurnPositions = new Rotation2d[] {
-            Rotation2d.fromDegrees(MALog.get("/Subsystems/Swerve/Modules/" + name + "/Absolute Angle").getDouble(0))
+            Rotation2d.fromDegrees(MALog.getReplayEntry("/Subsystems/Swerve/Modules/" + name + "/Absolute Angle").getDouble(0))
         };
     }
 
