@@ -80,7 +80,7 @@ public class CameraSimIO implements VisionCameraIO {
     public void setCrop(double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
     }
 
-    public void filterTags(int[] tags) {
+    public void allowTags(int[] tags) {
     }
 
     public void takeSnapshot() {
@@ -88,6 +88,10 @@ public class CameraSimIO implements VisionCameraIO {
 
     public int getPipline() {
         return 0;
+    }
+
+    public boolean isTag() {
+        return camera.getAllUnreadResults().get(0).hasTargets();
     }
 
     public RawFiducial getTag() {
@@ -134,6 +138,9 @@ public class CameraSimIO implements VisionCameraIO {
     @Override
     public String getName() {
         return camera.getName();
+    }
+
+    public void update() {
     }
 
 }
