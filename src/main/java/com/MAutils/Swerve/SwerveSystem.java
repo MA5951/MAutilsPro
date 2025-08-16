@@ -19,7 +19,6 @@ import com.MAutils.Swerve.Utils.SwerveSetpointGenerator;
 import com.MAutils.Swerve.Utils.SwerveState;
 import com.MAutils.Utils.DeafultRobotConstants;
 
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -148,10 +147,6 @@ public class SwerveSystem extends SubsystemBase {
 
     public GyroData getGyroData() {
         return gyro.getGyroData();
-    }
-
-    public Rotation3d getRobotRotation() {
-        return new Rotation3d(getGyroData().roll, getGyroData().pitch, getGyroData().yaw);
     }
 
     public SwerveModuleData[] getSwerveModuleData() {
