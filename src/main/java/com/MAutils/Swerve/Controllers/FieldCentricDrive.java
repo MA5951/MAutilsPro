@@ -71,7 +71,6 @@ public class FieldCentricDrive extends SwerveController {
         speeds = ChassisSpeedsUtil.FromFieldToRobot(speeds,
                 Rotation2d.fromDegrees(gyroDataSupplier.get().yaw - angleOffset));
 
-
     }
 
     @Override

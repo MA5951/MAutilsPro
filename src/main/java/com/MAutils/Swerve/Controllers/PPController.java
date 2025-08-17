@@ -15,28 +15,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PPController extends SwerveController {
 
-
-    public PPController(SwerveSystemConstants constants, SwerveSystem swerveSystem, PPHolonomicDriveController holonomicDriveController) {
+    public PPController(SwerveSystemConstants constants, SwerveSystem swerveSystem,
+            PPHolonomicDriveController holonomicDriveController) {
         super("PPController");
 
         AutoBuilder.configure(
-            () -> new Pose2d(), //TODO implement pose estimator
-            (pose2d) -> {}, //TODO implement pose estimator
-            () -> swerveSystem.getChassisSpeeds(), 
-            (speeds, feedforwards) -> setChassisSpeeds(speeds), 
-            holonomicDriveController , 
-            constants.getRobotConfig(), 
-            () -> {
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            }, new SubsystemBase("Virtual PPController Subssystem") {
-     
-            });
-        }
+                () -> new Pose2d(), // TODO implement pose estimator
+                (pose2d) -> {
+                }, // TODO implement pose estimator
+                () -> swerveSystem.getChassisSpeeds(),
+                (speeds, feedforwards) -> setChassisSpeeds(speeds),
+                holonomicDriveController,
+                constants.getRobotConfig(),
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                }, new SubsystemBase("Virtual PPController Subssystem") {
 
+                });
+    }
 
     public void startPath(String pathName) {
         try {
@@ -45,7 +45,6 @@ public class PPController extends SwerveController {
             DriverStation.reportError("Path " + pathName + " Not Found", false);
         }
     }
-
 
     private void setChassisSpeeds(ChassisSpeeds speeds) {
         this.speeds = speeds;
