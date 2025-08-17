@@ -5,7 +5,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.PoseEstimation.FOMPoseEstimator;
 import com.MAutils.PoseEstimation.SwerveDriveEstimator;
 import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SwerveSimulation;
@@ -57,7 +56,7 @@ public class SwerveSystem extends SubsystemBase {
             SimulationManager.registerSimulatable(new SwerveSimulation(swerveConstants));
         }
 
-        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this, FOMPoseEstimator.getInstance());
+        swerveDriveEstimator = new SwerveDriveEstimator(swerveConstants, this);
 
         PhoenixOdometryThread.getInstance(swerveConstants).start();
 

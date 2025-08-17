@@ -2,8 +2,13 @@
 package frc.robot;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
+import com.MAutils.Logger.MALog;
+import com.MAutils.PoseEstimation.PoseEstimator;
 import com.MAutils.Simulation.SimulationManager;
 
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -13,34 +18,32 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-
   public Robot() {
     m_robotContainer = new RobotContainer();
-    
+    PoseEstimator.resetPose(new Pose2d(10.354, 5.56, new Rotation2d()));
 
-    
-
-
-    
-
-
-    
   }
 
   @Override
   public void robotPeriodic() {
     StatusSignalsRunner.refreshAll();
     CommandScheduler.getInstance().run();
+
+    MALog.log("/Pose Estimator/FOM Pose", PoseEstimator.update());
+    MALog.log("/Pose Estimator/Robot FOM", PoseEstimator.getRobotFOM());
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+  }
 
   @Override
   public void autonomousInit() {
@@ -53,10 +56,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
@@ -70,7 +75,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -78,10 +84,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 
   @Override
   public void simulationInit() {
