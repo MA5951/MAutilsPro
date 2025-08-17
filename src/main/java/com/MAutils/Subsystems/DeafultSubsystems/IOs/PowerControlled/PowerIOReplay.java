@@ -12,7 +12,7 @@ public class PowerIOReplay implements PowerSystemIO {
 
     public PowerIOReplay(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.systemName + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.SYSTEM_NAME + "/IO" : systemConstants.LOG_PATH;
     }
 
     public double getVelocity() {
@@ -43,6 +43,9 @@ public class PowerIOReplay implements PowerSystemIO {
         MALog.log(logPath + "/Voltage", getAppliedVolts());
         MALog.log(logPath + "/Current", getCurrent());
         MALog.log(logPath + "/Position", getPosition());
+
+        MALog.log(logPath + "/Forward Limit", MALog.getReplayEntry(logPath + "/Forward Limit").getBoolean(false));
+        MALog.log(logPath + "/Reverse Limit", MALog.getReplayEntry(logPath + "/Reverse Limit").getBoolean(false));
 
     }
 

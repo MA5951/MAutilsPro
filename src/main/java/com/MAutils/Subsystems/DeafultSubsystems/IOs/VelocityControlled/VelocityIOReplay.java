@@ -6,7 +6,7 @@ import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstant
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReplay;
 
-public class VelocityIOReplay extends PowerIOReplay implements VelocitySystemIO{
+public class VelocityIOReplay extends PowerIOReplay implements VelocitySystemIO {
 
     public VelocityIOReplay(VelocitySystemConstants systemName) {
         super(systemName.toPowerSystemConstants());
@@ -39,5 +39,9 @@ public class VelocityIOReplay extends PowerIOReplay implements VelocitySystemIO{
         MALog.log(logPath + "/At Point", atPoint());
 
     }
-    
+
+    @Override
+    public void setVelocity(double velocity, double feedForward) {
+    }
+
 }

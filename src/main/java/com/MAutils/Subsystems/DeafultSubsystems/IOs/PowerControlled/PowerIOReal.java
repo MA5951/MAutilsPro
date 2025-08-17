@@ -37,7 +37,7 @@ public class PowerIOReal implements PowerSystemIO {
 
     public PowerIOReal(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.systemName + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.SYSTEM_NAME + "/IO" : systemConstants.LOG_PATH;
 
         configMotors();
 
@@ -125,6 +125,8 @@ public class PowerIOReal implements PowerSystemIO {
         MALog.log(logPath + "/Current", getCurrent());
         MALog.log(logPath + "/Position", getPosition());
 
+        MALog.log(logPath + "/Forward Limit", Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT);
+        MALog.log(logPath + "/Reverse Limit", Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT);
     }
 
     @Override

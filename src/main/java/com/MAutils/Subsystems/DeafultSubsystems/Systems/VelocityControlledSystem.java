@@ -3,8 +3,8 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
+import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.VelocitySystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.VelocitySystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.VelocityControlled.VelocityIOReal;
@@ -20,7 +20,7 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
 
     public VelocityControlledSystem(VelocitySystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
-        super(systemConstants.systemName);
+        super(systemConstants.SYSTEM_NAME);
         systemIO = new VelocityIOReal(systemConstants);
 
         if (!Robot.isReal()) {
@@ -31,17 +31,18 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
             }
         }
 
-
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public VelocityControlledSystem(VelocitySystemConstants systemConstants, VelocitySystemIO simIO) {
-        super(systemConstants.systemName);
+    public VelocityControlledSystem(VelocitySystemConstants systemConstants, VelocitySystemIO simIO,@SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.SYSTEM_NAME);
         systemIO = new VelocityIOReal(systemConstants);
 
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            systemIO = simIO;
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
     public double getAppliedVolts() {
@@ -82,6 +83,10 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
 
     public void setVelocity(double velocity) {
         systemIO.setVelocity(velocity);
+    }
+
+    public void setVelocity(double velocity, double feedForward) {
+        systemIO.setVelocity(velocity, feedForward);
     }
 
     @Override

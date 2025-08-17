@@ -10,7 +10,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-
 public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
 
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
@@ -52,12 +51,12 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
 
     @Override
     public double getError() {
-        return motorError.getValueAsDouble() * systemConstants.POSITION_FACTOR;
+        return motorError.getValueAsDouble() * systemConstants.VELOCITY_FACTOR;
     }
 
     @Override
     public double getSetPoint() {
-        return motorSetPoint.getValueAsDouble() * systemConstants.POSITION_FACTOR;
+        return motorSetPoint.getValueAsDouble() * systemConstants.VELOCITY_FACTOR;
     }
 
     @Override
@@ -73,6 +72,20 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
 
         systemConstants.master.motorController.setControl(velocityRequest.withVelocity(Velocity)
                 .withSlot(0)
+                .withFeedForward((Velocity / systemConstants.MAX_VELOCITY) * 12)
+                .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
+                .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT));
+    }
+
+    @Override
+    public void setVelocity(double Velocity, double feedForward) {
+        if (Velocity > systemConstants.MAX_VELOCITY) {
+            throw new IllegalArgumentException("Velocity exceeds maximum limit: " + systemConstants.MAX_VELOCITY);
+        }
+
+        systemConstants.master.motorController.setControl(velocityRequest.withVelocity(Velocity)
+                .withSlot(0)
+                .withFeedForward(feedForward)
                 .withLimitForwardMotion(Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT)
                 .withLimitReverseMotion(Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT));
     }
