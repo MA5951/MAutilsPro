@@ -44,6 +44,8 @@ public interface SwerveModuleIO {
 
     void updateSwerveModuleData(SwerveModuleData data);
 
+    void resetSteerPosition(Rotation2d rotation);
+
     void setDriveVoltage(double volts);
 
     void setSteerVoltage(double volts);
@@ -55,6 +57,10 @@ public interface SwerveModuleIO {
     void setDrivePID(double kP, double kI, double kD);
 
     void setSteerPID(double kP, double kI, double kD);
+
+    void setDriveNutralMode(boolean isBrake);
+
+    void setSteerNutralMode(boolean isBrake);
 
 
 }

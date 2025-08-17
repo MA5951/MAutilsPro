@@ -23,7 +23,7 @@ public class SwerveModule {
         this.moduleIO = moduleIO;
     }
 
-    public void updateLog() {
+    private void updateLog() {
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Is Drive Connected", moduleData.isDriveConnected);
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Drive Position", moduleData.drivePosition);
         MALog.log("/Subsystems/Swerve/Modules/" + name + "/Drive Velocity", moduleData.driveVelocity);
@@ -54,6 +54,14 @@ public class SwerveModule {
     public void setVoltage(double driveVolts, double steerVolts) {
         moduleIO.setDriveVoltage(driveVolts);
         moduleIO.setSteerVoltage(steerVolts);
+    }
+    
+    public void setDriveVoltage(double voltage) {
+        moduleIO.setDriveVoltage(voltage);
+    }
+
+    public void setSteerVoltage(double voltage) {
+        moduleIO.setSteerVoltage(voltage);
     }
 
     public SwerveModuleState getState() {

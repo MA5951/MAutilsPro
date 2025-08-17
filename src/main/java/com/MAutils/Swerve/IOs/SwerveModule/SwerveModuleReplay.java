@@ -1,30 +1,11 @@
 
 package com.MAutils.Swerve.IOs.SwerveModule;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Rotation;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-
-import java.util.Arrays;
-
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
-import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
 import com.MAutils.Logger.MALog;
-import com.MAutils.Swerve.SwerveSystemConstants;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.datalog.DataLogIterator;
-import edu.wpi.first.util.datalog.DataLogReader;
-import edu.wpi.first.util.datalog.DataLogRecord;
 
 public class SwerveModuleReplay implements SwerveModuleIO {
 
@@ -79,6 +60,15 @@ public class SwerveModuleReplay implements SwerveModuleIO {
 
     public void setSteerPID(double kP, double kI, double kD) {
         
+    }
+
+    public void setDriveNutralMode(boolean isBrake) {
+    }
+
+    public void setSteerNutralMode(boolean isBrake) {
+    }
+
+    public void resetSteerPosition(Rotation2d rotation) {
     }
 
 }

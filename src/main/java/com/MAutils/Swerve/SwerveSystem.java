@@ -22,7 +22,6 @@ import com.MAutils.Utils.DeafultRobotConstants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -51,7 +50,7 @@ public class SwerveSystem extends SubsystemBase {
         gyro = swerveConstants.getGyro();
 
         swerveSetpointGenerator = new SwerveSetpointGenerator(swerveConstants.getRobotConfig(),
-                Units.rotationsToRadians(10.0));
+                swerveConstants.MAX_STEER_VELOCITY_RADS);
 
         if (!Robot.isReal()) {
             SimulationManager.registerSimulatable(new SwerveSimulation(swerveConstants));
@@ -63,7 +62,6 @@ public class SwerveSystem extends SubsystemBase {
 
         odometryLock.lock();
         gyro.update();
-        System.out.println(gyro.getGyroData().yaw);
         for (var module : swerveModules) {
             module.update();
         }
@@ -78,6 +76,10 @@ public class SwerveSystem extends SubsystemBase {
         }
 
         swerveSetpoint = new SwerveSetpoint(new ChassisSpeeds(0, 0, 0), currentStates, DriveFeedforwards.zeros(4));
+    }
+
+    public SwerveSystemConstants getSwerveConstants() {
+        return swerveConstants;
     }
 
     public void setState(SwerveState state) {

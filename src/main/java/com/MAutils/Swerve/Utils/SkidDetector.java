@@ -1,4 +1,3 @@
-
 package com.MAutils.Swerve.Utils;
 
 import java.util.function.Supplier;
@@ -13,7 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SkidDetector {
-    private final double skidThreshold = 1.1;
+    private static final double SKID_THRESHOLD = 1.1;
 
     private final SwerveDriveKinematics kinematics;
     private final Supplier<SwerveModuleState[]> statesSupplier;
@@ -40,45 +39,36 @@ public class SkidDetector {
         swerveStatesRotationalPart = kinematics
                 .toSwerveModuleStates(new ChassisSpeeds(0, 0, measurSpeeds.omegaRadiansPerSecond));
 
+        // Calculate translational magnitudes and find minimum in one loop
         for (int i = 0; i < 4; i++) {
             swerveStateMeasuredAsVector = VectorUtil.getVectorFromSwerveState(statesSupplier.get()[i]);
             swerveStatesRotationalPartAsVector = VectorUtil.getVectorFromSwerveState(swerveStatesRotationalPart[i]);
             swerveStatesTranslationalPartAsVector = swerveStateMeasuredAsVector
                     .minus(swerveStatesRotationalPartAsVector);
             swerveStatesTranslationalPartMagnitudes[i] = swerveStatesTranslationalPartAsVector.getNorm();
+            
+            minimumTranslationalSpeed = Math.min(minimumTranslationalSpeed, swerveStatesTranslationalPartMagnitudes[i]);
         }
 
-        for (int i = 0; i < 4; i++) {
-            if (swerveStatesTranslationalPartMagnitudes[i] < minimumTranslationalSpeed) {
-                minimumTranslationalSpeed = swerveStatesTranslationalPartMagnitudes[i];
-            }
-        }
-
-        if (minimumTranslationalSpeed > 0.000000000000000000000000001) {
+        if (minimumTranslationalSpeed > 0) {//TODO epsilon after merge
             MALog.log("/Pose Estimator/Skid/Minimum Translational Speed",
                     minimumTranslationalSpeed);
-            for (int i = 0; i < 4; i++) {
-                skidRatio[i] = swerveStatesTranslationalPartMagnitudes[i]
-                        / minimumTranslationalSpeed;
-
-            }
-
-            for (int i = 0; i < 4; i++) {
-                isSkidding[i] = skidRatio[i] > skidThreshold;
-                MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
-                MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i,
-                skidRatio[i]);
-            }
-
+            
             numOfSkiddingModules = 0;
-
+            
+            // Calculate skid ratios and detect skidding in one loop
             for (int i = 0; i < 4; i++) {
+                skidRatio[i] = swerveStatesTranslationalPartMagnitudes[i] / minimumTranslationalSpeed;
+                isSkidding[i] = skidRatio[i] > SKID_THRESHOLD;
+                
                 if (isSkidding[i]) {
                     numOfSkiddingModules++;
                 }
+                
+                MALog.log("/Pose Estimator/Skid/Is Skidding/" + i, isSkidding[i]);
+                MALog.log("/Pose Estimator/Skid/Skid Ratios/" + i, skidRatio[i]);
             }
         }
-
     }
 
     public boolean[] getIsSkidding() {

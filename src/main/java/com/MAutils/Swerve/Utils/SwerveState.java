@@ -9,10 +9,8 @@ public class SwerveState {
 
     private ChassisSpeeds stateSpeeds;
     private String stateName;
-    private Supplier<ChassisSpeeds> xySupplier;
-    private Supplier<ChassisSpeeds> omegaSupplier;//TODO seperate to 3 double suppliers for 
-    private Runnable onStateEnter = () -> {};
-    private Runnable onStateRuning = () -> {};
+    private Supplier<ChassisSpeeds> xySupplier, omegaSupplier;
+    private Runnable onStateEnter = () -> {}, onStateRuning = () -> {}, updatRunnable = () -> {};
 
     public SwerveState(String name) {
         this.stateName = name;
@@ -38,16 +36,19 @@ public class SwerveState {
     }
 
     public SwerveState withXY(SwerveController controller) {
+        updatRunnable = controller::updateSpeeds;
         xySupplier = () -> controller.getSpeeds();
         return this;
     }
 
     public SwerveState withOmega(SwerveController controller) {
+        updatRunnable = controller::updateSpeeds;
         omegaSupplier = () -> controller.getSpeeds();
         return this;
     }
 
     public SwerveState withSpeeds(SwerveController controller) {
+        updatRunnable = controller::updateSpeeds;
         xySupplier = () -> controller.getSpeeds();
         omegaSupplier = () -> controller.getSpeeds();
         return this;
@@ -59,7 +60,7 @@ public class SwerveState {
         return this;
     }
 
-    public SwerveState withXY(double x, double y) {//TODO seperate xy
+    public SwerveState withXY(double x, double y) {
         xySupplier = () -> new ChassisSpeeds(x, y, 0);
         return this;
     }
@@ -79,7 +80,18 @@ public class SwerveState {
         return this;
     }
 
+    public SwerveState setX(double x) {
+        xySupplier = () -> new ChassisSpeeds(x, 0, 0);
+        return this;
+    }
+
+    public SwerveState setY(double y) {
+        xySupplier = () -> new ChassisSpeeds(0, y, 0);
+        return this;
+    }
+
     public ChassisSpeeds getSpeeds() {
+        updatRunnable.run();
         stateSpeeds = xySupplier.get();
         stateSpeeds.omegaRadiansPerSecond = omegaSupplier.get().omegaRadiansPerSecond;
         return stateSpeeds;
