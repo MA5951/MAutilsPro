@@ -12,8 +12,8 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 @SuppressWarnings("unchecked")
-public class DeafultSystemConstants<T> {
-    public Motor[] MOTORS = new Motor[]{};
+public abstract class DeafultSystemConstants<T> {
+    public Motor[] MOTORS = new Motor[] {};
     public final Motor master;
     public final TalonFXSimState masterSimState;
     public DCMotorSim motorSim;
@@ -32,10 +32,24 @@ public class DeafultSystemConstants<T> {
     public final String systemName;
     public LinearSystem<N2, N1, N2> systemID;
 
-    public DeafultSystemConstants(String systemName,Motor master, Motor... motors) {
+    public DeafultSystemConstants(String systemName, Motor master, double motorLimitCurrent, double gear,
+            boolean currentLimitEnabled, double statorCurrentLimit, double peakForwardVoltage,
+            double peakReverseVoltage, boolean isBrake, double positionFactor, double velocityFactor, double inertia,
+            boolean foc, String logPath, Motor... motors) {
         this.MOTORS = motors;
         this.master = master;
         this.systemName = systemName;
+        this.GEAR = gear;
+        this.STATOR_CURRENT_LIMIT = statorCurrentLimit;
+        this.CURRENT_LIMIT_ENABLED = currentLimitEnabled;
+        this.MOTOR_LIMIT_CURRENT = motorLimitCurrent;
+        this.LOG_PATH = logPath;
+        this.PEAK_FORWARD_VOLTAGE = peakForwardVoltage;
+        this.PEAK_REVERSE_VOLTAGE = peakReverseVoltage;
+        this.FOC = foc;
+        this.INERTIA = inertia;
+        this.POSITION_FACTOR = positionFactor;
+        this.VELOCITY_FACTOR = velocityFactor;
 
         masterSimState = master.motorController.getSimState();
 
@@ -46,85 +60,6 @@ public class DeafultSystemConstants<T> {
                 systemID,
                 MotorType.getDcMotor(master.motorType,
                         1 + MOTORS.length));
-    }
-
-    public T withGear(double gear) {
-        this.GEAR = gear;
-        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
-                INERTIA, GEAR);
-        motorSim = new DCMotorSim(
-                systemID,
-                MotorType.getDcMotor(master.motorType,
-                        1 + MOTORS.length));
-        return (T) this;
-    }
-
-    public T withStatorCurrentLimit(boolean currentLimitEnabled, double statorCurrentLimit) {
-        this.STATOR_CURRENT_LIMIT = statorCurrentLimit;
-        this.CURRENT_LIMIT_ENABLED = currentLimitEnabled;
-        return (T) this;
-    }
-
-    public T withMotorCurrentLimit(double motorLimitCurrent) {
-        this.MOTOR_LIMIT_CURRENT = motorLimitCurrent;
-        return (T) this;
-    }
-
-    public T withLogPath(String logPath) {
-        this.LOG_PATH = logPath;
-        return (T) this;
-    }
-
-    public T withIsBrake(boolean isBrake) {
-        this.IS_BRAKE = isBrake;
-        return (T) this;
-    }
-
-    public T withPeakVoltage(double peakForwardVoltage, double peakReverseVoltage) {
-        this.PEAK_FORWARD_VOLTAGE = peakForwardVoltage;
-        this.PEAK_REVERSE_VOLTAGE = peakReverseVoltage;
-        return (T) this;
-    }
-
-    public T withFOC(boolean foc) {
-        this.FOC = foc;
-        return (T) this;
-    }
-
-    public T withInertia(double inertia) {
-        this.INERTIA = inertia;
-        this.systemID = LinearSystemId.createDCMotorSystem(MotorType.getDcMotor(master.motorType, 1 + MOTORS.length),
-                INERTIA, GEAR);
-        motorSim = new DCMotorSim(
-                systemID,
-                MotorType.getDcMotor(master.motorType,
-                        1 + MOTORS.length));
-        return (T) this;
-    }
-
-    public T withPositionFactor(double positionFactor) {
-        this.POSITION_FACTOR = positionFactor;
-        return (T) this;
-    }
-
-    public T withVelocityFactor(double velocityFactor) {
-        this.VELOCITY_FACTOR = velocityFactor;
-        return (T) this;
-    }
-
-    public PowerSystemConstants toPowerSystemConstants() {
-        return new PowerSystemConstants(systemName, master, MOTORS)
-                .withFOC(FOC)
-                .withGear(GEAR)
-                .withInertia(INERTIA)
-                .withIsBrake(IS_BRAKE)
-                .withLogPath(LOG_PATH)
-                .withMotorCurrentLimit(MOTOR_LIMIT_CURRENT)
-                .withPeakVoltage(PEAK_FORWARD_VOLTAGE, PEAK_REVERSE_VOLTAGE)
-                .withStatorCurrentLimit(CURRENT_LIMIT_ENABLED, STATOR_CURRENT_LIMIT)
-                .withPositionFactor(POSITION_FACTOR)
-                .withVelocityFactor(VELOCITY_FACTOR)
-                ;
     }
 
 }
