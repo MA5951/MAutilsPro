@@ -42,8 +42,7 @@ public class PositionIOReplay extends PowerIOReplay implements PositionSystemIO 
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
 
-        MALog.log(logPath + "/Forward Limit", MALog.getReplayEntry(logPath + "/Forward Limit").getBoolean(false));
-        MALog.log(logPath + "/Reverse Limit", MALog.getReplayEntry(logPath + "/Reverse Limit").getBoolean(false));
+       
     }
 
 }

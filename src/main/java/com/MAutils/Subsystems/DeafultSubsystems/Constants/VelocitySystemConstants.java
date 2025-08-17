@@ -7,12 +7,12 @@ import frc.robot.Robot;
 
 public class VelocitySystemConstants extends DeafultSystemConstants<VelocitySystemConstants> {
 
-    public GainConfig REAL_GAINS;
-    public GainConfig SIM_GAINS;
+    public final GainConfig REAL_GAINS;
+    public final GainConfig SIM_GAINS;
 
-    public double MAX_VELOCITY = 0;
-    public double TOLERANCE = 0;
-    public double WHEEL_RADIUS = 0;
+    public final double MAX_VELOCITY ;
+    public final double TOLERANCE ;
+    public final double WHEEL_RADIUS;
 
     public VelocitySystemConstants(
             DeafultSystemConstants.Builder b,

@@ -1,24 +1,27 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
+import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
+import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReal;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIOReplay;
 import com.MAutils.Utils.Constants;
 import com.MAutils.Utils.Constants.SimulationType;
+import com.ctre.phoenix6.StatusSignal;
 
 import frc.robot.Robot;
 
-public abstract class PowerControlledSystem extends StateSubsystem{
+public abstract class PowerControlledSystem extends StateSubsystem {
 
     protected PowerSystemIO systemIO;
 
-    public PowerControlledSystem(PowerSystemConstants systemConstants) {
-        super(systemConstants.systemName);
+    public PowerControlledSystem(PowerSystemConstants systemConstants,
+            @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.SYSTEM_NAME);
         systemIO = new PowerIOReal(systemConstants);
 
         if (!Robot.isReal()) {
@@ -28,15 +31,20 @@ public abstract class PowerControlledSystem extends StateSubsystem{
                 systemIO = new PowerIOReplay(systemConstants);
             }
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO) {
-        super(systemConstants.systemName);
+    public PowerControlledSystem(PowerSystemConstants systemConstants, PowerSystemIO simIO,
+            @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.SYSTEM_NAME);
         systemIO = new PowerIOReal(systemConstants);
 
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            systemIO = simIO;
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
     public double getAppliedVolts() {
@@ -68,6 +76,5 @@ public abstract class PowerControlledSystem extends StateSubsystem{
         super.periodic();
         systemIO.updatePeriodic();
     }
-    
 
 }
