@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    
+
 
     try {
       dataLogReader = new DataLogReader(findReplayLogAdvantageScope());
@@ -47,10 +47,10 @@ public class Robot extends TimedRobot {
     }
 
 
-    
 
 
-    
+
+
   }
 
   @Override

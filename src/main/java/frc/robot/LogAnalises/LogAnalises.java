@@ -9,6 +9,7 @@ import com.MAutils.RobotControl.RobotState;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.Systems.PowerControlledSystem;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -29,6 +30,7 @@ public class LogAnalises {
     private Timer timeInCurrentStatetimer;
     private Timer timebetweenStatestimer;
     private Timer timeInMaxSpeed;
+    private Timer autoTimer;
 
     private RobotState lastRobotState;
     private Supplier<RobotState> currentRobotState;
@@ -46,7 +48,8 @@ public class LogAnalises {
     private PowerDistribution PDH;
 
     private double sumOfCurrents;
-    private double sumOfVoltage;
+
+    private double autoTime;
 
     public LogAnalises(Supplier<RobotState> currentRobotState,
      RobotState firstRobotState, RobotState secondRobotState,
@@ -70,14 +73,14 @@ public class LogAnalises {
 
         timeInMaxSpeed = new Timer();
 
-        this.currentVelocity = currentVelocity;
+        autoTimer = new Timer();
+
+        this.currentVelocity = currentVelocity; 
         maxVelocity = 0;
         maxVelocityTime = 0;
 
-        systemNum = 0;
 
         sumOfCurrents = 0;
-        sumOfVoltage = 0;
     }
 
     public double getTimeInCurrentState() {
@@ -95,9 +98,13 @@ public class LogAnalises {
     }
 
     public double getCycleTime(boolean startingCondition, boolean endingCondition) {
+        boolean enterTheFirstCondition = false; // add it to make sure it enterd the first condition
+
         if ((currentRobotState.get().equals(firstRobotState)) && startingCondition) {
             timebetweenStatestimer.start();
-        } else if(currentRobotState.get().equals(secondRobotState) && endingCondition) {
+
+            enterTheFirstCondition = true;
+        } else if(currentRobotState.get().equals(secondRobotState) && endingCondition && enterTheFirstCondition) {
             return timebetweenStatestimer.get();
         }
         return -1;
@@ -107,12 +114,13 @@ public class LogAnalises {
         if (currentVelocity.get() > maxVelocity) {
             maxVelocity = currentVelocity.get();
         }
-        if (Math.abs(currentVelocity.get()- maxVelocity) > LogAnalisesConstants.VELOCITY_TOLERANC) {
+        if (Math.abs(currentVelocity.get()- maxVelocity) < LogAnalisesConstants.VELOCITY_TOLERANC) {
             timeInMaxSpeed.start();
             maxVelocityTime = timeInMaxSpeed.get();
         } else {
             timeInMaxSpeed.reset();
         }
+        
     }
 
     public double getMaxVelocity() {
@@ -140,9 +148,17 @@ public class LogAnalises {
     }
 
     public CurrentEntry[] getCurrentPrecent() {
-        
-
         return currentPrecents;
     }
 
+    public void StartAuto() {
+        if (DriverStation.isAutonomousEnabled()) {
+            autoTimer.start();
+        }
+    }
+
+    public void endAuto() {
+        autoTime = autoTimer.get();
+        autoTimer.stop();
+    }
 }
