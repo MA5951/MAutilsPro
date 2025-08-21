@@ -3,6 +3,7 @@ package com.MAutils.Simulation.Simulatables;
 
 import java.util.function.Supplier;
 
+import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Utils.Simulatable;
 import com.MAutils.Vision.IOs.CameraSimIO;
 
@@ -14,6 +15,7 @@ public class VisionWorldSimulation implements Simulatable {
 
     public VisionWorldSimulation(Supplier<Pose2d> robotPose) {
         this.robotPose = robotPose;
+        SimulationManager.registerSimulatable(this);
     }
 
     @Override

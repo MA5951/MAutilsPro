@@ -5,14 +5,14 @@ import java.util.function.Supplier;
 
 import frc.robot.Robot;
 
-public class SensorWrapper<T> {
+public class BooleanSensorWrapper {
 
-    private Supplier<T> sensorSupplier;
-    private T value;
+    private Supplier<Boolean> sensorSupplier;
+    private Boolean value;
     private boolean usingSupplier;
 
 
-    public SensorWrapper(Supplier<T> sensorSupplier, Supplier<T> sensorSimSupplier) {
+    public BooleanSensorWrapper(Supplier<Boolean> sensorSupplier, Supplier<Boolean> sensorSimSupplier) {
         this.sensorSupplier = sensorSupplier;
         usingSupplier = true;
 
@@ -21,7 +21,7 @@ public class SensorWrapper<T> {
         }
     }
 
-    public void setValue(T value) {
+    public void setValue(Boolean value) {
         if (!Robot.isReal()) {
             this.value = value;
             usingSupplier = false;
@@ -30,7 +30,7 @@ public class SensorWrapper<T> {
         }
     }
 
-    public T getValue() {
+    public Boolean getValue() {
         return usingSupplier ? sensorSupplier.get() : value;
     }
 

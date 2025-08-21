@@ -5,6 +5,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 import com.MAutils.Logger.MALog;
+import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Utils.Simulatable;
 import com.MAutils.Swerve.SwerveSystemConstants;
 
@@ -15,6 +16,7 @@ public class SwerveSimulation implements Simulatable {
     public SwerveSimulation(SwerveSystemConstants swerveSystemConstants) {
         swerveDriveSimulation = swerveSystemConstants.SWERVE_DRIVE_SIMULATION;
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+        SimulationManager.registerSimulatable(this);
     }
 
     @Override

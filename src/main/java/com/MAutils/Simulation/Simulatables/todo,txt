@@ -1,0 +1,10 @@
+do distnace between sensors, and ass wheel radius to power and velocity systems to know
+
+addSensor(SensorWraper, Detection deadbound in cm)
+
+setGamePIece(game piece with cm)
+
+supplier for getting when gamepiece is in the robot then everythoing is by the systems travel and the sensor aragment
+
+
+support multiple gamepieces in at the same time in the same system
