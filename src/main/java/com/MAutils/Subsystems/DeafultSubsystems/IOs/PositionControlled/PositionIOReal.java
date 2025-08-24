@@ -40,12 +40,16 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         motorConfig.Slot0.kS = systemConstants.getGainConfig().Ks;
         motorConfig.Slot0.kV = systemConstants.getGainConfig().Kv;
         motorConfig.Slot0.kA = systemConstants.getGainConfig().Ka;
-        motorConfig.Slot0.StaticFeedforwardSign = systemConstants.IS_MOTION_MAGIC ? StaticFeedforwardSignValue.UseVelocitySign
+        motorConfig.Slot0.StaticFeedforwardSign = systemConstants.IS_MOTION_MAGIC
+                ? StaticFeedforwardSignValue.UseVelocitySign
                 : StaticFeedforwardSignValue.UseClosedLoopSign;
 
         motorConfig.MotionMagic.MotionMagicAcceleration = systemConstants.ACCELERATION;
         motorConfig.MotionMagic.MotionMagicCruiseVelocity = systemConstants.CRUISE_VELOCITY;
         motorConfig.MotionMagic.MotionMagicJerk = systemConstants.JERK;
+
+        motorConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = systemConstants.RAMP_RATE;
+        motorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = systemConstants.RAMP_RATE;
 
         motorConfig.MotorOutput.Inverted = systemConstants.master.invert;
         systemConstants.master.motorController.getConfigurator().apply(motorConfig);
@@ -117,6 +121,10 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
         MALog.log(logPath + "/Set Point", getSetPoint());
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
+        MALog.log(logPath + "/Forward Limit", Math.abs(getCurrent()) > systemConstants.MOTOR_LIMIT_CURRENT
+                || getPosition() > systemConstants.MAX_POSE);
+        MALog.log(logPath + "/Reverse Limit", Math.abs(getCurrent()) < systemConstants.MOTOR_LIMIT_CURRENT
+                || getPosition() < systemConstants.MIN_POSE);
     }
 
     @Override

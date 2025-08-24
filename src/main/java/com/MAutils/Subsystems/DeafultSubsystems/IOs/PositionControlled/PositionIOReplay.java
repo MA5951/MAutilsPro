@@ -8,7 +8,6 @@ import com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled.PowerIORepla
 
 public class PositionIOReplay extends PowerIOReplay implements PositionSystemIO {
 
-
     public PositionIOReplay(PositionSystemConstants systemConstants) {
         super(systemConstants.toPowerSystemConstants());
 
@@ -42,6 +41,8 @@ public class PositionIOReplay extends PowerIOReplay implements PositionSystemIO 
         MALog.log(logPath + "/Set Point", getSetPoint());
         MALog.log(logPath + "/Error", getError());
         MALog.log(logPath + "/At Point", atPoint());
+
+       
     }
 
 }

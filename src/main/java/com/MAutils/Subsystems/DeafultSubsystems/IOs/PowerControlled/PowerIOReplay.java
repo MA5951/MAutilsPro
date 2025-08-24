@@ -2,8 +2,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 
 import com.MAutils.Logger.MALog;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.DeafultSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Utils.ConvUtil;
 
 public class PowerIOReplay implements PowerSystemIO {
 
@@ -12,7 +14,7 @@ public class PowerIOReplay implements PowerSystemIO {
 
     public PowerIOReplay(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.systemName + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.SYSTEM_NAME + "/IO" : systemConstants.LOG_PATH;
     }
 
     public double getVelocity() {
@@ -44,10 +46,13 @@ public class PowerIOReplay implements PowerSystemIO {
         MALog.log(logPath + "/Current", getCurrent());
         MALog.log(logPath + "/Position", getPosition());
 
+        MALog.log(logPath + "/Forward Limit", MALog.getReplayEntry(logPath + "/Forward Limit").getBoolean(false));
+        MALog.log(logPath + "/Reverse Limit", MALog.getReplayEntry(logPath + "/Reverse Limit").getBoolean(false));
+
     }
 
     public boolean isMoving() {
-        return getVelocity() / systemConstants.VELOCITY_FACTOR > 1;
+        return ConvUtil.RPStoRPM(getVelocity() / systemConstants.VELOCITY_FACTOR) > DeafultSystemConstants.RPM_MOVING_THRESHOLD;
     }
 
     public void restPosition(double position) {
@@ -55,6 +60,16 @@ public class PowerIOReplay implements PowerSystemIO {
 
     public PowerSystemConstants getSystemConstants() {
         return systemConstants;
+    }
+
+    @Override
+    public double getRawVelocity() {
+        return 0;
+    }
+
+    @Override
+    public double getRawPosition() {
+        return 0;
     }
 
     

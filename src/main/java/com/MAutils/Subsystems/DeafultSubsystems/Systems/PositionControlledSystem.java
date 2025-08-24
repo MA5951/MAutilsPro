@@ -3,8 +3,8 @@ package com.MAutils.Subsystems.DeafultSubsystems.Systems;
 
 import com.MAutils.CanBus.StatusSignalsRunner;
 import com.MAutils.RobotControl.StateSubsystem;
-import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Simulation.Simulatables.SubsystemSimulation;
+import com.MAutils.Simulation.SimulationManager;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PositionSystemIO;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.PositionControlled.PositionIOReal;
@@ -21,7 +21,7 @@ public abstract class PositionControlledSystem extends StateSubsystem {
 
     public PositionControlledSystem(PositionSystemConstants systemConstants,
             @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
-        super(systemConstants.systemName);
+        super(systemConstants.SYSTEM_NAME);
 
         systemIO = new PositionIOReal(systemConstants);
 
@@ -33,16 +33,26 @@ public abstract class PositionControlledSystem extends StateSubsystem {
             }
         }
 
-        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);//TODO add to others
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
-    public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO) {
-        super(systemConstants.systemName);
+    public PositionControlledSystem(PositionSystemConstants systemConstants, PositionSystemIO simIO, @SuppressWarnings("rawtypes") StatusSignal... statusSignals) {
+        super(systemConstants.SYSTEM_NAME);
         systemIO = new PositionIOReal(systemConstants);
 
         if (!Robot.isReal()) {
-            SimulationManager.registerSimulatable(new SubsystemSimulation(systemIO.getSystemConstants()));
+            systemIO = simIO;
         }
+
+        StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
+    }
+
+    public double getRawPosition() {
+        return systemIO.getRawPosition();
+    }
+
+    public double getRawVelocity() {
+        return systemIO.getRawVelocity();
     }
 
     public double getAppliedVolts() {
