@@ -100,6 +100,16 @@ public class PowerIOReal implements PowerSystemIO {
     }
 
     @Override
+    public double getRawVelocity() {
+        return ConvUtil.RPStoRPM(motorVelocity.getValueAsDouble());
+    }
+
+    @Override
+    public double getRawPosition() {
+        return motorPosition.getValueAsDouble() * 360;
+    }
+
+    @Override
     public void setBrakeMode(boolean isBrake) {
         brakeConfig.NeutralMode = isBrake
                 ? NeutralModeValue.Brake

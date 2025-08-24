@@ -1,6 +1,7 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces;
 
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.DeafultSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 
 public interface PowerSystemIO {
@@ -14,6 +15,10 @@ public interface PowerSystemIO {
 
     double getAppliedVolts(); 
 
+    double getRawVelocity();//RPM
+
+    double getRawPosition();//Degrees
+
     void setVoltage(double voltage); 
 
     void setBrakeMode(boolean isBrake); 
@@ -21,7 +26,7 @@ public interface PowerSystemIO {
     void updatePeriodic();
 
     default  public boolean isMoving() {
-        return getVelocity() > 0.5;//TODO This deapunds on the VELCITY_FACTOR of the system constants (not shure what to do yet) 
+        return getRawVelocity() > DeafultSystemConstants.RPM_MOVING_THRESHOLD;
     }
 
     void restPosition(double position);

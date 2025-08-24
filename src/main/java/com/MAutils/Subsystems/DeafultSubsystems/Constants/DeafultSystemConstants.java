@@ -13,6 +13,8 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public abstract class DeafultSystemConstants<T> {
+        public static double RPM_MOVING_THRESHOLD = 0.5; // RPM
+
         public final Motor[] MOTORS;
         public final Motor master;
         public final TalonFXSimState masterSimState;

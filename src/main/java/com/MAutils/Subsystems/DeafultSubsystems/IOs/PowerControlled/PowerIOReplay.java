@@ -2,8 +2,10 @@
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.PowerControlled;
 
 import com.MAutils.Logger.MALog;
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.DeafultSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.Constants.PowerSystemConstants;
 import com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces.PowerSystemIO;
+import com.MAutils.Utils.ConvUtil;
 
 public class PowerIOReplay implements PowerSystemIO {
 
@@ -50,7 +52,7 @@ public class PowerIOReplay implements PowerSystemIO {
     }
 
     public boolean isMoving() {
-        return getVelocity() / systemConstants.VELOCITY_FACTOR > 1;
+        return ConvUtil.RPStoRPM(getVelocity() / systemConstants.VELOCITY_FACTOR) > DeafultSystemConstants.RPM_MOVING_THRESHOLD;
     }
 
     public void restPosition(double position) {
@@ -58,6 +60,16 @@ public class PowerIOReplay implements PowerSystemIO {
 
     public PowerSystemConstants getSystemConstants() {
         return systemConstants;
+    }
+
+    @Override
+    public double getRawVelocity() {
+        return 0;
+    }
+
+    @Override
+    public double getRawPosition() {
+        return 0;
     }
 
     
