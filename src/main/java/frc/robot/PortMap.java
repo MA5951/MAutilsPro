@@ -44,4 +44,9 @@ public class PortMap {
 
     }
 
+    public static class Intake {
+        public static final CANBusID INTAKE_MOTOR = new CANBusID(30, Canivore);
+        public static final CANBusID INTAKE_SLAVE = new CANBusID(29, Canivore);
+    }
+
 }
