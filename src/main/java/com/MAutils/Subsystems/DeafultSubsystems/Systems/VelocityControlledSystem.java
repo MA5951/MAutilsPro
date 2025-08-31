@@ -45,6 +45,10 @@ public abstract class VelocityControlledSystem extends StateSubsystem {
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
+    public void setConstants(VelocitySystemConstants systemConstants) {
+        systemIO.setSystemConstants(systemConstants);
+    }
+
     public double getRawPosition() {
         return systemIO.getRawPosition();
     }

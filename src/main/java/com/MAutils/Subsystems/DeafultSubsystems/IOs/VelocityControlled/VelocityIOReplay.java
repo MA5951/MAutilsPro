@@ -44,4 +44,8 @@ public class VelocityIOReplay extends PowerIOReplay implements VelocitySystemIO 
     public void setVelocity(double velocity, double feedForward) {
     }
 
+    @Override
+    public void setSystemConstants(VelocitySystemConstants systemConstants) {
+    }
+
 }

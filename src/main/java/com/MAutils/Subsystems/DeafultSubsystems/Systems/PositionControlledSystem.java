@@ -47,6 +47,10 @@ public abstract class PositionControlledSystem extends StateSubsystem {
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
+    public void setConstants(PositionSystemConstants systemConstants) {
+        systemIO.setSystemConstants(systemConstants);
+    }
+
     public double getRawPosition() {
         return systemIO.getRawPosition();
     }
