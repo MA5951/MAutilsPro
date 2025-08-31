@@ -46,7 +46,7 @@ public class FieldGamePieceSimulation implements Simulatable{
     @Override
     public void updateSimulation() {
         for (String type : gamePieces) {
-            MALog.log("Simulation/GamePices/" + type, SimulatedArena.getInstance().getGamePiecesArrayByType(type));
+            MALog.log("Simulation/GamePices/Field/" + type, SimulatedArena.getInstance().getGamePiecesArrayByType(type));
         }
     }
 
