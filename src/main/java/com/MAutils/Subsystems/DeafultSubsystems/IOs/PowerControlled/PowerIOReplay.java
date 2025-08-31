@@ -72,5 +72,9 @@ public class PowerIOReplay implements PowerSystemIO {
         return 0;
     }
 
+    @Override
+    public void setSystemConstants(PowerSystemConstants systemConstants) {
+    }
+
     
 }

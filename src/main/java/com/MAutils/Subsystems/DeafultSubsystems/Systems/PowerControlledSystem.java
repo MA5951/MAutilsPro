@@ -47,6 +47,10 @@ public abstract class PowerControlledSystem extends StateSubsystem {
         StatusSignalsRunner.registerSignals(systemConstants.master.canBusID, statusSignals);
     }
 
+    public void setConstants(PowerSystemConstants systemConstants) {
+        systemIO.setSystemConstants(systemConstants);
+    }
+
     public double getRawPosition() {
         return systemIO.getRawPosition();
     }

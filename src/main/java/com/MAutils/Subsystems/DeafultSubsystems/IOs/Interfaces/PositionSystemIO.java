@@ -1,6 +1,8 @@
 
 package com.MAutils.Subsystems.DeafultSubsystems.IOs.Interfaces;
 
+import com.MAutils.Subsystems.DeafultSubsystems.Constants.PositionSystemConstants;
+
 public interface PositionSystemIO extends PowerSystemIO {
 
     double getSetPoint();
@@ -8,6 +10,8 @@ public interface PositionSystemIO extends PowerSystemIO {
     double getError();
 
     boolean atPoint();
+
+    void setSystemConstants(PositionSystemConstants systemConstants);
 
     void setPosition(double position);
 

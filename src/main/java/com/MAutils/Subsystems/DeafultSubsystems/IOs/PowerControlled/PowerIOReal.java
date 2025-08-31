@@ -32,12 +32,12 @@ public class PowerIOReal implements PowerSystemIO {
 
     protected final String logPath;
 
-
-    private final PowerSystemConstants systemConstants;
+    private PowerSystemConstants systemConstants;
 
     public PowerIOReal(PowerSystemConstants systemConstants) {
         this.systemConstants = systemConstants;
-        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.SYSTEM_NAME + "/IO" : systemConstants.LOG_PATH;
+        logPath = systemConstants.LOG_PATH == null ? "/Subsystems/" + systemConstants.SYSTEM_NAME + "/IO"
+                : systemConstants.LOG_PATH;
 
         configMotors();
 
@@ -63,6 +63,11 @@ public class PowerIOReal implements PowerSystemIO {
 
     public PowerSystemConstants getSystemConstants() {
         return systemConstants;
+    }
+
+    @Override
+    public void setSystemConstants(PowerSystemConstants systemConstants) {
+        this.systemConstants = systemConstants;
     }
 
     protected void configMotors() {

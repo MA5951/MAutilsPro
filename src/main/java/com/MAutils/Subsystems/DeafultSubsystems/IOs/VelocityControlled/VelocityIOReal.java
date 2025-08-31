@@ -17,7 +17,7 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
     private StatusSignal<Double> motorError;
     private StatusSignal<Double> motorSetPoint;
 
-    private final VelocitySystemConstants systemConstants;
+    private VelocitySystemConstants systemConstants;
 
     public VelocityIOReal(VelocitySystemConstants systemConstants) {
         super(systemConstants.toPowerSystemConstants());
@@ -47,6 +47,11 @@ public class VelocityIOReal extends PowerIOReal implements VelocitySystemIO {
             motor.motorController.getConfigurator().apply(motorConfig);
             motor.motorController.setControl(follower);
         }
+    }
+
+    @Override
+    public void setSystemConstants(VelocitySystemConstants systemConstants) {
+        this.systemConstants = systemConstants;
     }
 
     @Override

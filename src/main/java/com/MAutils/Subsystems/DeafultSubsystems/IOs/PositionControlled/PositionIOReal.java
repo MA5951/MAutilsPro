@@ -13,7 +13,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
 
-    public final PositionSystemConstants systemConstants;
+    public PositionSystemConstants systemConstants;
 
     private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private PositionVoltage positionRequest = new PositionVoltage(0);
@@ -59,6 +59,11 @@ public class PositionIOReal extends PowerIOReal implements PositionSystemIO {
             motor.motorController.getConfigurator().apply(motorConfig);
             motor.motorController.setControl(follower);
         }
+    }
+
+    @Override
+    public void setSystemConstants(PositionSystemConstants systemConstants) {
+        this.systemConstants = systemConstants;
     }
 
     @Override

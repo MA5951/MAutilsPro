@@ -23,6 +23,8 @@ public interface PowerSystemIO {
 
     void setBrakeMode(boolean isBrake); 
 
+    void setSystemConstants(PowerSystemConstants systemConstants);
+
     void updatePeriodic();
 
     default  public boolean isMoving() {

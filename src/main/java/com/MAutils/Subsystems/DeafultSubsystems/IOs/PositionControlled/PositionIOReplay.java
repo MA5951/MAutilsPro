@@ -45,4 +45,8 @@ public class PositionIOReplay extends PowerIOReplay implements PositionSystemIO 
        
     }
 
+    @Override
+    public void setSystemConstants(PositionSystemConstants systemConstants) {
+    }
+
 }
